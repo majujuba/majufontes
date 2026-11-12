@@ -1,0 +1,25 @@
+/* Cursor Trail — Pixels v2 (copiado de "Cursor Trail — Pixels v2.html") */
+  @media (hover: hover) and (pointer: fine) {
+    html.cts-on, html.cts-on * { cursor: none !important; }
+    html.cts-on.cts-text, html.cts-on.cts-text * { cursor: auto !important; }
+  }
+  #cts-canvas {
+    position: fixed; inset: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 2147483646;
+  }
+  #cts-cursor {
+    position: fixed; left: 0; top: 0; z-index: 2147483647;
+    pointer-events: none; opacity: 0; color: #7562AA;
+    transition: opacity .15s, color .15s; will-change: transform;
+  }
+  #cts-cursor.cts-show { opacity: 1; }
+  #cts-cursor.cts-hide { opacity: 0; }
+  #cts-cursor svg {
+    position: absolute; left: 0; top: 0; height: 24px; width: auto; fill: currentColor;
+    transform-origin: 2% 2.5%; transform: translate(-2%, -2.5%) scale(1);
+    transition: opacity .12s, transform .15s;
+  }
+  #cts-cursor .cts-l { opacity: 0; }
+  #cts-cursor.cts-link .cts-n { opacity: 0; }
+  #cts-cursor.cts-link .cts-l { opacity: 1; transform: translate(-2%, -2.5%) scale(1.15); }
+  #cts-cursor.cts-down svg { transform: translate(-2%, -2.5%) scale(.88); }

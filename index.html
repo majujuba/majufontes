@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>maju. — designer</title>
+<!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
+<link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap">
+<!-- cursor com rastro de pixels (assets/cursor-trail.css + .js) -->
+<link rel="stylesheet" href="assets/cursor-trail.css">
+<!-- transição de pixels que se dissolvem, da Home para a about (precisa ficar no head) -->
+<script src="assets/transicao-dissolve.js"></script><style>
+  :root {
+    --roxo: #3F3166;
+    --azul: #84A9D9;
+    --cinza: #D8D8D8;
+    --branco: #FFFFFF;
+    --seasons: "the-seasons", "The Seasons", serif;
+    --cambria: Cambria, Caladea, Georgia, serif;
+    --pixel: "Pixelify Sans", monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #FFFFFF; }
+  body { min-width: 0; -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
+  a { color: inherit; text-decoration: none; }
+
+  /* Breakpoint Desktop · 1280 × 1896 */
+  /* overflow: clip (e não hidden) para os cards "sticky" funcionarem ao rolar */
+  .frame { position: relative; width: 100%; height: 3324px; overflow: hidden; overflow: clip; background: #FFFFFF; }
+  /* conteúdo em 1280 × 1896 (frame do Figma), centralizado; os fundos vão de borda a borda */
+  .page { position: absolute; top: 0; left: 50%; margin-left: -745px; width: 1490px; height: 3324px; overflow: visible; }
+  .bleed { left: -3000px; right: -3000px; }
+  .abs { position: absolute; }
+
+  /* ── home p01 ─────────────────────────────── */
+  /* começa no topo da página (atrás da header, que desce ao abrir); o degradê de 770px abaixo da header não mudou */
+  .hero-bg { left: -3000px; right: -3000px; top: 0; height: 812px;
+    background: linear-gradient(180deg, #84A9D9 42px, #D8D8D8 100%); }
+  /* flores animadas (arquivos html fiéis): caixa transparente sobre a home */
+  iframe.abs { border: 0; background: transparent; display: block; pointer-events: none; }
+  .desenho-branco { left: -275px; top: -278px; width: 1249px; height: 639px; }
+  .desenho-roxo { left: 413px; top: 489px; width: 1205px; height: 617px; }
+  .logo { left: 41px; top: 284px; width: 818px; height: 318px; }   /* 10% menor que o Figma (909 × 353); logo e texto descidos 10px */
+  .intro { left: 1016px; top: 457px; width: 335px;
+    font: 400 20px/1 var(--cambria); color: var(--roxo); }
+  /* esmaecimento longo e gradual até o cinza da seção de projetos (que começa em y = 812) */
+  /* curva "smoothstep": começa e termina devagar, para não marcar nenhuma das pontas */
+  .fade { left: -3000px; right: -3000px; top: 622px; height: 190px;
+    background: linear-gradient(180deg,
+      rgba(216,216,216,0) 0%, rgba(216,216,216,.028) 10%, rgba(216,216,216,.104) 20%,
+      rgba(216,216,216,.216) 30%, rgba(216,216,216,.352) 40%, rgba(216,216,216,.5) 50%,
+      rgba(216,216,216,.648) 60%, rgba(216,216,216,.784) 70%, rgba(216,216,216,.896) 80%,
+      rgba(216,216,216,.972) 90%, #D8D8D8 100%); }
+
+  /* ── header ───────────────────────────────── */
+  /* fixa no topo da janela ao rolar a página */
+  .header { position: fixed; left: 0; right: 0; top: 0; height: 42px; z-index: 10; background: var(--roxo); }
+  .header .estrela { left: 51px; top: 5px; width: 32px; height: 32px; }
+  .nav { font: 700 20px/1 var(--seasons); color: var(--cinza); white-space: nowrap; }
+  .nav.work    { right: 395px; top: 10px; }
+  .nav.about   { right: 228px; top: 10px; }
+  .nav.contact { right: 51px;  top: 9px; }
+  /* links da header mudam para o azul do site e crescem um pouco ao passar o mouse;
+     entram em 0,4 s e saem mais devagar (0,9 s) */
+  .header .nav { transform-origin: 50% 60%; transition: color .9s ease, transform .9s ease; }
+  /* estrela da header cresce um pouco ao passar o mouse, no mesmo ritmo dos links */
+  .header .estrela { transition: transform .9s ease; }
+  .header .estrela:hover { transform: scale(1.08); transition: transform .4s ease; }
+  .header .nav:hover { color: #84A9D9; transform: scale(1.08); transition: color .4s ease, transform .4s ease; }
+
+  /* ── projetos / works ─────────────────────── */
+  .secao-work { left: 0; right: 0; top: 777px; height: 2365px; }
+  .secao-work .fundo { left: -3000px; right: -3000px; top: 35px; height: 2330px; background: var(--cinza); }
+  /* título e linha ficam ancorados à janela (51px das bordas), como a header */
+  .titulo { left: 51px; top: 793px; width: 365px; height: 172px; z-index: 1;
+    font: 700 96px/86px var(--seasons); color: var(--roxo); }
+  .titulo em { font-style: italic; }
+  .linha { left: 51px; right: 51px; top: 989px; height: 2px; z-index: 1;
+    background: linear-gradient(90deg, #3F3166 0%, #7663AA 100%); }
+
+  .card { left: 56px; width: 1388px; height: 395px; border-radius: 30px; overflow: hidden; display: block; }
+  .card::after { content: ""; position: absolute; inset: 0; border-radius: 30px;
+    box-shadow: inset 0 0 0 1.5px var(--stroke); pointer-events: none; }
+  /* borda "recortada à mão": o script no fim gera um contorno tremido para cada card */
+  .card.rustica::after { display: none; }
+  .card .borda { left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .card.roxo { background: var(--roxo); --stroke: var(--cinza); color: var(--cinza); }
+  .card.azul { background: var(--azul); --stroke: var(--roxo); color: var(--roxo); }
+  .card .foto { right: 0; top: 0; width: 813px; height: 395px; object-fit: fill;
+    border-radius: 0 30px 30px 0; }
+  .card .nome { left: 45px; top: 46px; font: 700 68px/48px var(--cambria); letter-spacing: -0.01em; white-space: nowrap; }
+  .card .cat  { left: 48px; top: 150px; font: 400 36px/30px var(--pixel); white-space: nowrap; }
+  .card .espiral { left: 45px; top: 341px; width: 26px; height: 21px; }
+  .card .espiral.maior { top: 338px; width: 30px; height: 24px; }
+
+  /* ── pilha de cards ao rolar ──────────────────
+     Cada card fica preso no topo da janela (--topo-pilha), um degrau (--degrau) abaixo do anterior.
+     Entre um card e outro há --folga de rolagem; os de trás diminuem um pouco (script no fim). */
+  .pilha { left: 56px; top: 241px; width: 1388px; --topo-pilha: 80px; --degrau: 46px; --folga: 25px; }
+  .pilha .card { position: sticky; left: auto; top: calc(var(--topo-pilha) + var(--i) * var(--degrau));
+    margin-bottom: var(--folga); transform-origin: 50% 0; will-change: transform; }
+
+  /* ── tilt 3D ao passar o mouse (componente: .tilt-3d-container > .tilt-3d) ──
+     A escala da pilha encolhe a partir do topo (origem 50% 0); a inclinação gira em torno do
+     centro do card: o translateY(meia altura) e o translateY(-meia altura) se anulam, então o
+     card não sobe nem desce — só inclina. */
+  .tilt-3d-container { perspective: 1000px; }
+  .tilt-3d { --escala: 1; --rx: 0deg; --ry: 0deg; --meia: 197.5px;
+    transform: scale(var(--escala)) translateY(var(--meia)) rotateX(var(--rx)) rotateY(var(--ry)) translateY(calc(-1 * var(--meia))); }
+  .pilha .fim-pilha { height: 0; }   /* sem pausa: a pilha completa já começa a subir (aumente para segurá-la parada) */
+  .card.mais .chamada { left: 48px; top: 71px; font: 700 64px/60px var(--seasons); letter-spacing: -0.01em; white-space: nowrap; }
+  /* pode quebrar em duas linhas, sem passar por cima do desenho azul (que começa em x = 706) */
+  .card.mais .sub { left: 48px; top: 198px; width: 600px; font: 400 32px/34px var(--pixel); white-space: normal; }
+  .card.mais .desenho-caixa { left: 706px; right: auto; top: 95px; width: 680px; height: 298px; border-radius: 29px; overflow: hidden; }
+  /* flor azul animada (assets/desenho-azul-flor.html), no mesmo recorte da imagem antiga do card:
+     viewBox 920 × 485 em escala 1,155, deslocado (−8, −22) */
+  .card.mais .desenho-caixa iframe { left: -8px; top: -22px; width: 1063px; height: 560px; }
+
+  /* ── rodapé ───────────────────────────────── */
+  .rodape { left: 0; right: 0; top: 3141px; height: 183px; z-index: 2; }
+  .rodape::before { content: ""; position: absolute; top: 0; bottom: 0; left: -3000px; right: -3000px; background: var(--roxo); z-index: -1; }
+  .rodape .contato { left: 60px; top: 46px; width: 365px; color: var(--branco); }
+  .rodape .contato small { display: block; font: 400 16px/15px var(--cambria); }
+  .rodape .contato a { display: block; font: 700 28px/28px var(--cambria); white-space: nowrap; }
+  .rodape .estrela { left: 690px; top: 40px; width: 111px; height: 111px; }
+  .rodape .links { top: 38px; width: 147px; text-align: right; font: 400 20px/23px var(--cambria); color: var(--branco); }
+  .rodape .links a, .rodape .links span { display: block; height: 46px; }
+  .rodape .links.sociais { top: 38px; right: 264px; }
+  .rodape .links.paginas { right: 58px; }
+  .rodape .copy { left: 60px; bottom: 23px; font: 400 15px/1 var(--cambria); color: var(--cinza); white-space: nowrap; }
+
+  /* ── fade in ao entrar na tela (como na referência: sobe 20px enquanto aparece) ── */
+  .js .fade-in-element { opacity: 0; transform: translateY(20px);
+    transition: opacity 1.2s cubic-bezier(.22,1,.36,1), transform 1.2s cubic-bezier(.22,1,.36,1);
+    transition-delay: var(--atraso, 0s); }
+  .js .fade-in-element.visivel { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .js .fade-in-element { opacity: 1; transform: none; transition: none; }
+  }
+  /* header surge descendo de cima da janela, com movimento suave */
+  /* desce e aparece aos poucos; a chegada desacelera bem devagar (sem parada brusca) */
+  .js .header { transform: translateY(-100%); opacity: 0; will-change: transform, opacity;
+    transition: transform 1.6s cubic-bezier(.25,1,.5,1), opacity .9s ease-out; }
+  .js .header.desceu { transform: none; opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .js .header { transform: none; opacity: 1; transition: none; } }
+
+  /* ── tela de carregamento: fundo azul + estrela roxa no centro ──
+     a estrela entra (cresce de 90% a 100%), fica, sai ampliando (110%) e a tela some */
+  .carregando { position: fixed; inset: 0; z-index: 2147480000; background: #84A9D9;
+    display: flex; align-items: center; justify-content: center; transition: opacity .7s ease; }
+  html:not(.js) .carregando { display: none; }
+  .carregando img { width: 120px; height: auto; opacity: 0; transform: scale(.9);
+    transition: opacity .6s ease, transform .6s cubic-bezier(.22,1,.36,1); }
+  .carregando.entra img { opacity: 1; transform: none; }
+  .carregando.sai img { opacity: 0; transform: scale(1.1); transition: opacity .5s ease, transform .5s ease; }
+  .carregando.some { opacity: 0; pointer-events: none; }
+  html.js-carregando { overflow: hidden; }
+</style>
+<script>
+  document.documentElement.classList.add('js');
+  /* as animações da página só começam quando a tela de carregamento sai */
+  window.quandoCarregar = fn => { if (window.__carregou) fn(); else addEventListener('carregou', fn, { once: true }); };
+</script>
+</head>
+<body>
+<!-- tela de carregamento -->
+<div class="carregando" id="carregando" aria-hidden="true"><img src="assets/estrela-roxa.svg" alt=""></div>
+<script>
+(() => {
+  const MINIMO = 1800;   // tempo mínimo com a estrela na tela (ms), mesmo se a página carregar antes
+  const MAXIMO = 6000;   // se algo demorar, a tela sai mesmo assim (ms)
+  const tela = document.getElementById('carregando'), root = document.documentElement;
+  const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  root.classList.add('js-carregando');
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  scrollTo(0, 0);
+  const t0 = performance.now();
+  requestAnimationFrame(() => requestAnimationFrame(() => tela.classList.add('entra')));
+
+  // as flores (iframes) avisam quando estão prontas e esperam o "comecar"
+  const flores = new Set();
+  addEventListener('message', e => {
+    if (e.data !== 'flor-pronta') return;
+    flores.add(e.source);
+    if (window.__carregou) e.source.postMessage('comecar', '*');
+  });
+
+  let saiu = false;
+  function sair() {
+    if (saiu) return; saiu = true;
+    tela.classList.add('sai');                       // estrela sai ampliando
+    setTimeout(() => {
+      tela.classList.add('some');                    // a tela azul some e revela a página
+      root.classList.remove('js-carregando');
+      window.__carregou = true;
+      dispatchEvent(new Event('carregou'));
+      flores.forEach(f => f.postMessage('comecar', '*'));
+      setTimeout(() => tela.remove(), 800);
+    }, calmo ? 0 : 500);
+  }
+  function pronto() { setTimeout(sair, Math.max(0, (calmo ? 600 : MINIMO) - (performance.now() - t0))); }
+  if (document.readyState === 'complete') pronto(); else addEventListener('load', pronto);
+  setTimeout(sair, MAXIMO);
+})();
+</script>
+<div class="frame" id="frame"><main class="page" id="page">
+
+  <!-- home p01 -->
+  <div class="abs hero-bg"></div>
+  <img class="abs logo fade-in-element" style="--atraso:1.4s" src="assets/logo-maju.svg" alt="maju.">
+  <p class="abs intro fade-in-element" style="--atraso:1.7s">designer, inspirada na pluralidade humana, na música e na atmosfera dos grandes espetáculos.</p>
+  <iframe class="abs desenho-roxo" src="assets/desenho-vermelho-flor.html?esperar" title="flor e pixels — vermelho" scrolling="no" tabindex="-1" aria-hidden="true"></iframe>
+  <iframe class="abs desenho-branco" src="assets/desenho-roxo-flor.html?esperar" title="flor e pixels — roxo" scrolling="no" tabindex="-1" aria-hidden="true"></iframe>
+
+  <div class="abs fade"></div>
+
+  <footer class="abs rodape" data-cursor-bg="dark">
+    <div class="abs contato">
+      <small>entre em contato </small>
+      <a href="mailto:mariafontesju@gmail.com">mariafontesju@gmail.com</a>
+    </div>
+    <img class="abs estrela" src="assets/estrela-rodape.webp" alt="">
+    <nav class="abs links sociais"><a href="https://www.linkedin.com/in/maria-j%C3%BAlia-fontes-leite/" target="_blank" rel="noopener">linkedIn</a><a href="https://www.behance.net/majufontes" target="_blank" rel="noopener">behance</a></nav>
+    <nav class="abs links paginas"><a href="work.html">work</a><a href="about.html">about</a><a href="mailto:mariafontesju@gmail.com">contact</a></nav>
+    <p class="abs copy">©2026 maju. designer</p>
+  </footer>
+
+  <section class="abs secao-work">
+    <div class="abs fundo"></div>
+
+    <div class="abs pilha fade-in-element tilt-3d-container">
+    <a class="card tilt-3d roxo" style="--i:0" href="work-tiposp.html">
+      <img class="abs foto" src="assets/card-tiposp.jpg" alt="TipoSP">
+      <span class="abs nome">TipoSP</span>
+      <span class="abs cat">Web Design</span>
+      <img class="abs espiral maior" src="assets/espiral-tiposp.svg" alt="">
+    </a>
+    <a class="card tilt-3d azul" style="--i:1" href="work-gorducha.html">
+      <img class="abs foto" src="assets/card-gorducha.jpg" alt="Gorducha">
+      <span class="abs nome" style="font-size:64px">Gorducha</span>
+      <span class="abs cat">Tipografia</span>
+      <img class="abs espiral" src="assets/espiral-roxa.svg" alt="">
+    </a>
+    <a class="card tilt-3d roxo" style="--i:2" href="work-vizao.html">
+      <img class="abs foto" src="assets/card-vizao.jpg" alt="Vizão">
+      <span class="abs nome">Vizão</span>
+      <span class="abs cat">Editorial</span>
+      <img class="abs espiral" src="assets/espiral-clara.svg" alt="">
+    </a>
+    <a class="card tilt-3d azul" style="--i:3" href="work-dengo.html">
+      <img class="abs foto" src="assets/card-dengo.jpg" alt="Dengo" style="object-fit:cover">
+      <span class="abs nome">Dengo</span>
+      <span class="abs cat">Estampas</span>
+      <img class="abs espiral" src="assets/espiral-roxa.svg" alt="">
+    </a>
+    <a class="card tilt-3d roxo mais" style="--i:4" href="work.html">
+      <span class="abs chamada">veja mais projetos →</span>
+      <span class="abs sub">mais de 10 ideias que<br>saíram do papel!</span>
+      <img class="abs espiral" src="assets/espiral-clara.svg" alt="">
+      <div class="abs desenho-caixa"><iframe class="abs" src="assets/desenho-azul-flor.html" title="flor e pixels — azul" scrolling="no" tabindex="-1" aria-hidden="true"></iframe></div>
+    </a>
+    <div class="fim-pilha"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- título e linha: ancorados à janela (51px das bordas) -->
+<div class="abs linha fade-in-element" style="--atraso:.15s"></div>
+<h2 class="abs titulo fade-in-element">projetos<br><em>works</em></h2>
+
+<!-- header: ancorado à janela (51px das bordas esquerda e direita) -->
+<header class="abs header">
+  <img class="abs estrela" src="assets/estrela-header.svg" alt="">
+  <a class="abs nav work" href="work.html">work</a>
+  <a class="abs nav about" href="about.html">about</a>
+  <a class="abs nav contact" href="mailto:mariafontesju@gmail.com">contact</a>
+</header>
+</div>
+
+<script>
+/* header surge descendo de cima da janela (o movimento está no CSS: .header / .header.desceu) */
+(() => {
+  const h = document.querySelector('.header');
+  if (h) quandoCarregar(() => requestAnimationFrame(() => requestAnimationFrame(() => h.classList.add('desceu'))));
+})();
+</script>
+<script>
+/* fade in: cada .fade-in-element aparece (uma vez) quando entra na tela */
+(() => {
+  const MARGEM = 16;   // quantos px o elemento precisa ter entrado na tela para aparecer
+  let pendentes = [...document.querySelectorAll('.fade-in-element')];
+  let pedido = false;
+  function confere() {
+    pedido = false;
+    if (!window.__carregou) return;                 // espera a tela de carregamento sair
+    // só a posição vertical importa; o que já ficou acima da tela também aparece
+    pendentes = pendentes.filter(e => {
+      if (e.getBoundingClientRect().top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
+      return true;
+    });
+    if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
+  }
+  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(confere); } }
+  addEventListener('scroll', agenda, { passive: true });
+  addEventListener('resize', agenda);
+  quandoCarregar(agenda);
+})();
+</script>
+<script>
+/* borda "recortada à mão" dos cards: contorno arredondado com um tremido irregular,
+   usado para recortar o card e também desenhado como traço na cor de contorno */
+(() => {
+  const RAIO = 30;          // arredondamento dos cantos
+  const TREMIDO = 0.9;      // tamanho das ondulações do contorno (px)
+  const FINO = 0.35;        // tremido fino (px)
+  const ESPESSURA = 4.2;    // grossura do traço (encostado na beirada, por dentro)
+  const ONDA_TRACO = 0.5;   // ondulação suave do traço (0 = liso)
+  const ASPEREZA = 2.6;     // textura granulada nas bordas do traço, como a linha das flores (0 = liso)
+  const MARGEM = 5;         // folga para o tremido não passar da caixa do card
+
+  function sorteio(semente) { return () => (semente = (semente * 16807) % 2147483647) / 2147483647; }
+
+  function contorno(W, H, semente) {
+    const rnd = sorteio(semente), m = MARGEM, R = RAIO;
+    const retoH = W - 2*m - 2*R, retoV = H - 2*m - 2*R, arco = Math.PI * R / 2;
+    const P = 2*retoH + 2*retoV + 4*arco;
+    // ponto e normal (para fora) ao longo do perímetro, começando no topo
+    function ponto(s) {
+      const trechos = [
+        [retoH, t => [m+R + t*retoH, m, 0, -1]],
+        [arco,  t => { const a = -Math.PI/2 + t*Math.PI/2; return [W-m-R + R*Math.cos(a), m+R + R*Math.sin(a), Math.cos(a), Math.sin(a)]; }],
+        [retoV, t => [W-m, m+R + t*retoV, 1, 0]],
+        [arco,  t => { const a = t*Math.PI/2; return [W-m-R + R*Math.cos(a), H-m-R + R*Math.sin(a), Math.cos(a), Math.sin(a)]; }],
+        [retoH, t => [W-m-R - t*retoH, H-m, 0, 1]],
+        [arco,  t => { const a = Math.PI/2 + t*Math.PI/2; return [m+R + R*Math.cos(a), H-m-R + R*Math.sin(a), Math.cos(a), Math.sin(a)]; }],
+        [retoV, t => [m, H-m-R - t*retoV, -1, 0]],
+        [arco,  t => { const a = Math.PI + t*Math.PI/2; return [m+R + R*Math.cos(a), m+R + R*Math.sin(a), Math.cos(a), Math.sin(a)]; }],
+      ];
+      for (const [len, f] of trechos) { if (s <= len) return f(s/len); s -= len; }
+      return trechos[0][1](0);
+    }
+    const PASSO = 5, n = Math.ceil(P / PASSO), GROSSO = 7;   // ondulação maior a cada 7 pontos
+    const nos = Array.from({length: Math.ceil(n/GROSSO)}, () => (rnd()*2 - 1) * TREMIDO);
+    const desvios = [], pts = [];
+    for (let i = 0; i < n; i++) {
+      const j = Math.floor(i / GROSSO), f = (i % GROSSO) / GROSSO, k = (1 - Math.cos(f*Math.PI)) / 2;
+      desvios.push(nos[j % nos.length]*(1-k) + nos[(j+1) % nos.length]*k + (rnd()*2 - 1) * FINO);
+      pts.push(ponto(i * P / n));
+    }
+    // recuo > 0 puxa o contorno para dentro (usado pelo traço, para ele aparecer inteiro)
+    return recuo => {
+      let d = '';
+      pts.forEach(([x, y, nx, ny], i) => {
+        const o = desvios[i] - recuo;
+        d += (i ? 'L' : 'M') + (x + nx*o).toFixed(1) + ' ' + (y + ny*o).toFixed(1);
+      });
+      return d + 'Z';
+    };
+  }
+
+  document.querySelectorAll('.pilha .card').forEach((card, i) => {
+    const W = card.offsetWidth, H = card.offsetHeight;
+    const forma = contorno(W, H, 97 + i * 7919);
+    const dTraco = forma(ESPESSURA/2);                    // traço encostado na beirada, por dentro
+    card.classList.add('rustica');
+    /* textura de traço desenhado à mão: o mesmo tipo de distorção usado na linha das flores */
+    const id = 'traco-card-' + i;
+    const filtro =
+      '<filter id="' + id + '" filterUnits="userSpaceOnUse" x="-20" y="-20" width="' + (W + 40) + '" height="' + (H + 40) + '">' +
+        // ondulação suave e lenta ao longo do traço + aspereza fina nas bordas
+        '<feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="1" seed="' + (3 + i) + '" result="lenta"/>' +
+        '<feDisplacementMap in="SourceGraphic" in2="lenta" scale="' + (ONDA_TRACO*2) + '" xChannelSelector="R" yChannelSelector="G" result="ondulado"/>' +
+        '<feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="' + (11 + i) + '" result="fina"/>' +
+        '<feDisplacementMap in="ondulado" in2="fina" scale="' + ASPEREZA + '" xChannelSelector="R" yChannelSelector="G"/>' +
+      '</filter>';
+    const atributos = 'stroke-width="' + ESPESSURA + '" stroke-linejoin="round" filter="url(#' + id + ')"';
+
+    /* recorte do card = borda externa do próprio traço (mesma forma e mesma textura),
+       assim nada do fundo do card sobra do lado de fora da borda */
+    const molde = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">' +
+      '<defs>' + filtro + '</defs><path d="' + dTraco + '" fill="#fff" stroke="#fff" ' + atributos + '/></svg>';
+    const url = 'url("data:image/svg+xml,' + encodeURIComponent(molde) + '")';
+    card.style.webkitMaskImage = url; card.style.maskImage = url;
+    card.style.webkitMaskSize = '100% 100%'; card.style.maskSize = '100% 100%';
+    card.style.webkitMaskRepeat = 'no-repeat'; card.style.maskRepeat = 'no-repeat';
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'abs borda');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('aria-hidden', 'true');
+    svg.innerHTML = '<defs>' + filtro + '</defs>' +
+      '<path d="' + dTraco + '" fill="none" style="stroke:var(--stroke)" ' + atributos + '/>';
+    card.appendChild(svg);
+  });
+})();
+</script>
+<script>
+/* tilt 3D: o ponto do card sob o cursor se inclina em direção a quem vê (até ANGULO graus) */
+(() => {
+  const ANGULO = 6;   // inclinação máxima nas bordas (graus)
+  if (!matchMedia('(hover: hover)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.tilt-3d').forEach(card => {
+    const pai = card.closest('.tilt-3d-container') || card.parentElement;
+    let soltando;
+    // caixa do card SEM a inclinação (a caixa inclinada desloca o centro):
+    // posição no layout (já com o "sticky") + a escala da pilha, que encolhe a partir do topo
+    function caixa() {
+      const rp = pai.getBoundingClientRect();
+      const s = parseFloat(card.style.getPropertyValue('--escala')) || 1;
+      const w = card.offsetWidth * s, h = card.offsetHeight * s;
+      const cx = card.offsetLeft + card.offsetWidth / 2, cy = card.offsetTop + h / 2;   // em relação ao contêiner
+      return { rp, cx, cy, w, h };
+    }
+    // a perspectiva vem do contêiner; centraliza o ponto de vista no card ativo
+    function centraPerspectiva(b) { pai.style.perspectiveOrigin = b.cx + 'px ' + b.cy + 'px'; }
+    card.addEventListener('mouseenter', () => {
+      clearTimeout(soltando);
+      card.style.transition = 'transform 0.1s ease-out';
+      centraPerspectiva(caixa());
+    });
+    card.addEventListener('mousemove', e => {
+      const b = caixa();
+      // posição do cursor em relação ao centro do card: -1 (borda esquerda/topo) a 1 (direita/base)
+      const nx = Math.max(-1, Math.min(1, (e.clientX - (b.rp.left + b.cx)) / (b.w / 2)));
+      const ny = Math.max(-1, Math.min(1, (e.clientY - (b.rp.top + b.cy)) / (b.h / 2)));
+      centraPerspectiva(b);
+      // o lado sob o cursor vem para frente: base → rotateX positivo; direita → rotateY negativo
+      card.style.setProperty('--rx', (ny * ANGULO).toFixed(2) + 'deg');
+      card.style.setProperty('--ry', (-nx * ANGULO).toFixed(2) + 'deg');
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transition = 'transform 0.4s ease';
+      card.style.setProperty('--rx', '0deg');
+      card.style.setProperty('--ry', '0deg');
+      soltando = setTimeout(() => { card.style.transition = ''; }, 400);   // a escala da pilha volta a seguir a rolagem sem atraso
+    });
+  });
+})();
+</script>
+<script>
+/* pilha de cards: enquanto os próximos cards sobem, os de trás diminuem um pouco */
+(() => {
+  const ENCOLHE = 0.025;   // quanto cada nível da pilha diminui (0.025 = 2,5%)
+  const cards = [...document.querySelectorAll('.pilha .card')];
+  const n = cards.length;
+  if (n < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const pilha = cards[0].parentElement;
+  let pedido = false;
+  function atualiza() {
+    pedido = false;
+    const cs = getComputedStyle(pilha);
+    const topo = parseFloat(cs.getPropertyValue('--topo-pilha'));
+    const degrau = parseFloat(cs.getPropertyValue('--degrau'));
+    const passo = cards[0].offsetHeight + parseFloat(cs.getPropertyValue('--folga'));
+    const base = pilha.getBoundingClientRect().top + scrollY;
+    const prende = i => base + i * passo - (topo + i * degrau);   // rolagem em que o card i prende
+    const fim = prende(n - 1);
+    cards.forEach((c, i) => {
+      const a = Math.max(0, Math.min(1, (scrollY - prende(i)) / (fim - prende(i) || 1)));
+      const s = 1 - ENCOLHE * (n - 1 - i) * a;
+      const v = s.toFixed(4);                           // combinada com o tilt 3D no CSS
+      if (c.dataset.escala !== v) { c.dataset.escala = v; c.style.setProperty('--escala', v); }   // só regrava se mudou
+    });
+  }
+  addEventListener('scroll', () => { if (!pedido) { pedido = true; requestAnimationFrame(atualiza); } }, { passive: true });
+  addEventListener('resize', atualiza);
+  atualiza();
+})();
+</script>
+<!-- cursor com rastro de pixels -->
+<script src="assets/cursor-trail.js"></script>
+</body>
+
+</html>
