@@ -16,7 +16,7 @@
   const DISSOLVER_MS = 500;  // quadrados sumindo — igual ao tempo de surgir
   const ESQ_DIR = 0;         // ordem de sumir: 0 = aleatória, igual à de surgir (era 0,6, da esquerda para a direita)
   const FADE = 0.14;         // fração do tempo em que cada quadrado esmaece (0 = some de uma vez)
-  const DESTINO = /(^|\/)about\.html(\?|#|$)/;
+  const DESTINO = /(^|\/)(about|work)\.html(\?|#|$)/;   // páginas que chegam pela transição
   /* ============================================ */
   const CHAVE = 'maju-dissolve-chegada';
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
