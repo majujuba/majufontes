@@ -40,9 +40,12 @@
   /* flor animada no lugar da imagem do Figma "desenho branco" (1562 × 801 em 444, −13): linha roxa + pixels cinza.
      A imagem do Figma tem margem transparente: a LINHA ocupa x 558,4 / y 55,3, com 1333,2 × 663,6 na página.
      No arquivo animado a linha ocupa x 90,2 / y 53,8, com 878,6 × 437,2 do viewBox 920 × 485 (origem 70, 30)
-     → escala 1,5174; caixa do iframe = viewBox × escala, deslocada para a linha cair no mesmo lugar */
-  .flor-topo { left: 527.75px; top: 19.15px; width: 1396px; height: 735.9px; }
-  .titulo { left: 52px; top: 240px; font: 700 148px/130px var(--seasons); color: var(--roxo); white-space: nowrap; }
+     → escala 1,5174; caixa do iframe = viewBox × escala, deslocada para a linha cair no mesmo lugar.
+     Depois (pedido dela): flor 12% menor, presa pelo canto de cima à direita (escala 1,3353), para abrir margem
+     entre ela e o título. Pixels lidos da imagem do Figma da work (assets/desenho-roxo-works.html). */
+  .flor-topo { left: 691.41px; top: 23.48px; width: 1228.5px; height: 647.6px; }
+  /* título um pouco maior que o Figma (148/130), a pedido dela; mesmo centro vertical */
+  .titulo { left: 52px; top: 230px; font: 700 160px/140px var(--seasons); color: var(--roxo); white-space: nowrap; }
   .titulo em { display: block; font-style: italic; }
 
   /* ── lista de projetos (fundo cinza a partir de y 620) ── */
@@ -70,7 +73,8 @@
 
   /* flor do fim da página: Figma "desenho roxo" (1586 × 813 em −368, 5367): linha vinho + pixels roxos.
      A LINHA no Figma: x −201,1 / y 5434,8, com 1252,2 × 676,8; no arquivo animado: x 129,8 / y 52,6,
-     com 812,4 × 438,8 do viewBox 863 × 486 (origem 105, 30) → escala 1,5414 */
+     com 812,4 × 438,8 do viewBox 863 × 486 (origem 105, 30) → escala 1,5414.
+     Pixels (bolinhas roxas) lidos da imagem do Figma da work (assets/desenho-vermelho-works.html). */
   .flor-fim { left: -239.34px; top: 5399.92px; width: 1330.2px; height: 749.1px; }
 
   /* ── header (como a about, na cor do Figma da work: azul-claro com links roxos) ── */
@@ -122,7 +126,7 @@
 
   <!-- topo -->
   <div class="abs hero-bg" data-cursor-bg="dark"></div>
-  <iframe class="abs flor-topo" id="flor-topo" src="assets/desenho-roxo-flor.html?esperar" title="flor e pixels — roxo" scrolling="no" tabindex="-1" aria-hidden="true"></iframe>
+  <iframe class="abs flor-topo" id="flor-topo" src="assets/desenho-roxo-works.html?esperar" title="flor e pixels — roxo" scrolling="no" tabindex="-1" aria-hidden="true"></iframe>
   <h1 class="abs titulo fade-in-element" style="--atraso:.3s">projetos<em>works</em></h1>
 
   <!-- projetos (posições do Figma; o topo de cada um = 620 + posição na seção) -->
@@ -225,7 +229,7 @@
   </a>
 
   <!-- flor do fim da página (fica por trás do rodapé) -->
-  <iframe class="abs flor-fim" id="flor-fim" src="assets/desenho-vermelho-flor.html?esperar" title="flor e pixels — vermelho" scrolling="no" tabindex="-1" aria-hidden="true" loading="lazy"></iframe>
+  <iframe class="abs flor-fim" id="flor-fim" src="assets/desenho-vermelho-works.html?esperar" title="flor e pixels — vermelho" scrolling="no" tabindex="-1" aria-hidden="true" loading="lazy"></iframe>
 
   <!-- rodapé -->
   <footer class="abs rodape" data-cursor-bg="dark">
