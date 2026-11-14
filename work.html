@@ -37,8 +37,11 @@
   /* ── topo: "projetos works" ─────────────────── */
   .hero-bg { left: -3000px; right: -3000px; top: 0; height: 620px;
     background: linear-gradient(180deg, #7EA2D2 36px, #D8D8D8 100%); }
-  /* flor animada no lugar da imagem do Figma "desenho branco" (1562 × 801 em 444, −13): linha roxa + pixels cinza */
-  .flor-topo { left: 444px; top: -13px; width: 1562px; height: 801px; }
+  /* flor animada no lugar da imagem do Figma "desenho branco" (1562 × 801 em 444, −13): linha roxa + pixels cinza.
+     A imagem do Figma tem margem transparente: a LINHA ocupa x 558,4 / y 55,3, com 1333,2 × 663,6 na página.
+     No arquivo animado a linha ocupa x 90,2 / y 53,8, com 878,6 × 437,2 do viewBox 920 × 485 (origem 70, 30)
+     → escala 1,5174; caixa do iframe = viewBox × escala, deslocada para a linha cair no mesmo lugar */
+  .flor-topo { left: 527.75px; top: 19.15px; width: 1396px; height: 735.9px; }
   .titulo { left: 52px; top: 240px; font: 700 148px/130px var(--seasons); color: var(--roxo); white-space: nowrap; }
   .titulo em { display: block; font-style: italic; }
 
@@ -60,14 +63,15 @@
   .projeto .area { position: absolute; font: 400 34px/30px var(--pixel); white-space: nowrap; }
   .projeto p { position: absolute; font: 400 20px/22px var(--cambria); }
   .projeto p em { font-style: italic; }
-  .projeto .espiral { position: absolute; width: 26px; height: 21px; transition: transform .9s ease; }
-  /* ao passar o mouse: a imagem cresce um pouco e a espiral gira */
+  .projeto .espiral { position: absolute; width: 26px; height: 21px; }
+  /* ao passar o mouse: a imagem cresce um pouco (a espiral fica parada) */
   .projeto:hover .imagem { transform: scale(1.015); transition: transform .5s ease; }
-  .projeto:hover .espiral { transform: rotate(-180deg); transition: transform .5s ease; }
   .divisa { left: 53px; width: 1390px; height: 2px; }
 
-  /* flor do fim da página: Figma "desenho roxo" (1586 × 813 em −368, 5367): linha vinho + pixels roxos */
-  .flor-fim { left: -368px; top: 5367px; width: 1586px; height: 813px; }
+  /* flor do fim da página: Figma "desenho roxo" (1586 × 813 em −368, 5367): linha vinho + pixels roxos.
+     A LINHA no Figma: x −201,1 / y 5434,8, com 1252,2 × 676,8; no arquivo animado: x 129,8 / y 52,6,
+     com 812,4 × 438,8 do viewBox 863 × 486 (origem 105, 30) → escala 1,5414 */
+  .flor-fim { left: -239.34px; top: 5399.92px; width: 1330.2px; height: 749.1px; }
 
   /* ── header (como a about, na cor do Figma da work: azul-claro com links roxos) ── */
   .header { position: fixed; left: 0; right: 0; top: 0; height: 42px; z-index: 10; background: var(--azul-header); }
