@@ -77,10 +77,10 @@
 
   /* botão com "cantos de pixel": quadradinhos de 7px na cor do fundo em cada canto */
   .botao-pixel { display: flex; align-items: center; justify-content: center; background: var(--roxo);
-    color: var(--cinza); font: 500 32px/28px var(--pixel); letter-spacing: -0.32px; border: 0; cursor: pointer;
+    color: var(--cinza); font: 500 32px/28px var(--pixel); letter-spacing: -0.32px; border: 0; outline: none; cursor: pointer;
     --canto: var(--azul-about); }
   .botao-pixel::before, .botao-pixel::after, .botao-pixel > .c1, .botao-pixel > .c2 {
-    content: ""; position: absolute; width: 7px; height: 7px; background: var(--canto); }
+    content: ""; position: absolute; width: 8px; height: 8px; margin: -1px; background: var(--canto); }   /* 1px além da borda: esconde o fio roxo que aparecia em volta dos cantos */
   .botao-pixel::before { left: 0; top: 0; }
   .botao-pixel::after  { right: 0; top: 0; }
   .botao-pixel > .c1   { left: 0; bottom: 0; }
