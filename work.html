@@ -35,8 +35,10 @@
   iframe.abs { border: 0; background: transparent; display: block; pointer-events: none; }
 
   /* ── topo: "projetos works" ─────────────────── */
-  .hero-bg { left: -3000px; right: -3000px; top: 0; height: 620px;
-    background: linear-gradient(180deg, #7EA2D2 36px, #D8D8D8 100%); }
+  /* degradê atualizado no Figma (2026-11-14): retângulo de 719px a partir de y 48, #7EA2D2 → #D8D8D8;
+     acima de 48 (atrás da header) continua azul; termina em y 767, por trás do primeiro projeto */
+  .hero-bg { left: -3000px; right: -3000px; top: 0; height: 767px;
+    background: linear-gradient(180deg, #7EA2D2 48px, #D8D8D8 100%); }
   /* flor animada no lugar da imagem do Figma "desenho branco" (1562 × 801 em 444, −13): linha roxa + pixels cinza.
      A imagem do Figma tem margem transparente: a LINHA ocupa x 558,4 / y 55,3, com 1333,2 × 663,6 na página.
      No arquivo animado a linha ocupa x 90,2 / y 53,8, com 878,6 × 437,2 do viewBox 920 × 485 (origem 70, 30)
