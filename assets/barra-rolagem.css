@@ -13,8 +13,8 @@ body::-webkit-scrollbar { display: none; }
    a cor e um leve desfoque do que está atrás vão sumindo nos 10px antes do trilho */
 .barra-trilho::before {
   content: ""; position: absolute; top: 0; bottom: 0; right: 0; left: -10px; pointer-events: none;
-  background: linear-gradient(to right, rgba(216, 216, 216, 0), rgba(216, 216, 216, .4) 10px);
-  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);   /* era 3px; ela pediu mais desfoque */
+  background: linear-gradient(to right, rgba(216, 216, 216, 0), rgba(216, 216, 216, .6) 10px);   /* 60% (era 40%) */
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);   /* 3px → 8px → 14px, a pedido dela */
   -webkit-mask-image: linear-gradient(to right, transparent, #000 10px); mask-image: linear-gradient(to right, transparent, #000 10px);
 }
 .barra-polegar {
