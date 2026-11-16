@@ -6,9 +6,16 @@ body::-webkit-scrollbar { display: none; }
 
 .barra-trilho {
   position: fixed; top: 0; right: 0; bottom: 0; width: 12px;   /* era 14px */
-  background: rgba(216, 216, 216, .4);           /* #D8D8D8 a 40%: o fundo do site continua por trás (era opaco) */
   z-index: 2147479000;    /* acima da header; abaixo da tela de carregamento, da transição e do cursor */
   touch-action: none;
+}
+/* fundo do trilho: #D8D8D8 a 40% (o site continua por trás), com a borda esquerda esfumada —
+   a cor e um leve desfoque do que está atrás vão sumindo nos 10px antes do trilho */
+.barra-trilho::before {
+  content: ""; position: absolute; top: 0; bottom: 0; right: 0; left: -10px; pointer-events: none;
+  background: linear-gradient(to right, rgba(216, 216, 216, 0), rgba(216, 216, 216, .4) 10px);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 10px); mask-image: linear-gradient(to right, transparent, #000 10px);
 }
 .barra-polegar {
   position: absolute; left: 3px; width: 6px; top: 0; height: 60px;   /* era 8px */
