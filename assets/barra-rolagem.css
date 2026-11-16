@@ -5,26 +5,19 @@ html::-webkit-scrollbar { display: none; }      /* Chrome, Edge, Safari */
 body::-webkit-scrollbar { display: none; }
 
 .barra-trilho {
-  position: fixed; top: 0; right: 0; bottom: 0; width: 12px;   /* era 14px */
+  position: fixed; top: 0; right: 0; bottom: 0; width: 10px;   /* 14 → 12 → 10px */
+  background: rgba(216, 216, 216, .6);           /* #D8D8D8 a 60%: o site continua por trás (sem esfumado/desfoque, a pedido dela) */
   z-index: 2147479000;    /* acima da header; abaixo da tela de carregamento, da transição e do cursor */
   touch-action: none;
 }
-/* fundo do trilho: #D8D8D8 a 40% (o site continua por trás), com a borda esquerda esfumada —
-   a cor e um leve desfoque do que está atrás vão sumindo nos 10px antes do trilho */
-.barra-trilho::before {
-  content: ""; position: absolute; top: 0; bottom: 0; right: 0; left: -10px; pointer-events: none;
-  background: linear-gradient(to right, rgba(216, 216, 216, 0), rgba(216, 216, 216, .6) 10px);   /* 60% (era 40%) */
-  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);   /* 3px → 8px → 14px → 20px, a pedido dela */
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 10px); mask-image: linear-gradient(to right, transparent, #000 10px);
-}
 .barra-polegar {
-  position: absolute; left: 3px; width: 6px; top: 0; height: 60px;   /* era 8px */
-  border-radius: 3px; background: #3F3166;
+  position: absolute; left: 3px; width: 4px; top: 0; height: 60px;   /* 8 → 6 → 4px */
+  border-radius: 2px; background: #3F3166;
   filter: url(#barra-aspera);                   /* borda áspera: mesma distorção usada no traço das flores */
   cursor: grab; will-change: transform;
   transition: left .25s ease, width .25s ease;
 }
-.barra-trilho:hover .barra-polegar, .barra-polegar.arrastando { left: 2px; width: 8px; }
+.barra-trilho:hover .barra-polegar, .barra-polegar.arrastando { left: 2px; width: 6px; }
 .barra-polegar.arrastando { cursor: grabbing; }
 .barra-trilho.sem-rolagem { display: none; }
 html.arrastando-barra, html.arrastando-barra * { user-select: none !important; }
