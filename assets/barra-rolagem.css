@@ -14,7 +14,7 @@ body::-webkit-scrollbar { display: none; }
 .barra-trilho::before {
   content: ""; position: absolute; top: 0; bottom: 0; right: 0; left: -10px; pointer-events: none;
   background: linear-gradient(to right, rgba(216, 216, 216, 0), rgba(216, 216, 216, .4) 10px);
-  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);   /* era 3px; ela pediu mais desfoque */
   -webkit-mask-image: linear-gradient(to right, transparent, #000 10px); mask-image: linear-gradient(to right, transparent, #000 10px);
 }
 .barra-polegar {
