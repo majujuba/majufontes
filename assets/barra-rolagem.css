@@ -6,7 +6,8 @@ body::-webkit-scrollbar { display: none; }
 
 .barra-trilho {
   position: fixed; top: 0; right: 0; bottom: 0; width: 12px;   /* era 14px */
-  background: #D8D8D8; z-index: 2147479000;    /* acima da header; abaixo da tela de carregamento, da transição e do cursor */
+  background: rgba(216, 216, 216, .4);           /* #D8D8D8 a 40%: o fundo do site continua por trás (era opaco) */
+  z-index: 2147479000;    /* acima da header; abaixo da tela de carregamento, da transição e do cursor */
   touch-action: none;
 }
 .barra-polegar {
