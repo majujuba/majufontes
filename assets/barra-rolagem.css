@@ -5,18 +5,18 @@ html::-webkit-scrollbar { display: none; }      /* Chrome, Edge, Safari */
 body::-webkit-scrollbar { display: none; }
 
 .barra-trilho {
-  position: fixed; top: 0; right: 0; bottom: 0; width: 14px;
+  position: fixed; top: 0; right: 0; bottom: 0; width: 12px;   /* era 14px */
   background: #D8D8D8; z-index: 2147479000;    /* acima da header; abaixo da tela de carregamento, da transição e do cursor */
   touch-action: none;
 }
 .barra-polegar {
-  position: absolute; left: 3px; width: 8px; top: 0; height: 60px;
-  border-radius: 4px; background: #3F3166;
+  position: absolute; left: 3px; width: 6px; top: 0; height: 60px;   /* era 8px */
+  border-radius: 3px; background: #3F3166;
   filter: url(#barra-aspera);                   /* borda áspera: mesma distorção usada no traço das flores */
   cursor: grab; will-change: transform;
   transition: left .25s ease, width .25s ease;
 }
-.barra-trilho:hover .barra-polegar, .barra-polegar.arrastando { left: 2px; width: 10px; }
+.barra-trilho:hover .barra-polegar, .barra-polegar.arrastando { left: 2px; width: 8px; }
 .barra-polegar.arrastando { cursor: grabbing; }
 .barra-trilho.sem-rolagem { display: none; }
 html.arrastando-barra, html.arrastando-barra * { user-select: none !important; }
