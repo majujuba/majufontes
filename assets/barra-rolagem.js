@@ -5,6 +5,7 @@
   const MINIMO = 48;          // altura mínima da barra (px)
   const ASPEREZA = 2.4;       // quanto a borda "treme" (0 = lisa)
   const GRAO = 0.9;           // tamanho do grão da textura (maior = mais miúdo)
+  const MARGEM = 6;           // espaço livre em cima e embaixo da barra, dentro do trilho (px)
   /* ============================================ */
   const NS = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(NS, 'svg');
@@ -26,14 +27,14 @@
 
   function mede() {
     pedido = false;
-    const total = raiz.scrollHeight, janela = innerHeight, H = trilho.clientHeight || janela;
+    const total = raiz.scrollHeight, janela = innerHeight, H = (trilho.clientHeight || janela) - 2 * MARGEM;
     const sobra = total - janela;
     trilho.classList.toggle('sem-rolagem', sobra <= 1);
     if (sobra <= 1) return;
     alturaPolegar = Math.max(MINIMO, Math.round(H * janela / total));
     polegar.style.height = alturaPolegar + 'px';
     const y = (raiz.scrollTop / sobra) * (H - alturaPolegar);
-    polegar.style.transform = `translateY(${y.toFixed(1)}px)`;
+    polegar.style.transform = `translateY(${(MARGEM + y).toFixed(1)}px)`;
   }
   const agenda = () => { if (!pedido) { pedido = true; requestAnimationFrame(mede); } };
 
@@ -48,7 +49,7 @@
   });
   polegar.addEventListener('pointermove', e => {
     if (!polegar.hasPointerCapture(e.pointerId)) return;
-    const H = trilho.clientHeight, sobra = raiz.scrollHeight - innerHeight;
+    const H = trilho.clientHeight - 2 * MARGEM, sobra = raiz.scrollHeight - innerHeight;
     const fator = sobra / Math.max(1, H - alturaPolegar);
     raiz.scrollTop = inicioRolagem + (e.clientY - inicioY) * fator;
   });
@@ -63,8 +64,8 @@
   trilho.addEventListener('pointerdown', e => {
     if (e.target !== trilho || e.button !== 0) return;
     e.preventDefault();
-    const H = trilho.clientHeight, sobra = raiz.scrollHeight - innerHeight;
-    const alvo = (e.clientY - alturaPolegar / 2) / Math.max(1, H - alturaPolegar) * sobra;
+    const H = trilho.clientHeight - 2 * MARGEM, sobra = raiz.scrollHeight - innerHeight;
+    const alvo = (e.clientY - MARGEM - alturaPolegar / 2) / Math.max(1, H - alturaPolegar) * sobra;
     scrollTo({ top: Math.max(0, Math.min(sobra, alvo)), behavior: 'smooth' });
   });
 
