@@ -544,6 +544,7 @@ function escolheNivel(p,t,atual){
   const svgPix = svgLinha.cloneNode(false);
   svgPix.removeAttribute('aria-label'); svgPix.setAttribute('aria-hidden', 'true');
   svgPix.appendChild(gPix);
+  svgLinha.style.willChange = svgPix.style.willChange = 'transform';   // camadas separadas: piscar os pixels nÃ£o refaz o filtro da linha
   svgLinha.parentNode.insertBefore(svgPix, LINHA_ACIMA ? svgLinha : svgLinha.nextSibling);
 })();
 
@@ -578,9 +579,14 @@ if('IntersectionObserver' in window){
     .observe(document.documentElement);
 }
 
+/* desempenho: relÃ³gio prÃ³prio da ondulaÃ§Ã£o (pausa enquanto a pÃ¡gina de fora rola) e pixels a ~30 quadros/s */
+let pausada = false, tempoOnda = performance.now(), ultimoT = null, ultimoPix = -1e9;
+addEventListener('message', e => { if(e.data === 'onda-pausa') pausada = true; else if(e.data === 'onda-segue') pausada = false; });
 function quadro(t){
-  if(!visivel){ rodando = false; return; }
-  for(const p of pixels){
+  const dt = ultimoT === null ? 0 : Math.min(100, t - ultimoT); ultimoT = t;
+  if(!pausada) tempoOnda += dt;
+  const vezPix = t - ultimoPix >= 33; if(vezPix) ultimoPix = t;  if(!visivel){ rodando = false; ultimoT = null; return; }
+  if(vezPix) for(const p of pixels){
     if(t >= p.proxima){
       p.de = p.para;
       p.para = escolheNivel(p,t,p.de);
@@ -588,14 +594,14 @@ function quadro(t){
       p.dur = rnd(FADE_MIN,FADE_MAX)/vel;
       p.proxima = t + p.dur + rnd(PAUSA_MIN,PAUSA_MAX)/vel;
     }
-    if(t - p.inicio <= p.dur + 20){
+    if(t - p.inicio <= p.dur + 40){
       const k = suave(Math.min(1,(t-p.inicio)/p.dur));
       p.el.style.opacity = (p.de + (p.para-p.de)*k).toFixed(3);
     }
   }
-  if(t - ultimaOnda >= ONDA_INTERVALO){
+  if(!pausada && t - ultimaOnda >= ONDA_INTERVALO){
     ultimaOnda = t;
-    const tt = t*0.001*ONDA_VELOCIDADE*vel;
+    const tt = tempoOnda*0.001*ONDA_VELOCIDADE*vel;
     const fx = 0.009 + 0.0025*Math.sin(tt*0.37) + 0.0012*Math.sin(tt*0.91);
     const fy = 0.011 + 0.0025*Math.cos(tt*0.29) + 0.0012*Math.sin(tt*0.73+1);
     ruido.setAttribute('baseFrequency', fx.toFixed(5)+' '+fy.toFixed(5));

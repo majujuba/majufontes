@@ -80,7 +80,16 @@
   const desloca = cria('feDisplacementMap', { in: 'SourceGraphic', in2: 'n', scale: ONDA_AMPLITUDE * 0.89, xChannelSelector: 'R', yChannelSelector: 'G' });
   filtro.append(ruido, desloca); defs.appendChild(filtro);
   const poliFaixa = cria('polygon', { points: poligonoEm(0), fill: COR_FAIXA, filter: 'url(#faixa-onda)', 'data-cursor-bg': 'dark' });
-  svg.appendChild(poliFaixa);
+  /* desempenho: a corda (com o filtro pesado) fica num SVG próprio, numa camada separada das palavras.
+     Assim as palavras andando a cada quadro não obrigam o navegador a refazer o filtro da corda. */
+  const svgFundo = svg.cloneNode(false);
+  svgFundo.removeAttribute('id'); svgFundo.removeAttribute('role'); svgFundo.removeAttribute('aria-label');
+  svgFundo.setAttribute('aria-hidden', 'true');
+  svgFundo.appendChild(poliFaixa);
+  svg.parentNode.insertBefore(svgFundo, svg);
+  svgFundo.style.willChange = svg.style.willChange = 'transform';
+  // o fade in (classe "visivel") é aplicado ao SVG das palavras; a corda acompanha
+  new MutationObserver(() => { svgFundo.className.baseVal = svg.className.baseVal; }).observe(svg, { attributes: true, attributeFilter: ['class'] });
   // geometricPrecision: o navegador não "encaixa" as letras na grade de pixels a cada quadro (evita tremido)
   const grupo = cria('g', { 'clip-path': 'url(#faixa-recorte)', 'data-cursor-bg': 'dark', 'text-rendering': 'geometricPrecision' });
   svg.appendChild(grupo);
@@ -147,15 +156,22 @@
 
   const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let visivel = true, rodando = false, t0 = null, ultimaOnda = -1e9;
+  /* desempenho: a forma da corda e a ondulação mudam a ~30 quadros/s (são lentas) e dão uma pausa
+     enquanto a página rola (window.__rolando, de assets/desempenho.js); têm relógio próprio,
+     então continuam de onde pararam, sem salto. As palavras seguem andando normalmente. */
+  let tempoCorda = 0, tempoOnda = performance.now(), ultimoT = null, ultimaCorda = -1e9;
   function quadro(t) {
-    if (!visivel) { rodando = false; return; }
+    if (!visivel) { rodando = false; ultimoT = null; return; }
     if (t0 === null) t0 = t;
-    curvaCorda((t - t0) / 1000);
+    const dt = ultimoT === null ? 0 : Math.min(100, t - ultimoT); ultimoT = t;
+    const pausa = !!window.__rolando;
+    if (!pausa) { tempoCorda += dt; tempoOnda += dt; }
+    if (!pausa && t - ultimaCorda >= 33) { ultimaCorda = t; curvaCorda(tempoCorda / 1000); }
     posiciona(((t - t0) / 1000 * VELOCIDADE) % ciclo);
     // ondulação da faixa: mesma fórmula das flores, atualizada a ~30 quadros/s
-    if (t - ultimaOnda >= 33) {
+    if (!pausa && t - ultimaOnda >= 33) {
       ultimaOnda = t;
-      const tt = t * 0.001 * ONDA_VELOCIDADE;
+      const tt = tempoOnda * 0.001 * ONDA_VELOCIDADE;
       const k = ONDA_FREQ[0] / 0.009;
       const fx = ONDA_FREQ[0] + k * (0.0025 * Math.sin(tt * 0.37) + 0.0012 * Math.sin(tt * 0.91));
       const fy = ONDA_FREQ[1] + k * (0.0025 * Math.cos(tt * 0.29) + 0.0012 * Math.sin(tt * 0.73 + 1));

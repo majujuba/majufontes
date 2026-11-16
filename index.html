@@ -397,7 +397,38 @@
     svg.innerHTML = '<defs>' + filtro + '</defs>' +
       '<path d="' + dTraco + '" fill="none" style="stroke:var(--stroke)" ' + atributos + '/>';
     card.appendChild(svg);
+
+    /* desempenho: os cards encolhem a cada quadro da rolagem (pilha), e com o filtro "ao vivo"
+       o navegador refazia a textura do recorte e da borda o tempo todo. Aqui os dois viram uma
+       imagem pronta (desenhada uma vez, em alta resolução) — o visual é o mesmo. */
+    const cor = getComputedStyle(card).getPropertyValue('--stroke').trim() || '#D8D8D8';
+    const bordaTexto = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">' +
+      '<defs>' + filtro + '</defs><path d="' + dTraco + '" fill="none" stroke="' + cor + '" ' + atributos + '/></svg>';
+    Promise.all([rasteriza(molde, W, H), rasteriza(bordaTexto, W, H)]).then(([png, pngBorda]) => {
+      if (png) { const u = 'url("' + png + '")'; card.style.webkitMaskImage = u; card.style.maskImage = u; }
+      if (pngBorda) {
+        const img = new Image(); img.className = 'abs borda'; img.alt = ''; img.setAttribute('aria-hidden', 'true');
+        img.onload = () => svg.replaceWith(img); img.src = pngBorda;
+      }
+    });
   });
+
+  function rasteriza(svgTexto, W, H) {
+    const ESC = Math.min(3, (devicePixelRatio || 1) * 1.5);   // folga para o zoom do navegador e a inclinação 3D
+    return new Promise(res => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const c = document.createElement('canvas');
+          c.width = Math.round(W * ESC); c.height = Math.round(H * ESC);
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          res(c.toDataURL('image/png'));
+        } catch (e) { res(null); }                             // se não der, fica o filtro ao vivo
+      };
+      img.onerror = () => res(null);
+      img.src = 'data:image/svg+xml,' + encodeURIComponent(svgTexto);
+    });
+  }
 })();
 </script>
 <script>
@@ -474,6 +505,8 @@
 })();
 </script>
 <!-- cursor com rastro de pixels -->
+<!-- pausa as animações pesadas enquanto a página rola -->
+<script src="assets/desempenho.js"></script>
 <script src="assets/barra-rolagem.js"></script>
 <script src="assets/cursor-trail.js"></script>
 </body>
