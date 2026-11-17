@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>Vizão — maju. designer</title>
+<!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
+<link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/cursor-trail.css">
+<!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
+<link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- transição de pixels que se dissolvem (precisa ficar no head) -->
+<script src="assets/transicao-dissolve.js"></script>
+<style>
+  :root {
+    --roxo: #3F3166;
+    --azul: #84A9D9;
+    --azul-header: #B2C3D8;
+    --cinza: #D8D8D8;
+    --branco: #FFFFFF;
+    --seasons: "the-seasons", "The Seasons", serif;
+    --cambria: Cambria, Caladea, Georgia, serif;
+    --pixel: "Pixelify Sans", monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--cinza); }
+  body { -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
+  a { color: inherit; text-decoration: none; }
+
+  /* Figma: /work-vizao · Desktop 1490 × 7874 — conteúdo centralizado, fundos de borda a borda.
+     Posições = Figma (as da seção "works" somadas a 732, o topo dela) */
+  .frame { position: relative; width: 100%; height: 7874px; overflow: hidden; overflow: clip; background: var(--cinza); }
+  .page { position: absolute; top: 0; left: 50%; margin-left: -745px; width: 1490px; height: 7874px; }
+  .abs { position: absolute; }
+
+  /* ── topo: foto da revista que se dissolve no cinza ── */
+  .hero { left: -2px; top: 42px; width: 1492px; height: 649px; overflow: hidden; }
+  .hero img { position: absolute; left: 0; top: -10px; width: 1492px; height: 659px; object-fit: cover; display: block; }
+  .hero-fundo { left: 0; top: 430px; width: 1493px; height: 322px;
+    background: linear-gradient(180deg, rgba(198,198,198,0) 0%, var(--cinza) 100%); pointer-events: none; }
+  .titulo { left: 51px; top: 749px; font: 700 148px/130px var(--seasons); color: var(--roxo); white-space: nowrap; }
+
+  /* ── blocos com "cantos de pixel" (quadradinhos cinza de 12px nos cantos, como os cards da work) ── */
+  .bloco { position: absolute; overflow: hidden; }
+  .bloco > img, .bloco > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .bloco::before, .bloco::after, .bloco > .c1, .bloco > .c2 {
+    content: ""; position: absolute; width: 13px; height: 13px; margin: -1px; background: var(--cinza); z-index: 2; }
+  .bloco::before { left: 0; top: 0; }
+  .bloco::after  { right: 0; top: 0; }
+  .bloco > .c1   { left: 0; bottom: 0; }
+  .bloco > .c2   { right: 0; bottom: 0; }
+
+  /* ── texto de apresentação ── */
+  .apresentacao { left: 51px; top: 943px; width: 1390px; height: 252px; background: var(--azul-header); color: var(--roxo); }
+  .apresentacao .texto { position: absolute; left: 26px; top: 16px; width: 796px; font: 400 24px/26px var(--cambria); }
+  .apresentacao .texto b { font-weight: 700; }
+  .ficha { position: absolute; top: 24px; font: 400 20px/22px var(--cambria); }
+  .ficha strong { display: block; font: 600 20px/22px var(--pixel); }
+  .ficha.disciplina { left: 891px; width: 136px; }
+  .ficha.equipe     { left: 1064px; width: 172px; }
+  .ficha.ano        { left: 1259px; width: 63px; }
+
+  /* seta sobre a foto do livro aberto (image 28 do Figma) */
+  .seta { left: 1435.5px; top: 2702px; width: 32.5px; height: 35.4px; z-index: 3; pointer-events: none; }
+
+  /* ── citações ── */
+  .citacao { color: var(--cor); }
+  .citacao .aspas { position: absolute; width: 60px; height: 48px; background: var(--cor);
+    -webkit-mask: url(assets/vizao/aspas.png) center / contain no-repeat; mask: url(assets/vizao/aspas.png) center / contain no-repeat; }
+  .citacao .grifo { position: absolute; height: 34px; background: var(--grifo); }
+  .citacao p { position: absolute; font: 700 48px/50px var(--cambria); }
+  .citacao.laranja { --cor: #A12E05; --grifo: #EE9777; left: 51px; top: 3078px; width: 624px; height: 547px; background: rgba(255,142,102,.4); }
+  .citacao.verde   { --cor: #335E11; --grifo: #9DD66E; left: 822px; top: 5457px; width: 619px; height: 664px; background: rgba(189,235,151,.5); }
+
+  /* ── espaço reservado para a revista virtual ── */
+  .livro { left: 49px; top: 6645px; width: 1391px; height: 855px; background: #CAE2B8; }
+  .livro p { position: absolute; left: 325px; top: 372px; width: 859px; font: 400 32px/1 var(--cambria); color: var(--roxo); text-align: center; }
+
+  /* ── anterior / próximo ── */
+  .navega { left: 0; right: 0; top: 7549px; height: 142px; }
+  .navega::before { content: ""; position: absolute; top: 0; bottom: 0; left: -3000px; right: -3000px; background: var(--azul); }
+  .botao-pixel { position: absolute; display: flex; align-items: center; justify-content: center; height: 52px; background: var(--roxo);
+    color: var(--cinza); font: 500 32px/28px var(--pixel); letter-spacing: -0.32px; white-space: nowrap; --canto: var(--azul);
+    transition: transform .9s ease; }
+  .botao-pixel::before, .botao-pixel::after, .botao-pixel > .c1, .botao-pixel > .c2 {
+    content: ""; position: absolute; width: 8px; height: 8px; margin: -1px; background: var(--canto); }
+  .botao-pixel::before { left: 0; top: 0; }  .botao-pixel::after { right: 0; top: 0; }
+  .botao-pixel > .c1 { left: 0; bottom: 0; } .botao-pixel > .c2 { right: 0; bottom: 0; }
+  .botao-pixel:hover { transform: scale(1.04); transition: transform .4s ease; }
+  .anterior { left: 60px; top: 45px; width: 208px; }
+  .proximo  { left: 1230px; top: 45px; width: 200px; }
+
+  /* ── header (como a work: azul-claro com links roxos) ── */
+  .header { position: fixed; left: 0; right: 0; top: 0; height: 42px; z-index: 10; background: var(--azul-header); }
+  .header .estrela { left: 51px; top: 5px; width: 32px; height: 32px; }
+  .nav { font: 700 20px/1 var(--seasons); color: var(--roxo); white-space: nowrap; }
+  .nav.work    { right: 395px; top: 10px; }
+  .nav.about   { right: 228px; top: 10px; }
+  .nav.contact { right: 51px;  top: 9px; }
+  .header .nav { transform-origin: 50% 60%; transition: color .9s ease, transform .9s ease; }
+  .header .estrela { transition: transform .9s ease; }
+  .header .estrela:hover { transform: scale(1.08); transition: transform .4s ease; }
+  .header .nav:hover { color: #84A9D9; transform: scale(1.08); transition: color .4s ease, transform .4s ease; }
+
+  /* ── rodapé (igual às outras páginas) ── */
+  .rodape { left: 0; right: 0; top: 7691px; height: 183px; z-index: 2; }
+  .rodape::before { content: ""; position: absolute; top: 0; bottom: 0; left: -3000px; right: -3000px; background: var(--roxo); z-index: -1; }
+  .rodape .contato { left: 60px; top: 46px; width: 365px; color: var(--branco); }
+  .rodape .contato small { display: block; font: 400 16px/15px var(--cambria); }
+  .rodape .contato a { display: block; font: 700 28px/28px var(--cambria); white-space: nowrap; }
+  .rodape .estrela { left: 690px; top: 40px; width: 111px; height: 111px; }
+  .rodape .links { top: 38px; width: 147px; text-align: right; font: 400 20px/23px var(--cambria); color: var(--branco); }
+  .rodape .links a { display: block; height: 46px; }
+  .rodape .links.sociais { right: 264px; }
+  .rodape .links.paginas { right: 58px; }
+  .rodape .copy { left: 60px; bottom: 23px; font: 400 15px/1 var(--cambria); color: var(--cinza); white-space: nowrap; }
+
+  /* ── fade in (igual às outras páginas) ── */
+  .js .fade-in-element { opacity: 0; transform: translateY(20px);
+    transition: opacity 1.2s cubic-bezier(.22,1,.36,1), transform 1.2s cubic-bezier(.22,1,.36,1);
+    transition-delay: var(--atraso, 0s); }
+  .js .fade-in-element.visivel { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .js .fade-in-element { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+<script>
+  document.documentElement.classList.add('js');
+  window.__carregou = !window.__chegandoDissolve;
+  window.quandoCarregar = fn => { if (window.__carregou) fn(); else addEventListener('carregou', fn, { once: true }); };
+  addEventListener('transicao-fim', () => { window.__carregou = true; dispatchEvent(new Event('carregou')); });
+</script>
+</head>
+<body>
+
+<div class="frame"><main class="page">
+
+  <!-- topo -->
+  <div class="abs hero"><img src="assets/vizao/hero.jpg" alt="Revista Vizão aberta sobre um lençol, entre livros de Ailton Krenak"></div>
+  <div class="abs hero-fundo"></div>
+  <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Vizão</h1>
+
+  <!-- apresentação -->
+  <section class="bloco apresentacao fade-in-element">
+    <p class="texto">A Revista VIZÃO é criada diante de um desafio ao transformar o tema "Saúde" em um projeto editorial acadêmico. A partir disso, o projeto se debruça sobre a <b>ansiedade climática</b> como recorte temático, entendendo que sobreviver ao fim do mundo, resgata quem sempre soube viver nele. Fundamentada no conceito de "Futuro Ancestral" de Ailton Krenak, em que passado, presente e futuro caminham juntos, construímos uma publicação organizada como tutorial de sobrevivência, guia espiritual e resgate ancestral, rompendo fronteiras coloniais para dar protagonismo aos povos originários.</p>
+    <p class="ficha disciplina"><strong>Disciplina</strong>Projeto Editorial</p>
+    <p class="ficha equipe"><strong>Equipe</strong>Laura Alcantara, Luigi Cortopassi, Leandro Zampirolo, Thiago Augusto e Naian Menginelli</p>
+    <p class="ficha ano"><strong>Ano</strong>2025-1</p>
+    <span class="c1"></span><span class="c2"></span>
+  </section>
+
+  <!-- grade de imagens -->
+  <div class="bloco fade-in-element" style="left:51px; top:1259px; width:680px; height:552px"><img src="assets/vizao/mockup-verde.jpg" alt="Mockup da revista Vizão sobre fundo verde" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:741px; top:1259px; width:700px; height:552px"><img src="assets/vizao/capas.jpg" alt="Capas das edições da revista Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:51px; top:1821px; width:680px; height:547px"><img src="assets/vizao/mockup-amarelo.jpg" alt="Perfil e stories da Vizão no Instagram" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:741px; top:1821px; width:700px; height:547px"><img src="assets/vizao/mockup-marrom.jpg" alt="Páginas internas: Biotecnologia indígena" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:51px; top:2378px; width:1390px; height:690px"><img src="assets/vizao/livro-aberto.jpg" alt="Revista aberta na matéria sobre Ayahuasca" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <img class="abs seta" src="assets/vizao/seta.png" alt="">
+
+  <!-- citação laranja + ecobag + botton -->
+  <section class="bloco citacao laranja fade-in-element">
+    <span class="aspas" style="left:66px; top:91px"></span>
+    <span class="grifo" style="left:65px; top:183px; width:397px"></span>
+    <span class="grifo" style="left:65px; top:233px; width:383px"></span>
+    <p style="left:66px; top:175px; width:492px">reconectar jovens desesperançosos com a vida e à natureza através da verdade daqueles que sempre estiveram aqui.</p>
+    <span class="c1"></span><span class="c2"></span>
+  </section>
+  <div class="bloco fade-in-element" style="left:685px; top:3078px; width:756px; height:1109px"><img src="assets/vizao/ecobag.jpg" alt="Ecobag da Vizão sobre a grama" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:51px; top:3635px; width:624px; height:552px"><img src="assets/vizao/botton.jpg" alt="Bottons da Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+
+  <!-- vídeos (eram GIFs no Figma) e peças -->
+  <div class="bloco fade-in-element" style="left:51px; top:4197px; width:906px; height:363px"><video src="assets/vizao/chapeu.mp4" muted loop playsinline preload="metadata" aria-label="Animação: fogueira"></video><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:967px; top:4197px; width:474px; height:363px"><video src="assets/vizao/asteriscos.mp4" muted loop playsinline preload="metadata" aria-label="Animação: asteriscos"></video><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:51px; top:4570px; width:456px; height:504px"><img src="assets/vizao/adesivos.jpg" alt="Adesivos na placa" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:518px; top:4570px; width:923px; height:504px"><img src="assets/vizao/cartaz.jpg" alt="Cartaz da Vizão na rua" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:51px; top:5084px; width:1390px; height:363px"><video src="assets/vizao/braceletes.mp4" muted loop playsinline preload="metadata" aria-label="Animação: braceletes da Vila Vizão"></video><span class="c1"></span><span class="c2"></span></div>
+
+  <!-- mapa + citação verde -->
+  <div class="bloco fade-in-element" style="left:51px; top:5457px; width:761px; height:664px"><img src="assets/vizao/mapa.jpg" alt="Mapa e cartaz da Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <section class="bloco citacao verde fade-in-element">
+    <span class="aspas" style="left:53px; top:70px"></span>
+    <span class="grifo" style="left:53px; top:162px; width:230px"></span>
+    <span class="grifo" style="left:53px; top:362px; width:419px"></span>
+    <span class="grifo" style="left:53px; top:412px; width:449px"></span>
+    <span class="grifo" style="left:53px; top:462px; width:339px"></span>
+    <p style="left:53px; top:154px; width:514px">Vila Vizão, o encontro presencial da revista, nasce como um espaço de pertencimento que leva para além das páginas a reconexão com a natureza e com os saberes dos povos originários.</p>
+    <span class="c1"></span><span class="c2"></span>
+  </section>
+
+  <!-- ingresso, torre, palco -->
+  <div class="bloco fade-in-element" style="left:51px; top:6131px; width:456px; height:504px"><img src="assets/vizao/ingresso.jpg" alt="Ingresso roxo do festival Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:518px; top:6131px; width:456px; height:504px"><img src="assets/vizao/torre.jpg" alt="Torre roxa da Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:985px; top:6131px; width:456px; height:504px"><img src="assets/vizao/palco.jpg" alt="Palco da Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+
+  <!-- espaço reservado (no Figma: "nessa parte haverá uma parte para ver o livro de forma virtual") -->
+  <div class="bloco livro fade-in-element">
+    <p>nessa parte haverá uma parte para ver o livro de forma virtual, no qual as pessoas podem passar as páginas</p>
+    <span class="c1"></span><span class="c2"></span>
+  </div>
+
+  <!-- anterior / próximo (ordem da página work: TipoSP → Vizão → Gorducha) -->
+  <nav class="abs navega" aria-label="outros projetos">
+    <a class="botao-pixel anterior" href="work-tiposp.html">← anterior<span class="c1"></span><span class="c2"></span></a>
+    <a class="botao-pixel proximo" href="work-gorducha.html">próximo →<span class="c1"></span><span class="c2"></span></a>
+  </nav>
+
+  <!-- rodapé -->
+  <footer class="abs rodape" data-cursor-bg="dark">
+    <div class="abs contato">
+      <small>entre em contato </small>
+      <a href="mailto:mariafontesju@gmail.com">mariafontesju@gmail.com</a>
+    </div>
+    <img class="abs estrela" src="assets/estrela-rodape.webp" alt="">
+    <nav class="abs links sociais"><a href="https://www.linkedin.com/in/maria-j%C3%BAlia-fontes-leite/" target="_blank" rel="noopener">linkedIn</a><a href="https://www.behance.net/majufontes" target="_blank" rel="noopener">behance</a></nav>
+    <nav class="abs links paginas"><a href="work.html">work</a><a href="about.html">about</a><a href="mailto:mariafontesju@gmail.com">contact</a></nav>
+    <p class="abs copy">©2026 maju. designer</p>
+  </footer>
+
+</main>
+
+<!-- header -->
+<header class="abs header">
+  <a href="index.html" aria-label="início"><img class="abs estrela" src="assets/estrela-roxa.svg" alt=""></a>
+  <a class="abs nav work" href="work.html">work</a>
+  <a class="abs nav about" href="about.html">about</a>
+  <a class="abs nav contact" href="mailto:mariafontesju@gmail.com">contact</a>
+</header>
+</div>
+
+<script>
+/* fade in: cada .fade-in-element aparece (uma vez) quando entra na tela */
+(() => {
+  const MARGEM = 16;
+  let pendentes = [...document.querySelectorAll('.fade-in-element')];
+  let pedido = false;
+  function confere() {
+    pedido = false;
+    if (!window.__carregou) return;
+    pendentes = pendentes.filter(e => {
+      if (e.getBoundingClientRect().top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
+      return true;
+    });
+    if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
+  }
+  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(confere); } }
+  addEventListener('scroll', agenda, { passive: true });
+  addEventListener('resize', agenda);
+  quandoCarregar(agenda);
+})();
+</script>
+<script>
+/* vídeos (os GIFs do Figma): só tocam enquanto estão na tela — economiza processamento */
+(() => {
+  const videos = [...document.querySelectorAll('video')];
+  if (!('IntersectionObserver' in window)) { videos.forEach(v => v.play().catch(() => {})); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) e.target.play().catch(() => {}); else e.target.pause();
+  }), { rootMargin: '200px 0px' });
+  videos.forEach(v => io.observe(v));
+})();
+</script>
+<!-- pausa as animações pesadas enquanto a página rola -->
+<script src="assets/desempenho.js"></script>
+<script src="assets/barra-rolagem.js"></script>
+<!-- cursor com rastro de pixels -->
+<script src="assets/cursor-trail.js"></script>
+</body>
+</html>
