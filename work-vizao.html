@@ -32,8 +32,8 @@
 
   /* Figma: /work-vizao · Desktop 1490 × 7874 (aqui 7814: o carrossel ficou 60px mais baixo) — conteúdo centralizado, fundos de borda a borda.
      Posições = Figma (as da seção "works" somadas a 732, o topo dela) */
-  .frame { position: relative; width: 100%; height: 7814px; overflow: hidden; overflow: clip; background: var(--cinza); }
-  .page { position: absolute; top: 0; left: 50%; margin-left: -745px; width: 1490px; height: 7814px; }
+  .frame { position: relative; width: 100%; height: 7595px; overflow: hidden; overflow: clip; background: var(--cinza); }
+  .page { position: absolute; top: 0; left: 50%; margin-left: -745px; width: 1490px; height: 7595px; }
   .abs { position: absolute; }
 
   /* ── topo: foto da revista que se dissolve no cinza ── */
@@ -102,11 +102,38 @@
   .citacao.verde   { --cor: #335E11; --grifo: #9DD66E; left: 822px; top: 5397px; width: 619px; height: 664px; background: rgba(189,235,151,.5); }
 
   /* ── espaço reservado para a revista virtual ── */
-  .livro { left: 49px; top: 6585px; width: 1391px; height: 855px; background: #CAE2B8; }
-  .livro p { position: absolute; left: 325px; top: 372px; width: 859px; font: 400 32px/1 var(--cambria); color: var(--roxo); text-align: center; }
+  /* ── revista virtual (layout dela): páginas duplas no centro, setas verdes nas laterais, contador embaixo.
+     Bloco com 636px de altura (no Figma 855) para seguir as proporções do layout que ela mandou ── */
+  .livro { left: 49px; top: 6585px; width: 1391px; height: 636px; background: #CAE2B8; }
+  .revista { position: absolute; left: 321px; top: 49px; width: 749px; height: 505px; perspective: 2600px; }
+  .revista .lado { position: absolute; top: 0; width: 50%; height: 100%; background: #fff center / cover no-repeat; cursor: pointer; }
+  .revista .lado.esq { left: 0; box-shadow: inset -14px 0 18px -14px rgba(0,0,0,.25), 0 2px 10px rgba(51,94,17,.18); }
+  .revista .lado.dir { right: 0; box-shadow: inset 14px 0 18px -14px rgba(0,0,0,.25), 0 2px 10px rgba(51,94,17,.18); }
+  .revista .lado.vazio { visibility: hidden; }
+  /* folha que vira: frente e verso, girando em volta da lombada */
+  .revista .folha { position: absolute; top: 0; width: 50%; height: 100%; transform-style: preserve-3d; z-index: 3;
+    transition: transform .8s cubic-bezier(.45,.05,.3,1); pointer-events: none; }
+  .revista .folha.para-frente { left: 50%; transform-origin: left center; }
+  .revista .folha.para-tras  { left: 0;   transform-origin: right center; }
+  .revista .folha .face { position: absolute; inset: 0; background: #fff center / cover no-repeat; backface-visibility: hidden; }
+  .revista .folha .verso { transform: rotateY(180deg); }
+  .livro .seta-livro { position: absolute; top: 258px; width: 46px; height: 50px; padding: 0; border: 0; background: none; cursor: pointer;
+    transition: transform .35s ease, opacity .3s ease; }
+  .livro .seta-livro img { display: block; width: 100%; height: 100%; }
+  .livro .seta-livro:hover { transform: scale(1.15); }
+  .livro .seta-livro:disabled { opacity: .25; cursor: default; transform: none; }
+  .livro .seta-livro.ant { left: 26px; }
+  .livro .seta-livro.ant img { transform: scaleX(-1); }
+  .livro .seta-livro.prox { right: 26px; }
+  .livro .contador { position: absolute; left: 594px; top: 586px; width: 203px; height: 33px; display: flex; align-items: center; justify-content: center;
+    background: #9DD66E; color: #335E11; font: 600 20px/1 var(--pixel); white-space: nowrap; --canto: #CAE2B8; }
+  .livro .contador::before, .livro .contador::after, .livro .contador > .c1, .livro .contador > .c2 {
+    content: ""; position: absolute; width: 6px; height: 6px; background: var(--canto); }
+  .livro .contador::before { left: 0; top: 0; } .livro .contador::after { right: 0; top: 0; }
+  .livro .contador > .c1 { left: 0; bottom: 0; } .livro .contador > .c2 { right: 0; bottom: 0; }
 
   /* ── anterior / próximo ── */
-  .navega { left: 0; right: 0; top: 7489px; height: 142px; }
+  .navega { left: 0; right: 0; top: 7270px; height: 142px; }
   .navega::before { content: ""; position: absolute; top: 0; bottom: 0; left: -3000px; right: -3000px; background: var(--azul); }
   .botao-pixel { position: absolute; display: flex; align-items: center; justify-content: center; height: 52px; background: var(--roxo);
     color: var(--cinza); font: 500 32px/28px var(--pixel); letter-spacing: -0.32px; white-space: nowrap; --canto: var(--azul);
@@ -132,7 +159,7 @@
   .header .nav:hover { color: #84A9D9; transform: scale(1.08); transition: color .4s ease, transform .4s ease; }
 
   /* ── rodapé (igual às outras páginas) ── */
-  .rodape { left: 0; right: 0; top: 7631px; height: 183px; z-index: 2; }
+  .rodape { left: 0; right: 0; top: 7412px; height: 183px; z-index: 2; }
   .rodape::before { content: ""; position: absolute; top: 0; bottom: 0; left: -3000px; right: -3000px; background: var(--roxo); z-index: -1; }
   .rodape .contato { left: 60px; top: 46px; width: 365px; color: var(--branco); }
   .rodape .contato small { display: block; font: 400 16px/15px var(--cambria); }
@@ -238,9 +265,15 @@
   <div class="bloco fade-in-element" style="left:518px; top:6071px; width:456px; height:504px"><img src="assets/vizao/torre.jpg" alt="Torre roxa da Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
   <div class="bloco fade-in-element" style="left:985px; top:6071px; width:456px; height:504px"><img src="assets/vizao/palco.jpg" alt="Palco da Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
 
-  <!-- espaço reservado (no Figma: "nessa parte haverá uma parte para ver o livro de forma virtual") -->
-  <div class="bloco livro fade-in-element">
-    <p>nessa parte haverá uma parte para ver o livro de forma virtual, no qual as pessoas podem passar as páginas</p>
+  <!-- revista virtual: as 116 páginas do PDF (assets/vizao/revista/pag-NNN.jpg), folheadas como uma revista -->
+  <div class="bloco livro fade-in-element" id="revista-virtual" aria-roledescription="revista" aria-label="revista Vizão, edição 01, para folhear">
+    <div class="revista">
+      <div class="lado esq" role="img"></div>
+      <div class="lado dir" role="img"></div>
+    </div>
+    <button class="seta-livro ant" type="button" aria-label="páginas anteriores"><img src="assets/vizao/seta-verde.png" alt=""></button>
+    <button class="seta-livro prox" type="button" aria-label="próximas páginas"><img src="assets/vizao/seta-verde.png" alt=""></button>
+    <p class="contador" aria-live="polite"><span class="txt">pág 1 – 116</span><span class="c1"></span><span class="c2"></span></p>
     <span class="c1"></span><span class="c2"></span>
   </div>
 
@@ -339,7 +372,74 @@
   });
 })();
 </script>
-<!-- pausa as animações pesadas enquanto a página rola --><script src="assets/desempenho.js"></script>
+<script>
+/* revista virtual: abre na capa (sozinha, à direita), depois páginas duplas 2–3, 4–5… até a 116 (sozinha, à esquerda).
+   As setas (na tela e no teclado ← →) ou um clique na página da direita/esquerda viram a folha. */
+(() => {
+  const raiz = document.getElementById('revista-virtual');
+  if (!raiz) return;
+  const TOTAL = 116, ULTIMA = Math.floor(TOTAL / 2);   // 59 aberturas: 0 (capa) … 58
+  const url = n => 'assets/vizao/revista/pag-' + String(n).padStart(3, '0') + '.jpg';
+  const pags = s => [s === 0 ? null : 2 * s, 2 * s + 1 <= TOTAL ? 2 * s + 1 : null];
+  const rev = raiz.querySelector('.revista'), esq = rev.querySelector('.esq'), dir = rev.querySelector('.dir');
+  const ant = raiz.querySelector('.seta-livro.ant'), prox = raiz.querySelector('.seta-livro.prox'), txt = raiz.querySelector('.contador .txt');
+  const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let s = 0, ocupado = false, iniciado = false;
+  const poe = (el, n) => { el.classList.toggle('vazio', !n); el.style.backgroundImage = n ? 'url(' + url(n) + ')' : ''; el.setAttribute('aria-label', n ? 'página ' + n : ''); };
+  const preCarrega = c => [c - 1, c + 1, c + 2].forEach(x => { if (x >= 0 && x <= ULTIMA) pags(x).forEach(n => { if (n) new Image().src = url(n); }); });
+  function mostra() {
+    const [l, r] = pags(s);
+    poe(esq, l); poe(dir, r);
+    txt.textContent = 'pág ' + (l && r ? l + '/' + r : (l || r)) + ' – ' + TOTAL;
+    ant.disabled = s === 0; prox.disabled = s === ULTIMA;
+    preCarrega(s);
+  }
+  function vira(passo) {
+    const novo = s + passo;
+    if (ocupado || novo < 0 || novo > ULTIMA) return;
+    if (!iniciado) { iniciado = true; mostra(); }
+    const [l, r] = pags(s), [nl, nr] = pags(novo);
+    if (calmo) { s = novo; mostra(); return; }
+    ocupado = true;
+    const folha = document.createElement('div');
+    folha.className = 'folha ' + (passo > 0 ? 'para-frente' : 'para-tras');
+    folha.innerHTML = '<div class="face"></div><div class="face verso"></div>';
+    const [frente, verso] = folha.children;
+    frente.style.backgroundImage = 'url(' + url(passo > 0 ? r : l) + ')';
+    verso.style.backgroundImage = 'url(' + url(passo > 0 ? nl : nr) + ')';
+    // embaixo da folha já aparece a página que ela vai revelar
+    if (passo > 0) poe(dir, nr); else poe(esq, nl);
+    rev.appendChild(folha);
+    requestAnimationFrame(() => requestAnimationFrame(() => { folha.style.transform = 'rotateY(' + (passo > 0 ? -180 : 180) + 'deg)'; }));
+    const fim = () => { if (!ocupado) return; s = novo; mostra(); folha.remove(); ocupado = false; };
+    folha.addEventListener('transitionend', fim, { once: true });
+    setTimeout(fim, 1200);   // segurança
+  }
+  ant.addEventListener('click', () => vira(-1));
+  prox.addEventListener('click', () => vira(1));
+  esq.addEventListener('click', () => vira(-1));
+  dir.addEventListener('click', () => vira(1));
+  addEventListener('keydown', e => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    const alvo = e.target;
+    if (alvo && (alvo.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(alvo.tagName))) return;
+    const b = raiz.getBoundingClientRect();
+    if (b.bottom < 42 || b.top > innerHeight) return;
+    e.preventDefault();
+    vira(e.key === 'ArrowRight' ? 1 : -1);
+  });
+  // as páginas só começam a carregar quando a revista está chegando na tela
+  const inicia = () => { if (!iniciado) { iniciado = true; mostra(); } };
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) { inicia(); io.disconnect(); } }, { rootMargin: '600px 0px' });
+    io.observe(raiz);
+  } else inicia();
+  ant.disabled = true;
+})();
+</script>
+<!-- pausa as animações pesadas enquanto a página rola -->
+<script src="assets/desempenho.js"></script>
 <script src="assets/barra-rolagem.js"></script>
 <!-- cursor com rastro de pixels -->
 <script src="assets/cursor-trail.js"></script>
