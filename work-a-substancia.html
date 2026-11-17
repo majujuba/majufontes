@@ -40,7 +40,8 @@
   .hero { left: calc(745px - 50vw); width: max(100vw, 1490px); top: 41px; height: 666px; overflow: hidden; }
   .hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
   .hero-fundo { left: -3000px; right: -3000px; top: 440px; height: 322px;
-    background: linear-gradient(180deg, rgba(63,49,102,0) 0%, var(--roxo) 100%); pointer-events: none; }
+    /* chega ao roxo total em y 707, onde os olhos terminam (83% da altura) — sem a linha de corte do vídeo */
+    background: linear-gradient(180deg, rgba(63,49,102,0) 0%, var(--roxo) 83%); pointer-events: none; }
   .titulo { left: 51px; top: 737px; font: 700 148px/130px var(--seasons); color: var(--cinza); white-space: nowrap; }
 
   /* ── blocos com "cantos de pixel" (quadradinhos de 12px da cor do fundo — aqui roxo) ── */
