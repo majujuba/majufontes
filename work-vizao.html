@@ -43,7 +43,8 @@
   .hero img { position: absolute; left: 0; top: -10px; width: 100%; height: max(659px, calc(100vw * 659 / 1492));
     object-fit: cover; object-position: 50% 0; display: block; }
   .hero-fundo { left: -3000px; right: -3000px; top: 430px; height: 322px;
-    background: linear-gradient(180deg, rgba(198,198,198,0) 0%, var(--cinza) 100%); pointer-events: none; }
+    /* chega ao cinza total em y 691, onde a foto termina (81% da altura) — sem a linha de corte da foto */
+    background: linear-gradient(180deg, rgba(198,198,198,0) 0%, var(--cinza) 81%); pointer-events: none; }
   .titulo { left: 51px; top: 749px; font: 700 148px/130px var(--seasons); color: var(--roxo); white-space: nowrap; }
 
   /* ── blocos com "cantos de pixel" (quadradinhos cinza de 12px nos cantos, como os cards da work) ── */
