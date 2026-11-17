@@ -30,10 +30,10 @@
   body { -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
   a { color: inherit; text-decoration: none; }
 
-  /* Figma: /work-vizao · Desktop 1490 × 7874 — conteúdo centralizado, fundos de borda a borda.
+  /* Figma: /work-vizao · Desktop 1490 × 7874 (aqui 7784: o carrossel ficou 90px mais baixo) — conteúdo centralizado, fundos de borda a borda.
      Posições = Figma (as da seção "works" somadas a 732, o topo dela) */
-  .frame { position: relative; width: 100%; height: 7874px; overflow: hidden; overflow: clip; background: var(--cinza); }
-  .page { position: absolute; top: 0; left: 50%; margin-left: -745px; width: 1490px; height: 7874px; }
+  .frame { position: relative; width: 100%; height: 7784px; overflow: hidden; overflow: clip; background: var(--cinza); }
+  .page { position: absolute; top: 0; left: 50%; margin-left: -745px; width: 1490px; height: 7784px; }
   .abs { position: absolute; }
 
   /* ── topo: foto da revista que se dissolve no cinza ── */
@@ -72,10 +72,15 @@
      e passa para a próxima imagem (volta à primeira depois da última) */
   .carrossel > img { opacity: 0; transition: opacity .6s ease; }
   .carrossel > img.ativa { opacity: 1; }
-  .carrossel .seta { position: absolute; left: 1352px; top: 315px; width: 32.5px; height: 35.4px; z-index: 3;
-    padding: 0; border: 0; background: none; cursor: pointer; transition: transform .4s ease; }
+  /* 600px de altura (no Figma 690): assim a foto inteira cabe na tela abaixo da header, a pedido dela */
+  .carrossel .seta { position: absolute; left: 1352px; top: 282px; width: 32.5px; height: 35.4px; z-index: 3;
+    padding: 0; border: 0; background: none; cursor: pointer; transition: transform .35s ease, opacity .4s ease; }
   .carrossel .seta img { display: block; width: 100%; height: 100%; }
-  .carrossel .seta:hover { transform: scale(1.15); }
+  .carrossel .seta:hover { transform: scale(1.3); }
+  /* seta da esquerda: espelhada, só aparece depois que a primeira foto foi passada */
+  .carrossel .seta.voltar { left: 5.5px; opacity: 0; pointer-events: none; }
+  .carrossel .seta.voltar img { transform: scaleX(-1); }
+  .carrossel .seta.voltar.mostra { opacity: 1; pointer-events: auto; }
   .carrossel .seta:active { transform: scale(.95); transition-duration: .1s; }
   .carrossel .seta:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
 
@@ -84,15 +89,15 @@
   .citacao .aspas { position: absolute; width: 60px; height: 48px; display: block; }   /* imagem comum (a máscara CSS não funciona abrindo o arquivo direto no computador) */
   .citacao .grifo { position: absolute; height: 34px; background: var(--grifo); }
   .citacao p { position: absolute; font: 700 48px/50px var(--cambria); }
-  .citacao.laranja { --cor: #A12E05; --grifo: #EE9777; left: 51px; top: 3078px; width: 624px; height: 547px; background: rgba(255,142,102,.4); }
-  .citacao.verde   { --cor: #335E11; --grifo: #9DD66E; left: 822px; top: 5457px; width: 619px; height: 664px; background: rgba(189,235,151,.5); }
+  .citacao.laranja { --cor: #A12E05; --grifo: #EE9777; left: 51px; top: 2988px; width: 624px; height: 547px; background: rgba(255,142,102,.4); }
+  .citacao.verde   { --cor: #335E11; --grifo: #9DD66E; left: 822px; top: 5367px; width: 619px; height: 664px; background: rgba(189,235,151,.5); }
 
   /* ── espaço reservado para a revista virtual ── */
-  .livro { left: 49px; top: 6645px; width: 1391px; height: 855px; background: #CAE2B8; }
+  .livro { left: 49px; top: 6555px; width: 1391px; height: 855px; background: #CAE2B8; }
   .livro p { position: absolute; left: 325px; top: 372px; width: 859px; font: 400 32px/1 var(--cambria); color: var(--roxo); text-align: center; }
 
   /* ── anterior / próximo ── */
-  .navega { left: 0; right: 0; top: 7549px; height: 142px; }
+  .navega { left: 0; right: 0; top: 7459px; height: 142px; }
   .navega::before { content: ""; position: absolute; top: 0; bottom: 0; left: -3000px; right: -3000px; background: var(--azul); }
   .botao-pixel { position: absolute; display: flex; align-items: center; justify-content: center; height: 52px; background: var(--roxo);
     color: var(--cinza); font: 500 32px/28px var(--pixel); letter-spacing: -0.32px; white-space: nowrap; --canto: var(--azul);
@@ -118,7 +123,7 @@
   .header .nav:hover { color: #84A9D9; transform: scale(1.08); transition: color .4s ease, transform .4s ease; }
 
   /* ── rodapé (igual às outras páginas) ── */
-  .rodape { left: 0; right: 0; top: 7691px; height: 183px; z-index: 2; }
+  .rodape { left: 0; right: 0; top: 7601px; height: 183px; z-index: 2; }
   .rodape::before { content: ""; position: absolute; top: 0; bottom: 0; left: -3000px; right: -3000px; background: var(--roxo); z-index: -1; }
   .rodape .contato { left: 60px; top: 46px; width: 365px; color: var(--branco); }
   .rodape .contato small { display: block; font: 400 16px/15px var(--cambria); }
@@ -170,7 +175,7 @@
   <div class="bloco fade-in-element" style="left:51px; top:1821px; width:680px; height:547px"><img src="assets/vizao/mockup-amarelo.jpg" alt="Perfil e stories da Vizão no Instagram" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
   <div class="bloco fade-in-element" style="left:741px; top:1821px; width:700px; height:547px"><img src="assets/vizao/mockup-marrom.jpg" alt="Páginas internas: Biotecnologia indígena" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
   <!-- carrossel: a foto do Figma (livro aberto) e depois as 12 fotos da revista, na ordem que ela mandou -->
-  <div class="bloco carrossel fade-in-element" style="left:51px; top:2378px; width:1390px; height:690px" aria-roledescription="carrossel" aria-label="fotos da revista Vizão">
+  <div class="bloco carrossel fade-in-element" style="left:51px; top:2378px; width:1390px; height:600px" aria-roledescription="carrossel" aria-label="fotos da revista Vizão">
     <img class="ativa" src="assets/vizao/livro-aberto.jpg" alt="Revista aberta na matéria sobre Ayahuasca" loading="lazy">
     <img src="assets/vizao/carrossel-01.webp" alt="Revista Vizão — foto 1 de 12" loading="lazy">
     <img src="assets/vizao/carrossel-02.webp" alt="Revista Vizão — foto 2 de 12" loading="lazy">
@@ -184,7 +189,8 @@
     <img src="assets/vizao/carrossel-10.webp" alt="Revista Vizão — foto 10 de 12" loading="lazy">
     <img src="assets/vizao/carrossel-11.webp" alt="Revista Vizão — foto 11 de 12" loading="lazy">
     <img src="assets/vizao/carrossel-12.webp" alt="Revista Vizão — foto 12 de 12" loading="lazy">
-    <button class="seta" type="button" aria-label="próxima foto"><img src="assets/vizao/seta.png" alt=""></button>
+    <button class="seta voltar" type="button" aria-label="foto anterior" tabindex="-1"><img src="assets/vizao/seta.png" alt=""></button>
+    <button class="seta avancar" type="button" aria-label="próxima foto"><img src="assets/vizao/seta.png" alt=""></button>
     <span class="c1"></span><span class="c2"></span>
   </div>
 
@@ -196,18 +202,18 @@
     <p style="left:66px; top:175px; width:492px">reconectar jovens desesperançosos com a vida e à natureza através da verdade daqueles que sempre estiveram aqui.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
-  <div class="bloco fade-in-element" style="left:685px; top:3078px; width:756px; height:1109px"><img src="assets/vizao/ecobag.jpg" alt="Ecobag da Vizão sobre a grama" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
-  <div class="bloco fade-in-element" style="left:51px; top:3635px; width:624px; height:552px"><img src="assets/vizao/botton.jpg" alt="Bottons da Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:685px; top:2988px; width:756px; height:1109px"><img src="assets/vizao/ecobag.jpg" alt="Ecobag da Vizão sobre a grama" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:51px; top:3545px; width:624px; height:552px"><img src="assets/vizao/botton.jpg" alt="Bottons da Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
 
   <!-- vídeos (eram GIFs no Figma) e peças -->
-  <div class="bloco fade-in-element" style="left:51px; top:4197px; width:906px; height:363px"><video src="assets/vizao/chapeu.mp4" muted loop playsinline preload="metadata" aria-label="Animação: fogueira" style="inset:auto; left:-68.6px; top:-114.1px; width:1054px; height:593px; object-fit:fill"></video><span class="c1"></span><span class="c2"></span></div>
-  <div class="bloco fade-in-element" style="left:967px; top:4197px; width:474px; height:363px"><video src="assets/vizao/asteriscos.mp4" muted loop playsinline preload="metadata" aria-label="Animação: asteriscos"></video><span class="c1"></span><span class="c2"></span></div>
-  <div class="bloco fade-in-element" style="left:51px; top:4570px; width:456px; height:504px"><img src="assets/vizao/adesivos.jpg" alt="Adesivos na placa" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
-  <div class="bloco fade-in-element" style="left:518px; top:4570px; width:923px; height:504px"><img src="assets/vizao/cartaz.jpg" alt="Cartaz da Vizão na rua" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
-  <div class="bloco fade-in-element" style="left:51px; top:5084px; width:1390px; height:363px; background:#E6E6E6"><video src="assets/vizao/braceletes.mp4" muted loop playsinline preload="metadata" aria-label="Animação: braceletes da Vila Vizão" style="inset:auto; left:400px; top:-45.5px; width:588px; height:441px; object-fit:fill"></video><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:51px; top:4107px; width:906px; height:363px"><video src="assets/vizao/chapeu.mp4" muted loop playsinline preload="metadata" aria-label="Animação: fogueira" style="inset:auto; left:-68.6px; top:-114.1px; width:1054px; height:593px; object-fit:fill"></video><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:967px; top:4107px; width:474px; height:363px"><video src="assets/vizao/asteriscos.mp4" muted loop playsinline preload="metadata" aria-label="Animação: asteriscos"></video><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:51px; top:4480px; width:456px; height:504px"><img src="assets/vizao/adesivos.jpg" alt="Adesivos na placa" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:518px; top:4480px; width:923px; height:504px"><img src="assets/vizao/cartaz.jpg" alt="Cartaz da Vizão na rua" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:51px; top:4994px; width:1390px; height:363px; background:#E6E6E6"><video src="assets/vizao/braceletes.mp4" muted loop playsinline preload="metadata" aria-label="Animação: braceletes da Vila Vizão" style="inset:auto; left:400px; top:-45.5px; width:588px; height:441px; object-fit:fill"></video><span class="c1"></span><span class="c2"></span></div>
 
   <!-- mapa + citação verde -->
-  <div class="bloco fade-in-element" style="left:51px; top:5457px; width:761px; height:664px"><img src="assets/vizao/mapa.jpg" alt="Mapa e cartaz da Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:51px; top:5367px; width:761px; height:664px"><img src="assets/vizao/mapa.jpg" alt="Mapa e cartaz da Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
   <section class="bloco citacao verde fade-in-element">
     <img class="aspas" src="assets/vizao/aspas-verde.png" alt="" style="left:53px; top:70px">
     <span class="grifo" style="left:53px; top:162px; width:230px"></span>
@@ -219,9 +225,9 @@
   </section>
 
   <!-- ingresso, torre, palco -->
-  <div class="bloco fade-in-element" style="left:51px; top:6131px; width:456px; height:504px"><img src="assets/vizao/ingresso.jpg" alt="Ingresso roxo do festival Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
-  <div class="bloco fade-in-element" style="left:518px; top:6131px; width:456px; height:504px"><img src="assets/vizao/torre.jpg" alt="Torre roxa da Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
-  <div class="bloco fade-in-element" style="left:985px; top:6131px; width:456px; height:504px"><img src="assets/vizao/palco.jpg" alt="Palco da Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:51px; top:6041px; width:456px; height:504px"><img src="assets/vizao/ingresso.jpg" alt="Ingresso roxo do festival Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:518px; top:6041px; width:456px; height:504px"><img src="assets/vizao/torre.jpg" alt="Torre roxa da Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:985px; top:6041px; width:456px; height:504px"><img src="assets/vizao/palco.jpg" alt="Palco da Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
 
   <!-- espaço reservado (no Figma: "nessa parte haverá uma parte para ver o livro de forma virtual") -->
   <div class="bloco livro fade-in-element">
@@ -295,14 +301,20 @@
 (() => {
   document.querySelectorAll('.carrossel').forEach(c => {
     const fotos = [...c.querySelectorAll(':scope > img')];
+    const voltar = c.querySelector('.seta.voltar');
     let i = 0;
-    c.querySelector('.seta').addEventListener('click', () => {
+    const vai = n => {
       fotos[i].classList.remove('ativa');
-      i = (i + 1) % fotos.length;
+      i = (n + fotos.length) % fotos.length;
       fotos[i].loading = 'eager';
       fotos[i].classList.add('ativa');
       fotos[(i + 1) % fotos.length].loading = 'eager';   // já vai carregando a seguinte
-    });
+      // a seta da esquerda aparece depois da primeira foto (e some de novo ao voltar a ela)
+      voltar.classList.toggle('mostra', i > 0);
+      voltar.tabIndex = i > 0 ? 0 : -1;
+    };
+    c.querySelector('.seta.avancar').addEventListener('click', () => vai(i + 1));
+    voltar.addEventListener('click', () => vai(i - 1));
   });
 })();
 </script>
