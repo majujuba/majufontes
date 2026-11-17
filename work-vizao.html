@@ -315,6 +315,18 @@
     };
     c.querySelector('.seta.avancar').addEventListener('click', () => vai(i + 1));
     voltar.addEventListener('click', () => vai(i - 1));
+    // setas do teclado (← →) passam as fotos quando o carrossel está visível na tela
+    addEventListener('keydown', e => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      const alvo = e.target;
+      if (alvo && (alvo.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(alvo.tagName))) return;
+      const r = c.getBoundingClientRect();
+      if (r.bottom < 42 || r.top > innerHeight) return;   // carrossel fora da tela (42 = header)
+      e.preventDefault();
+      if (e.key === 'ArrowRight') vai(i + 1);
+      else if (i > 0) vai(i - 1);                         // na primeira foto, ← não faz nada (como a seta, que ainda não aparece)
+    });
   });
 })();
 </script>
