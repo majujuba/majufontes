@@ -145,6 +145,8 @@
     }
   }
   function trail(x, y) {
+    // página sem rastro (a seta continua): <html data-cursor-rastro="nao"> — usado na página do Vizão
+    if (root.dataset.cursorRastro === 'nao') return;
     // desempenho: lê a cor do fundo uma vez por movimento (antes era uma vez por ponto do trajeto)
     const light = isLight(x, y);
     if (last) {
