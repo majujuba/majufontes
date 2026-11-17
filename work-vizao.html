@@ -71,8 +71,7 @@
 
   /* ── citações ── */
   .citacao { color: var(--cor); }
-  .citacao .aspas { position: absolute; width: 60px; height: 48px; background: var(--cor);
-    -webkit-mask: url(assets/vizao/aspas.png) center / contain no-repeat; mask: url(assets/vizao/aspas.png) center / contain no-repeat; }
+  .citacao .aspas { position: absolute; width: 60px; height: 48px; display: block; }   /* imagem comum (a máscara CSS não funciona abrindo o arquivo direto no computador) */
   .citacao .grifo { position: absolute; height: 34px; background: var(--grifo); }
   .citacao p { position: absolute; font: 700 48px/50px var(--cambria); }
   .citacao.laranja { --cor: #A12E05; --grifo: #EE9777; left: 51px; top: 3078px; width: 624px; height: 547px; background: rgba(255,142,102,.4); }
@@ -165,7 +164,7 @@
 
   <!-- citação laranja + ecobag + botton -->
   <section class="bloco citacao laranja fade-in-element">
-    <span class="aspas" style="left:66px; top:91px"></span>
+    <img class="aspas" src="assets/vizao/aspas-laranja.png" alt="" style="left:66px; top:91px">
     <span class="grifo" style="left:65px; top:183px; width:397px"></span>
     <span class="grifo" style="left:65px; top:233px; width:383px"></span>
     <p style="left:66px; top:175px; width:492px">reconectar jovens desesperançosos com a vida e à natureza através da verdade daqueles que sempre estiveram aqui.</p>
@@ -184,7 +183,7 @@
   <!-- mapa + citação verde -->
   <div class="bloco fade-in-element" style="left:51px; top:5457px; width:761px; height:664px"><img src="assets/vizao/mapa.jpg" alt="Mapa e cartaz da Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
   <section class="bloco citacao verde fade-in-element">
-    <span class="aspas" style="left:53px; top:70px"></span>
+    <img class="aspas" src="assets/vizao/aspas-verde.png" alt="" style="left:53px; top:70px">
     <span class="grifo" style="left:53px; top:162px; width:230px"></span>
     <span class="grifo" style="left:53px; top:362px; width:419px"></span>
     <span class="grifo" style="left:53px; top:412px; width:449px"></span>
