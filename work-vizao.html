@@ -70,11 +70,8 @@
   /* seta sobre a foto do livro aberto (image 28 do Figma) */
   /* carrossel da foto larga: a seta (image 28 do Figma) fica por cima da foto, perto da borda direita,
      e passa para a próxima imagem (volta à primeira depois da última) */
-  /* as fotos aparecem inteiras (sem recorte), centralizadas; atrás delas, a mesma foto desfocada preenche as laterais */
-  .carrossel > img { opacity: 0; transition: opacity .6s ease; object-fit: contain; z-index: 1; }
+  .carrossel > img { opacity: 0; transition: opacity .6s ease; }
   .carrossel > img.ativa { opacity: 1; }
-  .carrossel .desfoque { position: absolute; inset: -40px; background: center / cover no-repeat;
-    filter: blur(28px) saturate(1.1); opacity: .55; transition: background-image .6s ease; z-index: 0; }
   /* 630px de altura (no Figma 690): assim a foto inteira cabe na tela abaixo da header, a pedido dela (600 ficou pequeno) */
   .carrossel .seta { position: absolute; left: 1352px; top: 297px; width: 32.5px; height: 35.4px; z-index: 3;
     padding: 0; border: 0; background: none; cursor: pointer; transition: transform .35s ease, opacity .4s ease; }
@@ -179,7 +176,6 @@
   <div class="bloco fade-in-element" style="left:741px; top:1821px; width:700px; height:547px"><img src="assets/vizao/mockup-marrom.jpg" alt="Páginas internas: Biotecnologia indígena" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
   <!-- carrossel: a foto do Figma (livro aberto) e depois as 12 fotos da revista, na ordem que ela mandou -->
   <div class="bloco carrossel fade-in-element" style="left:51px; top:2378px; width:1390px; height:630px" aria-roledescription="carrossel" aria-label="fotos da revista Vizão">
-    <div class="desfoque" style="background-image:url(assets/vizao/livro-aberto.jpg)" aria-hidden="true"></div>
     <img class="ativa" src="assets/vizao/livro-aberto.jpg" alt="Revista aberta na matéria sobre Ayahuasca" loading="lazy">
     <img src="assets/vizao/carrossel-01.webp" alt="Revista Vizão — foto 1 de 12" loading="lazy">
     <img src="assets/vizao/carrossel-02.webp" alt="Revista Vizão — foto 2 de 12" loading="lazy">
@@ -305,14 +301,13 @@
 (() => {
   document.querySelectorAll('.carrossel').forEach(c => {
     const fotos = [...c.querySelectorAll(':scope > img')];
-    const voltar = c.querySelector('.seta.voltar'), fundo = c.querySelector('.desfoque');
+    const voltar = c.querySelector('.seta.voltar');
     let i = 0;
     const vai = n => {
       fotos[i].classList.remove('ativa');
       i = (n + fotos.length) % fotos.length;
       fotos[i].loading = 'eager';
       fotos[i].classList.add('ativa');
-      fundo.style.backgroundImage = 'url(' + fotos[i].getAttribute('src') + ')';
       fotos[(i + 1) % fotos.length].loading = 'eager';   // já vai carregando a seguinte
       // a seta da esquerda aparece depois da primeira foto (e some de novo ao voltar a ela)
       voltar.classList.toggle('mostra', i > 0);
