@@ -63,9 +63,9 @@
   .ficha.disciplina { left: 1064px; width: 124px; }
   .ficha.ano        { left: 1259px; width: 63px; }
 
-  /* ── espaço do vídeo (ainda sem o arquivo) ── */
-  .video-vaga { left: 51px; top: 1182px; width: 1390px; height: 717px; background: var(--cinza);
-    display: flex; align-items: center; justify-content: center; font: 400 24px/1 var(--cambria); color: var(--roxo); }
+  /* ── vídeo da abertura (2100×1080, mesma proporção do bloco do Figma) ── */
+  .video-vaga { left: 51px; top: 1182px; width: 1390px; height: 717px; background: #000; }
+  .video-vaga > video { object-fit: contain; }
 
   /* ── citação rosa ── */
   .citacao { color: var(--cor); }
@@ -153,8 +153,8 @@
     <span class="c1"></span><span class="c2"></span>
   </section>
 
-  <!-- vídeo da abertura (espaço reservado, como no Figma) -->
-  <div class="bloco video-vaga fade-in-element">vídeo<span class="c1"></span><span class="c2"></span></div>
+  <!-- vídeo da abertura (com som: toca quando a pessoa aperta o play) -->
+  <div class="bloco video-vaga fade-in-element"><video class="abertura" src="assets/substancia/abertura.mp4" poster="assets/substancia/abertura.jpg" controls playsinline preload="metadata" aria-label="Abertura audiovisual de A Substância"></video><span class="c1"></span><span class="c2"></span></div>
 
   <!-- GIFs (aqui vídeos em loop) + citação rosa -->
   <div class="bloco fade-in-element" style="left:51px; top:1909px; width:823px; height:424px"><video src="assets/substancia/seringa.mp4" poster="assets/substancia/seringa.jpg" muted loop playsinline preload="metadata" aria-label="Animação: seringa verde"></video><span class="c1"></span><span class="c2"></span></div>
@@ -220,7 +220,7 @@
 <script>
 /* vídeos (os GIFs do Figma, e os olhos do topo): só tocam enquanto estão na tela — economiza processamento */
 (() => {
-  const videos = [...document.querySelectorAll('video')];
+  const videos = [...document.querySelectorAll('video:not(.abertura)')];   // a abertura (com som) só toca no play
   if (!('IntersectionObserver' in window)) { videos.forEach(v => v.play().catch(() => {})); return; }
   const io = new IntersectionObserver(es => es.forEach(e => {
     if (e.isIntersecting) e.target.play().catch(() => {}); else e.target.pause();
