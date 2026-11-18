@@ -232,25 +232,27 @@
 })();
 </script>
 <script>
-/* quadro amarelo: cada clique carimba um desenho do cartaz (13 cajus e 6 folhas), girado e com tamanho um pouco diferente.
+/* quadro amarelo: cada clique carimba um desenho do cartaz (11 cajus e 3 folhas), girado e com tamanho um pouco diferente.
    Os cajus saem mais vezes que as folhas. "limpar" apaga tudo. */
 (() => {
   const q = document.querySelector('.quadro');
   if (!q) return;
-  const CAJUS = 13, FOLHAS = 6;
+  // só os carimbos inteiros: os que encostavam na borda do PDF (9, 12, 16, 18 e 19) saíam cortados em linha reta
+  const CAJUS = [1,2,3,4,5,6,7,8,10,11,13], FOLHAS = [14,15,17];
+  const sorteia = l => l[Math.floor(Math.random() * l.length)];
   const tam = {1:[206,257],2:[186,276],3:[175,284],4:[219,305],5:[228,368],6:[228,362],7:[225,446],8:[178,290],9:[213,165],10:[402,452],11:[325,523],12:[414,794],13:[435,448],
                14:[78,216],15:[96,281],16:[56,183],17:[133,153],18:[200,146],19:[204,125]};
   const url = n => 'assets/granado/carimbos/' + String(n).padStart(2, '0') + '.webp';
   // já baixa os desenhos quando o quadro está chegando, para o primeiro clique não demorar
   let baixou = false;
-  const baixa = () => { if (baixou) return; baixou = true; for (let n = 1; n <= CAJUS + FOLHAS; n++) new Image().src = url(n); };
+  const baixa = () => { if (baixou) return; baixou = true; CAJUS.concat(FOLHAS).forEach(n => { new Image().src = url(n); }); };
   if ('IntersectionObserver' in window) new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { baixa(); o.disconnect(); } }, { rootMargin: '100% 0px' }).observe(q);
   else baixa();
   let camada = 1;
   q.addEventListener('pointerdown', e => {
     if (e.button !== 0 || e.target.closest('.limpar')) return;
     const r = q.getBoundingClientRect();
-    const n = Math.random() < .72 ? 1 + Math.floor(Math.random() * CAJUS) : CAJUS + 1 + Math.floor(Math.random() * FOLHAS);
+    const n = Math.random() < .78 ? sorteia(CAJUS) : sorteia(FOLHAS);
     const esc = .5 + Math.random() * .2;                         // os desenhos estão em 2x
     const img = new Image();
     img.className = 'carimbo'; img.alt = ''; img.src = url(n); img.decoding = 'async';
