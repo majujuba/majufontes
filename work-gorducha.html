@@ -87,11 +87,11 @@
   /* ── caixa para escrever com a tipografia Gorducha e as cores da identidade ── */
   /* cada cor da barra é um par da identidade: o fundo fica no tom pastel e a letra no tom escuro */
   .escrever { left: 51px; top: 6429px; width: 1388px; height: 448px; --fundo: #FFC8CF; --tinta: #FF5772; background: var(--fundo); transition: background-color .45s ease; }
-  .escrever textarea { position: absolute; left: 60px; top: 40px; width: 1268px; height: 290px; border: 0; outline: 0; resize: none; background: transparent;
-    font: 400 96px/1.05 "Gorducha", var(--cambria); color: var(--tinta); text-align: center; transition: color .45s ease; overflow: hidden; caret-color: currentColor; }
+  .escrever textarea { position: absolute; left: 60px; top: 24px; width: 1268px; height: 320px; border: 0; outline: 0; resize: none; background: transparent;
+    font: 400 150px/1.05 "Gorducha", var(--cambria); color: var(--tinta); text-align: center; transition: color .45s ease; overflow: hidden; caret-color: currentColor; }
   .escrever textarea::placeholder { color: var(--tinta); opacity: .4; }
   .escrever .cores { position: absolute; left: 0; right: 0; bottom: 34px; display: flex; justify-content: center; gap: 14px; }
-  .escrever .cor { width: 38px; height: 38px; border: 0; padding: 0; cursor: pointer; background: linear-gradient(180deg, var(--c) 0 50%, var(--p) 50% 100%);
+  .escrever .cor { width: 38px; height: 38px; border: 0; padding: 0; cursor: pointer; background: var(--c);
     clip-path: polygon(0 5px, 5px 5px, 5px 0, calc(100% - 5px) 0, calc(100% - 5px) 5px, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px));
     transition: transform .25s ease; }
   .escrever .cor:hover { transform: scale(1.15); }
@@ -289,15 +289,17 @@
     ta.focus();
   }));
   const ajusta = () => {
-    let t = 96; ta.style.paddingTop = '0px'; ta.style.fontSize = t + 'px';
-    while (t > 36 && ta.scrollHeight > ta.clientHeight) { t -= 4; ta.style.fontSize = t + 'px'; }
+    let t = 150; ta.style.paddingTop = '0px'; ta.style.fontSize = t + 'px';
+    while (t > 48 && ta.scrollHeight > ta.clientHeight) { t -= 4; ta.style.fontSize = t + 'px'; }
     // centraliza o texto na altura da caixa
     const alt = ta.clientHeight; ta.style.height = '0px'; const conteudo = ta.scrollHeight; ta.style.height = '';
     const sobra = alt - conteudo;
     ta.style.paddingTop = Math.max(0, Math.floor(sobra / 2)) + 'px';
   };
   ta.addEventListener('input', ajusta);
-  (document.fonts ? document.fonts.ready : Promise.resolve()).then(ajusta);
+  // ajusta de novo quando a fonte Gorducha termina de carregar e quando a caixa aparece na tela
+  if (document.fonts && document.fonts.load) document.fonts.load('150px Gorducha').then(ajusta, ajusta); else ajusta();
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { if (es[0].isIntersecting) ajusta(); }).observe(caixa);
 })();
 </script>
 <!-- pausa as animações pesadas enquanto a página rola -->
