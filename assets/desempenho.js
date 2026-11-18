@@ -36,7 +36,15 @@
       el.loading = 'eager';
       if (el.decode) el.decode().catch(() => {});
     } else if (el.tagName === 'VIDEO') {
-      if (el.preload !== 'auto') { el.preload = 'auto'; try { el.load(); } catch (e) {} }
+      if (el.preload !== 'auto') {
+        el.preload = 'auto';
+        // só recarrega se o vídeo ainda não começou; se já estiver na tela, volta a tocar depois de carregar
+        if (el.readyState === 0 && el.paused) {
+          try { el.load(); } catch (e) {}
+          const r = el.getBoundingClientRect();
+          if (el.loop && el.muted && r.bottom > 0 && r.top < innerHeight) el.play().catch(() => {});
+        }
+      }
     }
   };
   const io = new IntersectionObserver(es => es.forEach(e => {

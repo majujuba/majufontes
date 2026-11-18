@@ -243,6 +243,20 @@
   videos.forEach(v => io.observe(v));
 })();
 </script>
+<script>
+/* abrindo a página direto do arquivo (file://), o navegador bloqueia a leitura dos .glb:
+   nesse caso usa os modelos embutidos em modelos-locais.js (no site publicado nada disso acontece) */
+(() => {
+  if (location.protocol !== 'file:') return;
+  const s = document.createElement('script');
+  s.src = 'assets/fosforo/modelos-locais.js';
+  s.onload = () => document.querySelectorAll('model-viewer').forEach(m => {
+    const nome = m.getAttribute('src').split('/').pop();
+    if (window.__modelosLocais && window.__modelosLocais[nome]) m.setAttribute('src', window.__modelosLocais[nome]);
+  });
+  document.head.appendChild(s);
+})();
+</script>
 <script src="assets/desempenho.js"></script>
 <script src="assets/barra-rolagem.js"></script>
 <!-- cursor com rastro de pixels -->
