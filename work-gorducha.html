@@ -85,17 +85,18 @@
   .video-bloco > video { object-fit: contain; }
 
   /* ── caixa para escrever com a tipografia Gorducha e as cores da identidade ── */
-  .escrever { left: 51px; top: 6429px; width: 1388px; height: 448px; background: #C33A52; }
+  /* cada cor da barra é um par da identidade: o fundo fica no tom pastel e a letra no tom escuro */
+  .escrever { left: 51px; top: 6429px; width: 1388px; height: 448px; --fundo: #FFC8CF; --tinta: #FF5772; background: var(--fundo); transition: background-color .45s ease; }
   .escrever textarea { position: absolute; left: 60px; top: 40px; width: 1268px; height: 290px; border: 0; outline: 0; resize: none; background: transparent;
-    font: 400 96px/1.05 "Gorducha", var(--cambria); color: var(--tinta, #FFFFFF); text-align: center; overflow: hidden; caret-color: currentColor; }
-  .escrever textarea::placeholder { color: rgba(255,255,255,.45); }
+    font: 400 96px/1.05 "Gorducha", var(--cambria); color: var(--tinta); text-align: center; transition: color .45s ease; overflow: hidden; caret-color: currentColor; }
+  .escrever textarea::placeholder { color: var(--tinta); opacity: .4; }
   .escrever .cores { position: absolute; left: 0; right: 0; bottom: 34px; display: flex; justify-content: center; gap: 14px; }
-  .escrever .cor { width: 34px; height: 34px; border: 0; padding: 0; cursor: pointer; background: var(--c);
+  .escrever .cor { width: 38px; height: 38px; border: 0; padding: 0; cursor: pointer; background: linear-gradient(180deg, var(--c) 0 50%, var(--p) 50% 100%);
     clip-path: polygon(0 5px, 5px 5px, 5px 0, calc(100% - 5px) 0, calc(100% - 5px) 5px, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px));
     transition: transform .25s ease; }
   .escrever .cor:hover { transform: scale(1.15); }
   .escrever .cor.ativa { transform: translateY(-6px) scale(1.1); }
-  .escrever .rotulo { position: absolute; left: 0; right: 0; bottom: 78px; text-align: center; font: 500 18px/1 var(--pixel); color: rgba(255,255,255,.7); }
+  .escrever .rotulo { position: absolute; left: 0; right: 0; bottom: 78px; text-align: center; font: 500 18px/1 var(--pixel); color: var(--tinta); opacity: .75; transition: color .45s ease; }
 
   /* ── anterior / próximo ── */
   .navega { left: 0; right: 0; top: 6931px; height: 142px; }
@@ -205,14 +206,11 @@
     <textarea spellcheck="false" maxlength="80" placeholder="escreva aqui" aria-label="texto escrito com a tipografia Gorducha">Gorducha</textarea>
     <p class="rotulo">escolha a cor</p>
     <div class="cores" role="group" aria-label="cores da identidade">
-      <button class="cor ativa" type="button" style="--c:#FFFFFF" aria-label="branco"></button>
-      <button class="cor" type="button" style="--c:#FECDD4" aria-label="rosa claro"></button>
-      <button class="cor" type="button" style="--c:#FFA9B8" aria-label="rosa"></button>
-      <button class="cor" type="button" style="--c:#DCBAE7" aria-label="lilás"></button>
-      <button class="cor" type="button" style="--c:#AC9BDD" aria-label="roxo claro"></button>
-      <button class="cor" type="button" style="--c:#BFEED6" aria-label="menta"></button>
-      <button class="cor" type="button" style="--c:#F6D54B" aria-label="amarelo"></button>
-      <button class="cor" type="button" style="--c:#3F3166" aria-label="roxo"></button>
+      <button class="cor ativa" type="button" style="--c:#FF5772; --p:#FFC8CF" aria-label="rosa"></button>
+      <button class="cor" type="button" style="--c:#17C66B; --p:#C4FFE1" aria-label="verde"></button>
+      <button class="cor" type="button" style="--c:#FFC324; --p:#FFEEA8" aria-label="amarelo"></button>
+      <button class="cor" type="button" style="--c:#703631; --p:#ECB8A0" aria-label="marrom"></button>
+      <button class="cor" type="button" style="--c:#8720BE; --p:#EECAFF" aria-label="roxo"></button>
     </div>
     <span class="c1"></span><span class="c2"></span>
   </section>
@@ -279,7 +277,7 @@
 })();
 </script>
 <script>
-/* caixa de escrever: a cor escolhida pinta o texto; o tamanho da letra diminui quando o texto não cabe */
+/* caixa de escrever: cada cor da barra pinta o fundo (tom pastel) e a letra (tom escuro do mesmo par); o tamanho da letra diminui quando o texto não cabe */
 (() => {
   const caixa = document.querySelector('.escrever');
   if (!caixa) return;
@@ -287,6 +285,7 @@
   caixa.querySelectorAll('.cor').forEach(b => b.addEventListener('click', () => {
     caixa.querySelectorAll('.cor').forEach(x => x.classList.toggle('ativa', x === b));
     caixa.style.setProperty('--tinta', b.style.getPropertyValue('--c'));
+    caixa.style.setProperty('--fundo', b.style.getPropertyValue('--p'));
     ta.focus();
   }));
   const ajusta = () => {
