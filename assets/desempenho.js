@@ -24,3 +24,28 @@
     }, ESPERA);
   }, { passive: true });
 })();
+
+/* PREPARAR ANTES DE APARECER
+   O que mais engasga quando os blocos surgem (fade in) é o navegador decodificar fotos grandes e começar
+   a baixar/abrir os vídeos exatamente nesse momento. Aqui isso é feito um pouco antes, enquanto o bloco
+   ainda está uma tela e meia abaixo: as fotos já chegam decodificadas e os vídeos já com dados baixados. */
+(() => {
+  if (!('IntersectionObserver' in window)) return;
+  const prepara = el => {
+    if (el.tagName === 'IMG') {
+      el.loading = 'eager';
+      if (el.decode) el.decode().catch(() => {});
+    } else if (el.tagName === 'VIDEO') {
+      if (el.preload !== 'auto') { el.preload = 'auto'; try { el.load(); } catch (e) {} }
+    }
+  };
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { prepara(e.target); io.unobserve(e.target); }
+  }), { rootMargin: '150% 0px' });
+  const inicia = () => {
+    document.querySelectorAll('img[loading="lazy"]').forEach(i => io.observe(i));
+    // vídeos em loop (os GIFs); a abertura com som continua carregando só quando a pessoa der play
+    document.querySelectorAll('video[muted][loop]:not(.abertura), video[loop]:not(.abertura)').forEach(v => io.observe(v));
+  };
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', inicia); else inicia();
+})();

@@ -90,7 +90,17 @@
     add({ r: 255, g: 255, b: 255 }, 1);                     // fundo padrão do navegador
     return (0.299 * R + 0.587 * G + 0.114 * B) / 255;
   }
-  const isLight = (x, y) => bgLuma(x, y) > .5;
+  // desempenho: ler a cor do fundo é caro (pode desenhar a imagem/vídeo embaixo do mouse para pegar um pixel).
+  // Guarda o resultado e só lê de novo a cada 150 ms ou quando o mouse anda mais de 40 px.
+  let luzCache = null;
+  const isLight = (x, y) => {
+    const t = performance.now();
+    if (luzCache && t - luzCache.t < 150 && Math.abs(x - luzCache.x) < 40 && Math.abs(y - luzCache.y) < 40) return luzCache.v;
+    const v = bgLuma(x, y) > .5;
+    luzCache = { t, x, y, v };
+    return v;
+  };
+  addEventListener('scroll', () => { luzCache = null; }, { passive: true });
 
   /* ---------- formas quebradas ---------- */
   function makeBlob() {
