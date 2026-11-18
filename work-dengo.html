@@ -80,7 +80,11 @@
   .citacao.amarela  { --cor: #B51712; --grifo: #FFBA38; left: 640px; top: 4765px; width: 799px; height: 428px; background: rgba(255,206,116,.5); }
 
   /* ── estampas soltas no fim (sem bloco) ── */
-  .estampas-soltas { left: 184px; top: 5777px; width: 1122.5px; height: 442.5px; display: block; }
+  /* cada estampa pode ser segurada e arrastada pela página toda */
+  .adesivo { position: absolute; display: block; z-index: 5; cursor: grab; touch-action: none; user-select: none; -webkit-user-drag: none;
+    filter: drop-shadow(0 2px 3px rgba(63,49,102,.18)); }
+  .js .adesivo.fade-in-element.visivel { transition: opacity 1.2s cubic-bezier(.22,1,.36,1), transform .25s ease, filter .25s ease; }
+  .adesivo.segurando { cursor: grabbing; filter: drop-shadow(0 14px 16px rgba(63,49,102,.35)); }
 
   /* ── anterior / próximo ── */
   .navega { left: 0; right: 0; top: 6288px; height: 142px; }
@@ -97,7 +101,7 @@
   .proximo  { left: 1230px; top: 45px; width: 200px; }
 
   /* ── header (como a work: azul-claro com links roxos) ── */
-  .header { position: fixed; left: 0; right: 0; top: 0; height: 42px; z-index: 10; background: var(--azul-header); }
+  .header { position: fixed; left: 0; right: 0; top: 0; height: 42px; z-index: 9999; background: var(--azul-header); }
   .header .estrela { left: 51px; top: 5px; width: 32px; height: 32px; }
   .nav { font: 700 20px/1 var(--seasons); color: var(--roxo); white-space: nowrap; }
   .nav.work    { right: 395px; top: 10px; }
@@ -198,7 +202,16 @@
   <div class="bloco fade-in-element" style="left:639px; top:5202px; width:801px; height:544px"><img src="assets/dengo/pacotes-vermelho.jpg" alt="Pacotes Dengo sobre fundo vermelho" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
 
   <!-- estampas soltas -->
-  <img class="abs estampas-soltas fade-in-element" src="assets/dengo/estampas-soltas.jpg" alt="As estampas da Dengo, soltas" loading="lazy">
+  <!-- (cada uma é solta: dá para segurar e arrastar pela página) -->
+  <img class="adesivo fade-in-element" src="assets/dengo/estampa-07.webp" alt="Estampa de cacau" draggable="false" data-cursor="link" style="left:184px; top:5985px; width:167.5px; height:172.5px">
+  <img class="adesivo fade-in-element" src="assets/dengo/estampa-01.webp" alt="Estampa de carambolas" draggable="false" data-cursor="link" style="left:254px; top:5779.5px; width:186px; height:187px">
+  <img class="adesivo fade-in-element" src="assets/dengo/estampa-08.webp" alt="Estampa de triângulos" draggable="false" data-cursor="link" style="left:394.5px; top:5997px; width:162.5px; height:222px">
+  <img class="adesivo fade-in-element" src="assets/dengo/estampa-02.webp" alt="Estampa de flores de café" draggable="false" data-cursor="link" style="left:515.5px; top:5786px; width:193px; height:201.5px">
+  <img class="adesivo fade-in-element" src="assets/dengo/estampa-03.webp" alt="Estampa em xilogravura de mata" draggable="false" data-cursor="link" style="left:623.5px; top:5975.5px; width:179px; height:228.5px">
+  <img class="adesivo fade-in-element" src="assets/dengo/estampa-04.webp" alt="Estampa de mapas" draggable="false" data-cursor="link" style="left:795px; top:5795px; width:166.5px; height:172.5px">
+  <img class="adesivo fade-in-element" src="assets/dengo/estampa-09.webp" alt="Estampa de ondas coloridas" draggable="false" data-cursor="link" style="left:874px; top:6002.5px; width:186px; height:186.5px">
+  <img class="adesivo fade-in-element" src="assets/dengo/estampa-05.webp" alt="Estampa de dança" draggable="false" data-cursor="link" style="left:986px; top:5800.5px; width:184px; height:186px">
+  <img class="adesivo fade-in-element" src="assets/dengo/estampa-06.webp" alt="Estampa de estrelas" draggable="false" data-cursor="link" style="left:1109.5px; top:5970.5px; width:192px; height:201px">
 
   <!-- anterior / próximo (ordem da página work: Gorducha → Dengo → A Substância) -->
   <nav class="abs navega" aria-label="outros projetos">
@@ -259,6 +272,44 @@
     if (e.isIntersecting) e.target.play().catch(() => {}); else e.target.pause();
   }), { rootMargin: '200px 0px' });
   videos.forEach(v => io.observe(v));
+})();
+</script>
+<script>
+/* estampas soltas: a pessoa segura uma, arrasta para qualquer lugar da página e solta.
+   Enquanto está segurando, a estampa cresce um pouco e inclina; a última segurada fica por cima das outras. */
+(() => {
+  const pagina = document.querySelector('.page');
+  let topo = 6;
+  document.querySelectorAll('.adesivo').forEach(el => {
+    let ini = null;
+    el.addEventListener('pointerdown', e => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      el.setPointerCapture(e.pointerId);
+      ini = { x: e.clientX, y: e.clientY, l: el.offsetLeft, t: el.offsetTop, rolagem: scrollY };
+      el.style.zIndex = ++topo;
+      el.classList.add('segurando');
+      const giro = (Math.random() * 8 - 4).toFixed(1);
+      el.style.transform = 'scale(1.1) rotate(' + giro + 'deg)';
+    });
+    const move = e => {
+      if (!ini) return;
+      const W = pagina.offsetWidth, H = pagina.offsetHeight;
+      // a página pode rolar enquanto a pessoa arrasta (rodinha do mouse): a estampa acompanha
+      let l = ini.l + e.clientX - ini.x;
+      let t = ini.t + e.clientY - ini.y + (scrollY - ini.rolagem);
+      l = Math.max(-el.offsetWidth / 2, Math.min(W - el.offsetWidth / 2, l));
+      t = Math.max(42, Math.min(H - el.offsetHeight, t));
+      el.style.left = l + 'px'; el.style.top = t + 'px';
+    };
+    el.addEventListener('pointermove', move);
+    let ultimo = null;
+    el.addEventListener('pointermove', e => { ultimo = e; });
+    addEventListener('scroll', () => { if (ini && ultimo) move(ultimo); }, { passive: true });
+    const solta = () => { if (!ini) return; ini = null; el.classList.remove('segurando'); el.style.transform = 'none'; };
+    el.addEventListener('pointerup', solta);
+    el.addEventListener('pointercancel', solta);
+  });
 })();
 </script>
 <!-- pausa as animações pesadas enquanto a página rola -->
