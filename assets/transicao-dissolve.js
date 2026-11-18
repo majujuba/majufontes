@@ -1,7 +1,7 @@
-/* TRANSIÇÃO DE PIXELS QUE SE DISSOLVEM — da Home para a about, como no vídeo de referência.
-   Home: ao clicar num link para about.html, quadrados coloridos cobrem a tela em ordem aleatória.
-   About: abre já coberta e os quadrados somem aos poucos (aleatório, com tendência da esquerda para a direita).
-   Carregar no <head> das duas páginas (precisa agir antes do primeiro desenho da about). */
+/* TRANSIÇÃO DE PIXELS QUE SE DISSOLVEM — em toda troca de página do site, como no vídeo de referência.
+   Página de saída: ao clicar num link para outra página do site, quadrados coloridos cobrem a tela em ordem aleatória.
+   Página de chegada: abre já coberta e os quadrados somem aos poucos.
+   Carregar no <head> de todas as páginas (precisa agir antes do primeiro desenho da página de chegada). */
 (() => {
   /* ================== AJUSTES ================== */
   const CORES = [            // cor e peso (proporção no vídeo)
@@ -16,7 +16,7 @@
   const DISSOLVER_MS = 500;  // quadrados sumindo — igual ao tempo de surgir
   const ESQ_DIR = 0;         // ordem de sumir: 0 = aleatória, igual à de surgir (era 0,6, da esquerda para a direita)
   const FADE = 0.14;         // fração do tempo em que cada quadrado esmaece (0 = some de uma vez)
-  const DESTINO = /(^|\/)(about|work)\.html(\?|#|$)/;   // páginas que chegam pela transição
+  const DESTINO = /(^|\/)[\w-]+\.html(\?|#|$)/;   // qualquer página do site (home, about, work e projetos) chega pela transição
   /* ============================================ */
   const CHAVE = 'maju-dissolve-chegada';
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -63,7 +63,9 @@
     if (!a || saindo || !DESTINO.test(a.getAttribute('href'))) return;
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     if (a.target && a.target !== '_self') return;
-    if (new URL(a.href, location.href).pathname === location.pathname) return;   // já está na about
+    const alvo = new URL(a.href, location.href);
+    if (alvo.origin !== location.origin && location.protocol !== 'file:') return;   // link para outro site
+    if (alvo.pathname === location.pathname) return;   // já está nessa página
     e.preventDefault(); saindo = true;
     const { cv, ctx, W, H, s, cel, semente } = criaTela();
     document.documentElement.appendChild(cv);
