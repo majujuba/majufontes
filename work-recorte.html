@@ -30,10 +30,10 @@
   body { -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
   a { color: inherit; text-decoration: none; }
 
-  /* Figma: /work-recorte · Desktop 1490 × 5529 — conteúdo centralizado, fundos de borda a borda.
+  /* Figma: /work-recorte · Desktop 1490 × 5529 (aqui 5312: o bloco do livreto ficou com a altura do bloco verde da Vizão) — conteúdo centralizado, fundos de borda a borda.
      Posições = Figma (as da seção "works" somadas a 720, o topo dela) */
-  .frame { position: relative; width: 100%; height: 5529px; overflow: hidden; overflow: clip; background: var(--cinza); }
-  .page { position: absolute; top: 0; left: 50%; margin-left: -745px; width: 1490px; height: 5529px; }
+  .frame { position: relative; width: 100%; height: 5312px; overflow: hidden; overflow: clip; background: var(--cinza); }
+  .page { position: absolute; top: 0; left: 50%; margin-left: -745px; width: 1490px; height: 5312px; }
   .abs { position: absolute; }
 
   /* ── topo: livretos abertos sobre o roxo, que se dissolvem no cinza ── */
@@ -81,8 +81,8 @@
   .miniaturas > img.grade { inset: auto; left: 26px; top: 45px; width: 1336px; height: 1061.5px; object-fit: fill; }
 
   /* ── livreto virtual: páginas duplas no centro, setas roxas nas laterais, contador embaixo (como a revista da Vizão) ── */
-  .livro { left: 50px; top: 4305px; width: 1389px; height: 853px; background: #C2C0D0; }
-  .revista { position: absolute; left: 241.5px; top: 60px; width: 906px; height: 640px; perspective: 2600px; }
+  .livro { left: 50px; top: 4305px; width: 1389px; height: 636px; background: #C2C0D0; }
+  .revista { position: absolute; left: 305.5px; top: 24px; width: 778px; height: 550px; perspective: 2600px; }
   .revista .lado { position: absolute; top: 0; width: 50%; height: 100%; background: #fff center / cover no-repeat; cursor: pointer; }
   .revista .lado.esq { left: 0; box-shadow: inset -14px 0 18px -14px rgba(0,0,0,.25), 0 2px 10px rgba(63,49,102,.18); }
   .revista .lado.dir { right: 0; box-shadow: inset 14px 0 18px -14px rgba(0,0,0,.25), 0 2px 10px rgba(63,49,102,.18); }
@@ -94,15 +94,15 @@
   .revista .folha.para-tras  { left: 0;   transform-origin: right center; }
   .revista .folha .face { position: absolute; inset: 0; background: #fff center / cover no-repeat; backface-visibility: hidden; }
   .revista .folha .verso { transform: rotateY(180deg); }
-  .livro .seta-livro { position: absolute; top: 355px; width: 46px; height: 50px; padding: 0; border: 0; background: none; cursor: pointer;
+  .livro .seta-livro { position: absolute; top: 274px; width: 46px; height: 50px; padding: 0; border: 0; background: none; cursor: pointer;
     transition: transform .35s ease, opacity .3s ease; }
   .livro .seta-livro img { display: block; width: 100%; height: 100%; }
   .livro .seta-livro:hover { transform: scale(1.15); }
   .livro .seta-livro:disabled { opacity: .25; cursor: default; transform: none; }
-  .livro .seta-livro.ant { left: 130px; }
+  .livro .seta-livro.ant { left: 26px; }
   .livro .seta-livro.ant img { transform: scaleX(-1); }
-  .livro .seta-livro.prox { right: 130px; }
-  .livro .contador { position: absolute; left: 593px; top: 740px; width: 203px; height: 33px; display: flex; align-items: center; justify-content: center;
+  .livro .seta-livro.prox { right: 26px; }
+  .livro .contador { position: absolute; left: 593px; top: 588px; width: 203px; height: 33px; display: flex; align-items: center; justify-content: center;
     background: var(--roxo); color: #C2C0D0; font: 600 20px/1 var(--pixel); white-space: nowrap; --canto: #C2C0D0; }
   .livro .contador::before, .livro .contador::after, .livro .contador > .c1, .livro .contador > .c2 {
     content: ""; position: absolute; width: 6px; height: 6px; background: var(--canto); }
@@ -110,7 +110,7 @@
   .livro .contador > .c1 { left: 0; bottom: 0; } .livro .contador > .c2 { right: 0; bottom: 0; }
 
   /* ── anterior / próximo ── */
-  .navega { left: 0; right: 0; top: 5204px; height: 142px; }
+  .navega { left: 0; right: 0; top: 4987px; height: 142px; }
   .navega::before { content: ""; position: absolute; top: 0; bottom: 0; left: -3000px; right: -3000px; background: var(--azul); }
   .botao-pixel { position: absolute; display: flex; align-items: center; justify-content: center; height: 52px; background: var(--roxo);
     color: var(--cinza); font: 500 32px/28px var(--pixel); letter-spacing: -0.32px; white-space: nowrap; --canto: var(--azul);
@@ -136,7 +136,7 @@
   .header .nav:hover { color: #731212; transform: scale(1.08); transition: color .4s ease, transform .4s ease; }
 
   /* ── rodapé (igual às outras páginas) ── */
-  .rodape { left: 0; right: 0; top: 5346px; height: 183px; z-index: 2; }
+  .rodape { left: 0; right: 0; top: 5129px; height: 183px; z-index: 2; }
   .rodape::before { content: ""; position: absolute; top: 0; bottom: 0; left: -3000px; right: -3000px; background: var(--roxo); z-index: -1; }
   .rodape .contato { left: 60px; top: 46px; width: 365px; color: var(--branco); }
   .rodape .contato small { display: block; font: 400 16px/15px var(--cambria); }
