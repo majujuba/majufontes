@@ -40,6 +40,7 @@
 
   /* ── topo: caixas de fósforo que se dissolvem no cinza ── */
   .hero { left: calc(745px - 50vw); width: max(100vw, 1490px); top: 42px; height: 678px; overflow: hidden; }
+  .hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
   .hero img { position: absolute; left: 0; top: 0; width: 100%; height: max(693px, calc(100vw * 693 / 1490));
     object-fit: cover; object-position: 50% 0; display: block; }
   .hero-fundo { left: -3000px; right: -3000px; top: 430px; height: 322px;
@@ -76,12 +77,12 @@
   .citacao.amarela { --cor: #731212; --grifo: #FFBA41; left: 749px; top: 2392px; width: 691px; height: 521px; background: rgba(255,198,98,.5); }
 
   /* ── caixas em 3D: a pessoa arrasta para girar (modelos do Blender) ── */
-  .modelo { width: 691px; height: 621px; background: var(--roxo); }
+  .modelo { width: 691px; height: 621px; background: #FFC662; }
   .modelo model-viewer { position: absolute; inset: 0; width: 100%; height: 100%; --poster-color: transparent; background: transparent; cursor: grab; }
   .modelo model-viewer:active { cursor: grabbing; }
   .modelo .legenda { position: absolute; left: 0; right: 0; bottom: 22px; text-align: center; pointer-events: none;
-    font: 500 20px/1.2 var(--pixel); color: rgba(216,216,216,.8); z-index: 3; }
-  .modelo .legenda small { display: block; font: 400 15px/1.2 var(--pixel); color: rgba(216,216,216,.5); }
+    font: 500 20px/1.2 var(--pixel); color: #731212; z-index: 3; }
+  .modelo .legenda small { display: block; font: 400 15px/1.2 var(--pixel); color: rgba(115,18,18,.6); }
 
   /* ── anterior / próximo ── */
   .navega { left: 0; right: 0; top: 4260px; height: 142px; }
@@ -143,7 +144,7 @@
 <div class="frame"><main class="page">
 
   <!-- topo -->
-  <div class="abs hero"><img decoding="async" src="assets/fosforo/hero.jpg" alt="Caixas de fósforo Paraná com a nova embalagem"></div>
+  <div class="abs hero"><video src="assets/fosforo/hero.mp4" poster="assets/fosforo/hero-poster.jpg" muted loop playsinline autoplay preload="auto" aria-label="Animação: caixas de fósforo Paraná"></video></div>
   <div class="abs hero-fundo"></div>
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Fósforo Paraná</h1>
 
@@ -177,7 +178,7 @@
     <span class="c1"></span><span class="c2"></span>
   </div>
   <div class="bloco modelo fade-in-element" style="left:749px; top:3581px">
-    <model-viewer src="assets/fosforo/caixa-secundaria.glb" alt="Embalagem secundária do Fósforo Paraná em 3D" camera-controls disable-zoom auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" interaction-prompt="none" shadow-intensity="1" exposure="1.05" loading="lazy" data-cursor="link"></model-viewer>
+    <model-viewer src="assets/fosforo/caixa-secundaria.glb" alt="Embalagem secundária do Fósforo Paraná em 3D" camera-controls disable-zoom camera-orbit="auto auto 130%" max-camera-orbit="auto auto 200%" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" interaction-prompt="none" shadow-intensity="1" exposure="1.05" loading="lazy" data-cursor="link"></model-viewer>
     <p class="legenda">caixa secundária<small>arraste para girar</small></p>
     <span class="c1"></span><span class="c2"></span>
   </div>
