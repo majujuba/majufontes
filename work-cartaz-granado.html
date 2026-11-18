@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="pt-BR" data-cursor-rastro="nao">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>Cartaz Granado — maju. designer</title>
+<!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
+<link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/cursor-trail.css">
+<!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
+<link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- transição de pixels que se dissolvem (precisa ficar no head) -->
+<script src="assets/transicao-dissolve.js"></script>
+<style>
+  :root {
+    --roxo: #3F3166;
+    --azul: #84A9D9;
+    --azul-header: #B2C3D8;
+    --cinza: #D8D8D8;
+    --branco: #FFFFFF;
+    --seasons: "the-seasons", "The Seasons", serif;
+    --cambria: Cambria, Caladea, Georgia, serif;
+    --pixel: "Pixelify Sans", monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--cinza); }
+  body { -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
+  a { color: inherit; text-decoration: none; }
+
+  /* Figma: /work-cartazgranado · Desktop 1490 × 5339 — conteúdo centralizado, fundos de borda a borda.
+     Posições = Figma (as da seção "works" somadas a 720, o topo dela) */
+  .frame { position: relative; width: 100%; height: 5339px; overflow: hidden; overflow: clip; background: var(--cinza); }
+  .page { position: absolute; top: 0; left: 50%; margin-left: -745px; width: 1490px; height: 5339px; }
+  .abs { position: absolute; }
+
+  /* ── topo: cajus do cartaz que se dissolvem no cinza ── */
+  .hero { left: calc(745px - 50vw); width: max(100vw, 1490px); top: 42px; height: 666px; overflow: hidden; }
+  .hero img { position: absolute; left: 0; top: 0; width: 100%; height: max(678px, calc(100vw * 678 / 1490));
+    object-fit: cover; object-position: 50% 0; display: block; }
+  .hero-fundo { left: -3000px; right: -3000px; top: 440px; height: 322px;
+    background: linear-gradient(180deg, rgba(198,198,198,0) 0%, var(--cinza) 83%); pointer-events: none; }
+  .titulo { left: 49px; top: 737px; font: 700 148px/130px var(--seasons); color: var(--roxo); white-space: nowrap; }
+
+  /* ── blocos com "cantos de pixel" ── */
+  .bloco { position: absolute; overflow: hidden; }
+  .bloco > img, .bloco > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .bloco::before, .bloco::after, .bloco > .c1, .bloco > .c2 {
+    content: ""; position: absolute; width: 13px; height: 13px; margin: -1px; background: var(--cinza); z-index: 2; }
+  .bloco::before { left: 0; top: 0; }
+  .bloco::after  { right: 0; top: 0; }
+  .bloco > .c1   { left: 0; bottom: 0; }
+  .bloco > .c2   { right: 0; bottom: 0; }
+  .peca { position: absolute; display: block; }   /* imagens exportadas do Figma já com os cantinhos */
+
+  /* ── texto de apresentação ── */
+  .apresentacao { left: 51px; top: 931px; width: 1388px; height: 194px; background: var(--azul-header); color: var(--roxo); }
+  .apresentacao .texto { position: absolute; left: 31px; top: 20px; width: 931px; font: 400 24px/26px var(--cambria); }
+  .apresentacao .texto b { font-weight: 700; }
+  .ficha { position: absolute; top: 24px; font: 400 20px/22px var(--cambria); }
+  .ficha strong { display: block; font: 600 20px/22px var(--pixel); }
+  .ficha.disciplina { left: 1064px; width: 180px; }
+  .ficha.ano        { left: 1259px; width: 63px; }
+
+  /* ── quadro amarelo: cada clique carimba um caju ou uma folha (desenhos do cartaz) ── */
+  .quadro { left: 51px; top: 4110px; width: 1388px; height: 857px; background: #FFF2C5; cursor: crosshair; touch-action: manipulation; user-select: none; }
+  .quadro .carimbo { position: absolute; display: block; inset: auto; height: auto; object-fit: contain; pointer-events: none; mix-blend-mode: multiply;
+    animation: carimba .35s cubic-bezier(.2,1.4,.4,1) both; }
+  @keyframes carimba { from { opacity: 0; transform: translate(-50%,-50%) rotate(var(--giro)) scale(1.35); }
+                       to   { opacity: 1; transform: translate(-50%,-50%) rotate(var(--giro)) scale(1); } }
+  .quadro .dica { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center; pointer-events: none;
+    font: 500 28px/1.2 var(--pixel); color: rgba(63,49,102,.55); transition: opacity .6s ease; }
+  .quadro.usado .dica { opacity: 0; }
+  .quadro .limpar { position: absolute; right: 22px; bottom: 22px; height: 40px; padding: 0 18px; border: 0; z-index: 99999; cursor: pointer;
+    background: var(--roxo); color: var(--cinza); font: 500 22px/1 var(--pixel); opacity: 0; pointer-events: none; transition: opacity .4s ease, transform .4s ease; }
+  .quadro.usado .limpar { opacity: 1; pointer-events: auto; }
+  .quadro .limpar:hover { transform: scale(1.05); }
+  .quadro .limpar::before, .quadro .limpar::after { content: ""; position: absolute; width: 6px; height: 6px; background: #FFF2C5; }
+  .quadro .limpar::before { left: 0; top: 0; } .quadro .limpar::after { right: 0; top: 0; }
+
+  /* ── anterior / próximo ── */
+  .navega { left: 0; right: 0; top: 5014px; height: 142px; }
+  .navega::before { content: ""; position: absolute; top: 0; bottom: 0; left: -3000px; right: -3000px; background: var(--azul); }
+  .botao-pixel { position: absolute; display: flex; align-items: center; justify-content: center; height: 52px; background: var(--roxo);
+    color: var(--cinza); font: 500 32px/28px var(--pixel); letter-spacing: -0.32px; white-space: nowrap; --canto: var(--azul);
+    transition: transform .9s ease; }
+  .botao-pixel::before, .botao-pixel::after, .botao-pixel > .c1, .botao-pixel > .c2 {
+    content: ""; position: absolute; width: 8px; height: 8px; margin: -1px; background: var(--canto); }
+  .botao-pixel::before { left: 0; top: 0; }  .botao-pixel::after { right: 0; top: 0; }
+  .botao-pixel > .c1 { left: 0; bottom: 0; } .botao-pixel > .c2 { right: 0; bottom: 0; }
+  .botao-pixel:hover { transform: scale(1.04); transition: transform .4s ease; }
+  .anterior { left: 60px; top: 45px; width: 208px; }
+  .proximo  { left: 1230px; top: 45px; width: 200px; }
+
+  /* ── header (como a work: azul-claro com links roxos) ── */
+  .header { position: fixed; left: 0; right: 0; top: 0; height: 42px; z-index: 9999; background: var(--azul-header); }
+  .header .estrela { left: 51px; top: 5px; width: 32px; height: 32px; }
+  .nav { font: 700 20px/1 var(--seasons); color: var(--roxo); white-space: nowrap; }
+  .nav.work    { right: 395px; top: 10px; }
+  .nav.about   { right: 228px; top: 10px; }
+  .nav.contact { right: 51px;  top: 9px; }
+  .header .nav { transform-origin: 50% 60%; transition: color .9s ease, transform .9s ease; }
+  .header .estrela { transition: transform .9s ease; }
+  .header .estrela:hover { transform: scale(1.08); transition: transform .4s ease; }
+  .header .nav:hover { color: #731212; transform: scale(1.08); transition: color .4s ease, transform .4s ease; }
+
+  /* ── rodapé (igual às outras páginas) ── */
+  .rodape { left: 0; right: 0; top: 5156px; height: 183px; z-index: 2; }
+  .rodape::before { content: ""; position: absolute; top: 0; bottom: 0; left: -3000px; right: -3000px; background: var(--roxo); z-index: -1; }
+  .rodape .contato { left: 60px; top: 46px; width: 365px; color: var(--branco); }
+  .rodape .contato small { display: block; font: 400 16px/15px var(--cambria); }
+  .rodape .contato a { display: block; font: 700 28px/28px var(--cambria); white-space: nowrap; }
+  .rodape .estrela { left: 690px; top: 40px; width: 111px; height: 111px; }
+  .rodape .links { top: 38px; width: 147px; text-align: right; font: 400 20px/23px var(--cambria); color: var(--branco); }
+  .rodape .links a { display: block; height: 46px; }
+  .rodape .links.sociais { right: 264px; }
+  .rodape .links.paginas { right: 58px; }
+  .rodape .copy { left: 60px; bottom: 23px; font: 400 15px/1 var(--cambria); color: var(--cinza); white-space: nowrap; }
+
+  /* ── fade in (igual às outras páginas) ── */
+  .js .fade-in-element { opacity: 0; transform: translateY(20px);
+    transition: opacity 1.2s cubic-bezier(.22,1,.36,1), transform 1.2s cubic-bezier(.22,1,.36,1);
+    transition-delay: var(--atraso, 0s); }
+  .js .fade-in-element.visivel { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .js .fade-in-element { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+<script>
+  document.documentElement.classList.add('js');
+  window.__carregou = !window.__chegandoDissolve;
+  window.quandoCarregar = fn => { if (window.__carregou) fn(); else addEventListener('carregou', fn, { once: true }); };
+  addEventListener('transicao-fim', () => { window.__carregou = true; dispatchEvent(new Event('carregou')); });
+</script>
+</head>
+<body>
+
+<div class="frame"><main class="page">
+
+  <!-- topo -->
+  <div class="abs hero"><img decoding="async" src="assets/granado/hero.jpg" alt="Cajus e folhas carimbados do cartaz Granado"></div>
+  <div class="abs hero-fundo"></div>
+  <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Cartaz Granado</h1>
+
+  <!-- apresentação -->
+  <section class="bloco apresentacao fade-in-element">
+    <p class="texto">Cartaz nasceu com o conceito de composição de elementos livre, a escolha dos elementos para a marca Granado, foram os pequenos cajus e as folhas de cajueiros, que refletem uma conexão com a brasilidade nordestina, destacando o caju como símbolo da riqueza cultural do Brasil. Complementando essa identidade visual, foram escolhidas as <b>cores terrosas, que remetem à terra, ao sol e ao clima quente do Nordeste</b>, criando uma atmosfera de acolhimento, sofisticação e tradição.</p>
+    <p class="ficha disciplina"><strong>Disciplina</strong>Linguagem Visual</p>
+    <p class="ficha ano"><strong>Ano</strong>2024-2</p>
+    <span class="c1"></span><span class="c2"></span>
+  </section>
+
+  <!-- faixa animada (GIF no Figma, aqui vídeo em loop) -->
+  <div class="bloco fade-in-element" style="left:51px; top:1189px; width:1388px; height:208.2px"><video src="assets/granado/faixa.mp4" poster="assets/granado/faixa.jpg" muted loop playsinline preload="metadata" aria-label="Animação: assinatura do cartaz"></video><span class="c1"></span><span class="c2"></span></div>
+
+  <!-- cartaz e fotos -->
+  <img decoding="async" class="peca fade-in-element" src="assets/granado/cartaz.jpg" alt="Cartaz Granado: cajus e folhas carimbados em cores terrosas" loading="lazy" style="left:51px; top:1407px; width:1388px; height:1714px">
+  <img decoding="async" class="peca fade-in-element" src="assets/granado/cartaz-parede.jpg" alt="Cartaz Granado aplicado" loading="lazy" style="left:51px; top:3131.4px; width:689px; height:584px">
+  <img decoding="async" class="peca fade-in-element" src="assets/granado/cartaz-mao.jpg" alt="Cartaz Granado aplicado" loading="lazy" style="left:750px; top:3131.4px; width:689px; height:584px">
+  <img decoding="async" class="peca fade-in-element" src="assets/granado/processo-1.jpg" alt="Processo: carimbos de caju" loading="lazy" style="left:50px; top:3724px; width:460px; height:368px">
+  <img decoding="async" class="peca fade-in-element" src="assets/granado/processo-2.jpg" alt="Processo: carimbos de caju" loading="lazy" style="left:518px; top:3724px; width:458px; height:368px">
+  <img decoding="async" class="peca fade-in-element" src="assets/granado/processo-3.jpg" alt="Processo: carimbos de caju" loading="lazy" style="left:983px; top:3724px; width:457px; height:368px">
+
+  <!-- quadro amarelo: a pessoa clica e vai carimbando cajus e folhas para criar a própria composição -->
+  <section class="bloco quadro fade-in-element" aria-label="quadro para criar uma composição com os cajus: clique para carimbar">
+    <p class="dica">clique para carimbar cajus e folhas</p>
+    <button class="limpar" type="button">limpar</button>
+    <span class="c1"></span><span class="c2"></span>
+  </section>
+
+  <!-- anterior / próximo (ordem da página work: Fósforo → Cartaz Granado, o último; o próximo volta ao primeiro, TipoSP) -->
+  <nav class="abs navega" aria-label="outros projetos">
+    <a class="botao-pixel anterior" href="work-fosforo.html">← anterior<span class="c1"></span><span class="c2"></span></a>
+    <a class="botao-pixel proximo" href="work-tiposp.html">próximo →<span class="c1"></span><span class="c2"></span></a>
+  </nav>
+
+  <!-- rodapé -->
+  <footer class="abs rodape" data-cursor-bg="dark">
+    <div class="abs contato">
+      <small>entre em contato </small>
+      <a href="mailto:mariafontesju@gmail.com">mariafontesju@gmail.com</a>
+    </div>
+    <img decoding="async" class="abs estrela" src="assets/estrela-rodape.webp" alt="">
+    <nav class="abs links sociais"><a href="https://www.linkedin.com/in/maria-j%C3%BAlia-fontes-leite/" target="_blank" rel="noopener">linkedIn</a><a href="https://www.behance.net/majufontes" target="_blank" rel="noopener">behance</a></nav>
+    <nav class="abs links paginas"><a href="work.html">work</a><a href="about.html">about</a><a href="mailto:mariafontesju@gmail.com">contact</a></nav>
+    <p class="abs copy">©2026 maju. designer</p>
+  </footer>
+
+</main>
+
+<!-- header -->
+<header class="abs header">
+  <a href="index.html" aria-label="início"><img decoding="async" class="abs estrela" src="assets/estrela-roxa.svg" alt=""></a>
+  <a class="abs nav work" href="work.html">work</a>
+  <a class="abs nav about" href="about.html">about</a>
+  <a class="abs nav contact" href="mailto:mariafontesju@gmail.com">contact</a>
+</header>
+</div>
+
+<script>
+/* fade in: cada .fade-in-element aparece (uma vez) quando entra na tela */
+(() => {
+  const MARGEM = 16;
+  let pendentes = [...document.querySelectorAll('.fade-in-element')];
+  let pedido = false;
+  function confere() {
+    pedido = false;
+    if (!window.__carregou) return;
+    pendentes = pendentes.filter(e => {
+      if (e.getBoundingClientRect().top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
+      return true;
+    });
+    if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
+  }
+  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(confere); } }
+  addEventListener('scroll', agenda, { passive: true });
+  addEventListener('resize', agenda);
+  quandoCarregar(agenda);
+})();
+</script>
+<script>
+/* vídeos (os GIFs do Figma): só tocam enquanto estão na tela — economiza processamento */
+(() => {
+  const videos = [...document.querySelectorAll('video')];
+  if (!('IntersectionObserver' in window)) { videos.forEach(v => v.play().catch(() => {})); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) e.target.play().catch(() => {}); else e.target.pause();
+  }), { rootMargin: '200px 0px' });
+  videos.forEach(v => io.observe(v));
+})();
+</script>
+<script>
+/* quadro amarelo: cada clique carimba um desenho do cartaz (13 cajus e 6 folhas), girado e com tamanho um pouco diferente.
+   Os cajus saem mais vezes que as folhas. "limpar" apaga tudo. */
+(() => {
+  const q = document.querySelector('.quadro');
+  if (!q) return;
+  const CAJUS = 13, FOLHAS = 6;
+  const tam = {1:[206,257],2:[186,276],3:[175,284],4:[219,305],5:[228,368],6:[228,362],7:[225,446],8:[178,290],9:[213,165],10:[402,452],11:[325,523],12:[414,794],13:[435,448],
+               14:[78,216],15:[96,281],16:[56,183],17:[133,153],18:[200,146],19:[204,125]};
+  const url = n => 'assets/granado/carimbos/' + String(n).padStart(2, '0') + '.webp';
+  // já baixa os desenhos quando o quadro está chegando, para o primeiro clique não demorar
+  let baixou = false;
+  const baixa = () => { if (baixou) return; baixou = true; for (let n = 1; n <= CAJUS + FOLHAS; n++) new Image().src = url(n); };
+  if ('IntersectionObserver' in window) new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { baixa(); o.disconnect(); } }, { rootMargin: '100% 0px' }).observe(q);
+  else baixa();
+  let camada = 1;
+  q.addEventListener('pointerdown', e => {
+    if (e.button !== 0 || e.target.closest('.limpar')) return;
+    const r = q.getBoundingClientRect();
+    const n = Math.random() < .72 ? 1 + Math.floor(Math.random() * CAJUS) : CAJUS + 1 + Math.floor(Math.random() * FOLHAS);
+    const esc = .5 + Math.random() * .2;                         // os desenhos estão em 2x
+    const img = new Image();
+    img.className = 'carimbo'; img.alt = ''; img.src = url(n); img.decoding = 'async';
+    img.style.width = (tam[n][0] * esc) + 'px';
+    img.style.left = (e.clientX - r.left) + 'px';
+    img.style.top = (e.clientY - r.top) + 'px';
+    img.style.setProperty('--giro', (Math.random() * 70 - 35).toFixed(1) + 'deg');
+    img.style.zIndex = camada++;
+    q.appendChild(img);
+    q.classList.add('usado');
+  });
+  q.querySelector('.limpar').addEventListener('click', () => {
+    q.querySelectorAll('.carimbo').forEach(c => c.remove());
+    q.classList.remove('usado'); camada = 1;
+  });
+})();
+</script>
+<script src="assets/desempenho.js"></script>
+<script src="assets/barra-rolagem.js"></script>
+<!-- cursor com rastro de pixels -->
+<script src="assets/cursor-trail.js"></script>
+</body>
+</html>
