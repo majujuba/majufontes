@@ -16,7 +16,7 @@
   const DISSOLVER_MS = 500;  // quadrados sumindo — igual ao tempo de surgir
   const ESQ_DIR = 0;         // ordem de sumir: 0 = aleatória, igual à de surgir (era 0,6, da esquerda para a direita)
   const FADE = 0.14;         // fração do tempo em que cada quadrado esmaece (0 = some de uma vez)
-  const DESTINO = /(^|\/)[\w-]+\.html(\?|#|$)/;   // qualquer página do site (home, about, work e projetos) chega pela transição
+  const DESTINO = /(^|\/)[\w-]+\.html(\?|#|$)/;   // qualquer página do site (about, work e projetos) chega pela transição — menos a home
   /* ============================================ */
   const CHAVE = 'maju-dissolve-chegada';
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -66,6 +66,7 @@
     const alvo = new URL(a.href, location.href);
     if (alvo.origin !== location.origin && location.protocol !== 'file:') return;   // link para outro site
     if (alvo.pathname === location.pathname) return;   // já está nessa página
+    if (/(^|\/)(index\.html)?$/.test(alvo.pathname)) return;   // indo para a home: sem transição (a pedido dela)
     e.preventDefault(); saindo = true;
     const { cv, ctx, W, H, s, cel, semente } = criaTela();
     document.documentElement.appendChild(cv);
