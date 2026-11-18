@@ -386,7 +386,19 @@
   const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let s = 0, ocupado = false, iniciado = false;
   const poe = (el, n) => { el.classList.toggle('vazio', !n); el.style.backgroundImage = n ? 'url(' + url(n) + ')' : ''; el.setAttribute('aria-label', n ? 'página ' + n : ''); };
-  const preCarrega = c => [c - 1, c + 1, c + 2].forEach(x => { if (x >= 0 && x <= ULTIMA) pags(x).forEach(n => { if (n) new Image().src = url(n); }); });
+  // páginas já baixadas e decodificadas ficam guardadas: a folha só começa a virar com as imagens prontas (sem engasgo no meio)
+  const cache = new Map();
+  const carrega = n => {
+    if (!n) return Promise.resolve();
+    if (!cache.has(n)) {
+      const img = new Image();
+      img.src = url(n);
+      cache.set(n, img.decode().catch(() => {}));
+      cache.get(n).img = img;
+    }
+    return cache.get(n);
+  };
+  const preCarrega = c => [c - 1, c + 1, c + 2].forEach(x => { if (x >= 0 && x <= ULTIMA) pags(x).forEach(carrega); });
   function mostra() {
     const [l, r] = pags(s);
     poe(esq, l); poe(dir, r);
@@ -394,15 +406,20 @@
     ant.disabled = s === 0; prox.disabled = s === ULTIMA;
     preCarrega(s);
   }
-  function vira(passo) {
+  let pendente = 0;   // clique feito enquanto uma folha ainda vira: é atendido logo depois
+  async function vira(passo) {
+    if (ocupado) { pendente = passo; return; }
     const novo = s + passo;
-    if (ocupado || novo < 0 || novo > ULTIMA) return;
+    if (novo < 0 || novo > ULTIMA) return;
     if (!iniciado) { iniciado = true; mostra(); }
-    const [l, r] = pags(s), [nl, nr] = pags(novo);
-    if (calmo) { s = novo; mostra(); return; }
     ocupado = true;
+    const [l, r] = pags(s), [nl, nr] = pags(novo);
+    // espera as páginas que vão aparecer (no máximo 1,5 s; se a internet estiver lenta, vira assim mesmo)
+    await Promise.race([Promise.all([nl, nr].map(carrega)), new Promise(ok => setTimeout(ok, 1500))]);
+    if (calmo || !rev.animate) { s = novo; mostra(); ocupado = false; return proximo(); }
     const folha = document.createElement('div');
     folha.className = 'folha ' + (passo > 0 ? 'para-frente' : 'para-tras');
+    folha.style.willChange = 'transform';
     folha.innerHTML = '<div class="face"></div><div class="face verso"></div>';
     const [frente, verso] = folha.children;
     frente.style.backgroundImage = 'url(' + url(passo > 0 ? r : l) + ')';
@@ -410,11 +427,18 @@
     // embaixo da folha já aparece a página que ela vai revelar
     if (passo > 0) poe(dir, nr); else poe(esq, nl);
     rev.appendChild(folha);
-    requestAnimationFrame(() => requestAnimationFrame(() => { folha.style.transform = 'rotateY(' + (passo > 0 ? -180 : 180) + 'deg)'; }));
-    const fim = () => { if (!ocupado) return; s = novo; mostra(); folha.remove(); ocupado = false; };
-    folha.addEventListener('transitionend', fim, { once: true });
-    setTimeout(fim, 1200);   // segurança
+    // animação pelo próprio navegador (Web Animations): termina sempre no fim do giro, mesmo se algum quadro atrasar
+    const giro = folha.animate(
+      [{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(' + (passo > 0 ? -180 : 180) + 'deg)' }],
+      { duration: 800, easing: 'cubic-bezier(.45,.05,.3,1)', fill: 'forwards' });
+    await giro.finished.catch(() => {});
+    s = novo; mostra();
+    // tira a folha só depois que as páginas novas já estão desenhadas embaixo dela (sem piscar)
+    requestAnimationFrame(() => requestAnimationFrame(() => folha.remove()));
+    ocupado = false;
+    proximo();
   }
+  function proximo() { if (pendente) { const p = pendente; pendente = 0; vira(p); } }
   ant.addEventListener('click', () => vira(-1));
   prox.addEventListener('click', () => vira(1));
   esq.addEventListener('click', () => vira(-1));
