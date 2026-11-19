@@ -41,6 +41,9 @@
   // cursor de texto: o "I" desenhado por ela, já pintado na cor da seta (assets/cursor-texto.png);
   // aparece sobre campos de escrever. Imagem comum (não máscara CSS): funciona também abrindo o arquivo direto
   cur.insertAdjacentHTML('beforeend', '<img class="cts-t" src="assets/cursor-texto.png" alt="" aria-hidden="true" decoding="async">');
+  // cursor de segurar: a "bolinha" desenhada por ela, já roxa (assets/cursor-segurar.png);
+  // aparece sobre o que dá para pegar e arrastar (3D do Fósforo, adesivos, barra de rolagem)
+  cur.insertAdjacentHTML('beforeend', '<img class="cts-s" src="assets/cursor-segurar.png" alt="" aria-hidden="true" decoding="async">');
   if (fine) { document.body.appendChild(cur); root.classList.add('cts-on'); }
 
   /* ---------- luminância do fundo sob o cursor ---------- */
@@ -175,14 +178,18 @@
     'input[type="submit"], input[type="button"], input[type="checkbox"], input[type="radio"], [onclick], [data-cursor="link"]';
   const TEXTFIELD = 'input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]), ' +
     'textarea, [contenteditable=""], [contenteditable="true"]';
-  let mx = -100, my = -100, dirty = false;
+  // o que dá para segurar e arrastar (onde antes o cursor do sistema virava a "mãozinha")
+  const SEGURAR = 'model-viewer, .adesivo, .barra-polegar, [data-cursor="segurar"]';
+  let mx = -100, my = -100, dirty = false, arrastando = false;
 
   function refreshCursor() {
     const el = document.elementFromPoint(mx, my);
     const text = !!(el && el.closest(TEXTFIELD));
     root.classList.toggle('cts-text', text);
     cur.classList.toggle('cts-texto', text);   // troca a seta pela barra de texto (antes: escondia e usava a do sistema)
-    cur.classList.toggle('cts-link', !text && !!(el && el.closest(CLICKABLE)));
+    const segura = arrastando || (!text && !!(el && el.closest(SEGURAR)));
+    cur.classList.toggle('cts-segurar', segura);
+    cur.classList.toggle('cts-link', !text && !segura && !!(el && el.closest(CLICKABLE)));
     cur.style.color = SETA;   // antes: roxo/branco conforme o fundo (o rastro continua trocando)
   }
 
@@ -193,8 +200,14 @@
     trail(mx, my);
   }, { passive: true });
   addEventListener('scroll', () => { dirty = true; }, { passive: true, capture: true });
-  addEventListener('pointerdown', () => cur.classList.add('cts-down'));
-  addEventListener('pointerup', () => cur.classList.remove('cts-down'));
+  // arrastando algo que se segura, a bolinha fica até soltar o botão (mesmo se o ponteiro sair do objeto)
+  addEventListener('pointerdown', e => {
+    cur.classList.add('cts-down');
+    arrastando = !!(e.target.closest && e.target.closest(SEGURAR)); dirty = true;
+  }, true);
+  const solta = () => { cur.classList.remove('cts-down'); if (arrastando) { arrastando = false; dirty = true; } };
+  addEventListener('pointerup', solta, true);
+  addEventListener('pointercancel', solta, true);
   root.addEventListener('mouseleave', () => { last = null; cur.classList.remove('cts-show'); });
   root.addEventListener('mouseenter', () => { if (fine) cur.classList.add('cts-show'); });
 

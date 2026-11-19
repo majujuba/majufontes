@@ -25,6 +25,13 @@
   /* cursor de texto: o "I" desenhado (cursor-texto.png, já na cor da seta), centrado no ponteiro */
   #cts-cursor .cts-t { position: absolute; left: 0; top: 0; width: auto; height: 26px; max-width: none; opacity: 0;
     transform: translate(-50%, -50%); transition: opacity .12s; display: block; }
+  /* cursor de segurar: a bolinha desenhada (cursor-segurar.png, já roxa), centrada no ponteiro;
+     ao clicar e segurar ela encolhe um pouco, como se apertasse */
+  #cts-cursor .cts-s { position: absolute; left: 0; top: 0; width: 24px; height: auto; max-width: none; opacity: 0; display: block;
+    transform: translate(-50%, -50%); transition: opacity .12s, transform .15s; }
+  #cts-cursor.cts-segurar .cts-n, #cts-cursor.cts-segurar .cts-l { opacity: 0; }
+  #cts-cursor.cts-segurar .cts-s { opacity: 1; }
+  #cts-cursor.cts-segurar.cts-down .cts-s { transform: translate(-50%, -50%) scale(.8); }
   #cts-cursor.cts-texto .cts-n, #cts-cursor.cts-texto .cts-l { opacity: 0; }
   #cts-cursor.cts-texto .cts-t { opacity: 1; }
   #cts-cursor.cts-texto.cts-down .cts-t { transform: translate(-50%, -50%); }
