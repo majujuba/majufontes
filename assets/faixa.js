@@ -49,7 +49,7 @@
   const CORTE_E = 200, CORTE_D = 3900;
   const ESCALA = 1670.5 / 4096;                  // px de tela por unidade da imagem
   const ACALMA = 250;                           // quão rápido a inclinação some nas pontas
-  const PASSO = 4;    // um ponto da borda a cada 4 unidades (≈ 1,6 px de tela), como o desenho original: calombos redondos
+  const PASSO = 2;    // um ponto da borda a cada 2 unidades (≈ 0,8 px de tela): os calombinhos miúdos saem redondos
   /* espessura igual do começo ao fim (pedido dela): a corda é desenhada a partir da linha do meio,
      com a mesma distância para cima e para baixo, medida na perpendicular da curva
      (assim ela não afina nos trechos inclinados). 240 = espessura do trecho do meio no desenho do Figma */
@@ -62,9 +62,17 @@
   // borda irregular nas extensões, parecida com a do desenho (pseudoaleatória, sempre igual)
   /* textura da borda como a do desenho original e a das flores: calombinhos arredondados e irregulares
      (sem serrilhado fino), que a ondulação do filtro deixa ainda mais orgânicos */
+  // ruído suave (valores aleatórios fixos ligados por curvas): calombinhos de tamanhos e alturas variados
+  const sorteio = n => { const v = Math.sin(n * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
+  const ruido1d = (x, s) => {
+    const i = Math.floor(x), f = x - i, u = f * f * (3 - 2 * f);
+    return (sorteio(i + s * 1000) * (1 - u) + sorteio(i + 1 + s * 1000) * u) * 2 - 1;
+  };
+  /* textura "de pincel" (referência dela): ondinhas largas e suaves + muitos calombinhos miúdos
+     e arredondados, a cada ~3–5 px de tela, de alturas diferentes */
   const serra = (x, s) =>
-    5.0 * Math.sin(x * 0.019 + s) + 4.0 * Math.sin(x * 0.057 + 2 * s) +
-    3.5 * Math.sin(x * 0.118 + 3 * s) * (0.55 + 0.45 * Math.sin(x * 0.009 + s));
+    4.0 * Math.sin(x * 0.019 + s) + 3.0 * Math.sin(x * 0.057 + 2 * s) +
+    4.5 * ruido1d(x / 11, s) + 1.2 * ruido1d(x / 7, s + 0.5) + 2.5 * ruido1d(x / 37, s + 0.25);
 
   let POLI = [], P0 = [], EXT = 0;
   function geometria() {
@@ -76,7 +84,7 @@
     // linha do meio a cada PASSO, suavizada mais uma vez para as perpendiculares não oscilarem
     const xs = [], cs = [];
     for (let x = CORTE_E - EXT; x <= CORTE_D + EXT; x += PASSO) { xs.push(x); cs.push(centro(x)); }
-    const J = 12, cl = cs.map((_, i) => {
+    const J = 24, cl = cs.map((_, i) => {
       let s = 0, n = 0;
       for (let j = Math.max(0, i - J); j <= Math.min(cs.length - 1, i + J); j++) { s += cs[j]; n++; }
       return s / n;
