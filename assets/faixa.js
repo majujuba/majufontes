@@ -41,79 +41,8 @@
   });
   /* curva contínua (Catmull-Rom → Bézier): sem "quinas" entre segmentos, as letras não mudam
      de inclinação aos saltos — era isso que fazia o texto tremer ao andar */
-  const POLI_ORIG = POLIGONO.trim().split(/\s+/).map(s => s.split(',').map(Number));
-
-  /* corda contínua: as pontas arredondadas do desenho apareciam em telas mais largas que 1490px.
-     A corda é cortada onde já tem a espessura cheia (CORTE_E / CORTE_D) e continua para fora da tela,
-     com a mesma espessura e uma curva que vai se acalmando aos poucos. */
-  const CORTE_E = 200, CORTE_D = 3900;
-  const ESCALA = 1670.5 / 4096;                  // px de tela por unidade da imagem
-  const ACALMA = 250;                           // quão rápido a inclinação some nas pontas
-  const PASSO = 2;    // um ponto da borda a cada 2 unidades (≈ 0,8 px de tela): os calombinhos miúdos saem redondos
-  /* espessura igual do começo ao fim (pedido dela): a corda é desenhada a partir da linha do meio,
-     com a mesma distância para cima e para baixo, medida na perpendicular da curva
-     (assim ela não afina nos trechos inclinados). 240 = espessura do trecho do meio no desenho do Figma */
-  const ESPESSURA = 240;
-  const sEm = x => suave[Math.round(x / 4)][1];
-  // inclinação da linha do meio perto de cada corte (média de 64 unidades para não pegar serrilhado)
-  const incE = (sEm(CORTE_E + 64) - sEm(CORTE_E)) / 64;
-  const incD = (sEm(CORTE_D) - sEm(CORTE_D - 64)) / 64;
-  const desvio = d => ACALMA * (1 - Math.exp(-d / ACALMA));
-  // borda irregular nas extensões, parecida com a do desenho (pseudoaleatória, sempre igual)
-  /* textura da borda como a do desenho original e a das flores: calombinhos arredondados e irregulares
-     (sem serrilhado fino), que a ondulação do filtro deixa ainda mais orgânicos */
-  // ruído suave (valores aleatórios fixos ligados por curvas): calombinhos de tamanhos e alturas variados
-  const sorteio = n => { const v = Math.sin(n * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
-  const ruido1d = (x, s) => {
-    const i = Math.floor(x), f = x - i, u = f * f * (3 - 2 * f);
-    return (sorteio(i + s * 1000) * (1 - u) + sorteio(i + 1 + s * 1000) * u) * 2 - 1;
-  };
-  /* textura "de pincel" (referência dela): ondinhas largas e suaves + muitos calombinhos miúdos
-     e arredondados, a cada ~3–5 px de tela, de alturas diferentes */
-  /* borda da referência dela: quase reta, com "bolinhas" arredondadas lado a lado (escalope),
-     uma a cada ~12 unidades (≈ 5 px de tela), de altura um pouco variada */
-  const BOLINHA = 15;
-  const serra = (x, s) => {
-    const fase = x / BOLINHA + 0.35 * ruido1d(x / 40, s + 0.7);            // espaçamento levemente irregular
-    const altura = 5.5 + 2 * ruido1d(x / 11, s);                           // bolinhas de alturas diferentes
-    // raiz do seno: cada bolinha sai redonda (meia-lua), e não pontuda como um dente
-    return altura * Math.sqrt(Math.abs(Math.sin(Math.PI * fase))) + 1.5 * ruido1d(x / 60, s + 0.3);
-  };
-
-  let POLI = [], P0 = [], EXT = 0;
-  function geometria() {
-    const largura = Math.max(screen.width || 0, innerWidth, 1490);
-    EXT = Math.ceil(((largura - 1490) / 2 + 160) / ESCALA / PASSO) * PASSO;
-    const sE = sEm(CORTE_E), sD = sEm(CORTE_D);
-    const centro = x => x < CORTE_E ? sE - incE * desvio(CORTE_E - x)
-                      : x > CORTE_D ? sD + incD * desvio(x - CORTE_D) : sEm(x);
-    // linha do meio a cada PASSO, suavizada mais uma vez para as perpendiculares não oscilarem
-    const xs = [], cs = [];
-    for (let x = CORTE_E - EXT; x <= CORTE_D + EXT; x += PASSO) { xs.push(x); cs.push(centro(x)); }
-    const J = 24, cl = cs.map((_, i) => {
-      let s = 0, n = 0;
-      for (let j = Math.max(0, i - J); j <= Math.min(cs.length - 1, i + J); j++) { s += cs[j]; n++; }
-      return s / n;
-    });
-    const h = ESPESSURA / 2, cima = [], baixo = [];
-    for (let i = 0; i < xs.length; i++) {
-      const a = Math.max(0, i - 1), b = Math.min(xs.length - 1, i + 1);
-      const inc = (cl[b] - cl[a]) / (xs[b] - xs[a]), nl = Math.hypot(1, inc);
-      const nx = -inc / nl, ny = 1 / nl;      // perpendicular apontando para baixo
-      const ht = h + serra(xs[i], 1), hb = h + serra(xs[i], 3);   // borda levemente irregular, como no desenho
-      cima.push([+(xs[i] - nx * ht).toFixed(1), cl[i] - ny * ht]);
-      baixo.push([+(xs[i] + nx * hb).toFixed(1), cl[i] + ny * hb]);
-    }
-    POLI = [...cima, ...baixo.reverse()];
-    // linha do meio (por onde as palavras correm), estendida do mesmo jeito
-    const meio = [];
-    for (let d = EXT; d > 0; d -= 128) meio.push([CORTE_E - d, sE - incE * desvio(d)]);
-    suave.filter((p, i) => i % 8 === 0 && p[0] >= CORTE_E && p[0] <= CORTE_D).forEach(p => meio.push(p));
-    if (meio[meio.length - 1][0] !== CORTE_D) meio.push([CORTE_D, sD]);
-    for (let d = 128; d <= EXT; d += 128) meio.push([CORTE_D + d, sD + incD * desvio(d)]);
-    P0 = meio;
-  }
-  geometria();
+  const P0 = suave.filter((p, i) => i % 8 === 0 || i === suave.length - 1);
+  const POLI = POLIGONO.trim().split(/\s+/).map(s => s.split(',').map(Number));
 
   /* deslocamento vertical da corda no ponto x, no tempo tt (s): duas ondas suaves,
      uma andando para a direita e outra, mais curta, para a esquerda — o encontro delas
@@ -146,16 +75,7 @@
   recorte.appendChild(poliRecorte);
   defs.append(recorte, cria('path', { id: 'faixa-meio', d: caminhoEm(0), fill: 'none' }));
   svg.appendChild(defs);
-  const filtro = cria('filter', { id: 'faixa-onda', filterUnits: 'userSpaceOnUse' });
-  // a área do filtro cobre só a corda (com as extensões): área maior = filtro mais pesado
-  function areaFiltro() {
-    let y0 = Infinity, y1 = -Infinity;
-    for (const [, y] of POLI) { if (y < y0) y0 = y; if (y > y1) y1 = y; }
-    const m = CURVA_ALTURA + ONDA_AMPLITUDE + 40;
-    filtro.setAttribute('x', -EXT - 100 + CORTE_E); filtro.setAttribute('width', 2 * EXT + 200 + CORTE_D - CORTE_E);
-    filtro.setAttribute('y', Math.floor(y0 - m)); filtro.setAttribute('height', Math.ceil(y1 - y0 + 2 * m));
-  }
-  areaFiltro();
+  const filtro = cria('filter', { id: 'faixa-onda', filterUnits: 'userSpaceOnUse', x: -100, y: -100, width: 4296, height: 897 });
   const ruido = cria('feTurbulence', { type: 'fractalNoise', baseFrequency: ONDA_FREQ.join(' '), numOctaves: 2, seed: 7, result: 'n' });
   const desloca = cria('feDisplacementMap', { in: 'SourceGraphic', in2: 'n', scale: ONDA_AMPLITUDE * 0.89, xChannelSelector: 'R', yChannelSelector: 'G' });
   filtro.append(ruido, desloca); defs.appendChild(filtro);
@@ -266,11 +186,6 @@
   inicia();
   // quando a fonte The Seasons terminar de carregar, mede as palavras de novo
   if (document.fonts) document.fonts.ready.then(() => { const antes = ciclo; monta(); if (ciclo !== antes || calmo) posiciona(0); });
-  // janela aumentada além do previsto (ex.: arrastada para um monitor maior): estica a corda
-  addEventListener('resize', () => {
-    if ((innerWidth - 1490) / 2 + 160 <= EXT * ESCALA) return;
-    geometria(); areaFiltro(); curvaCorda(tempoCorda / 1000); monta(); posiciona(0);
-  });
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(es => { visivel = es[es.length - 1].isIntersecting; if (visivel) liga(); }).observe(svg);
   }
