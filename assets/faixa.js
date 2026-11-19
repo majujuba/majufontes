@@ -50,11 +50,11 @@
   const ESCALA = 1670.5 / 4096;                  // px de tela por unidade da imagem
   const ACALMA = 250;                           // quão rápido a inclinação some nas pontas
   const PASSO = 16;
-  const iTopoFim = POLI_ORIG.findIndex(p => p[0] === 4092);
-  const topo = POLI_ORIG.slice(0, iTopoFim + 1).filter(p => p[0] >= CORTE_E && p[0] <= CORTE_D);
-  const base = POLI_ORIG.slice(iTopoFim + 1).filter(p => p[0] >= CORTE_E && p[0] <= CORTE_D);   // da direita para a esquerda
-  const yEm = (lista, x) => lista.find(p => p[0] === x)[1];
-  const sEm = x => suave.find(p => p[0] === x)[1];
+  /* espessura igual do começo ao fim (pedido dela): a corda é desenhada a partir da linha do meio,
+     com a mesma distância para cima e para baixo, medida na perpendicular da curva
+     (assim ela não afina nos trechos inclinados). 240 = espessura do trecho do meio no desenho do Figma */
+  const ESPESSURA = 240;
+  const sEm = x => suave[Math.round(x / 4)][1];
   // inclinação da linha do meio perto de cada corte (média de 64 unidades para não pegar serrilhado)
   const incE = (sEm(CORTE_E + 64) - sEm(CORTE_E)) / 64;
   const incD = (sEm(CORTE_D) - sEm(CORTE_D - 64)) / 64;
@@ -66,21 +66,29 @@
   function geometria() {
     const largura = Math.max(screen.width || 0, innerWidth, 1490);
     EXT = Math.ceil(((largura - 1490) / 2 + 160) / ESCALA / PASSO) * PASSO;
-    const tE = yEm(topo, CORTE_E), bE = yEm(base, CORTE_E), tD = yEm(topo, CORTE_D), bD = yEm(base, CORTE_D);
-    const cE = (tE + bE) / 2, cD = (tD + bD) / 2;
-    const extE = [], extD = [];
-    for (let d = EXT; d > 0; d -= PASSO) extE.push([CORTE_E - d, cE - incE * desvio(d)]);
-    for (let d = PASSO; d <= EXT; d += PASSO) extD.push([CORTE_D + d, cD + incD * desvio(d)]);
-    POLI = [
-      ...extE.map(([x, c]) => [x, c - (cE - tE) + serra(x, 1)]),
-      ...topo,
-      ...extD.map(([x, c]) => [x, c - (cD - tD) + serra(x, 2)]),
-      ...extD.slice().reverse().map(([x, c]) => [x, c + (bD - cD) + serra(x, 3)]),
-      ...base,
-      ...extE.slice().reverse().map(([x, c]) => [x, c + (bE - cE) + serra(x, 4)]),
-    ];
+    const sE = sEm(CORTE_E), sD = sEm(CORTE_D);
+    const centro = x => x < CORTE_E ? sE - incE * desvio(CORTE_E - x)
+                      : x > CORTE_D ? sD + incD * desvio(x - CORTE_D) : sEm(x);
+    // linha do meio a cada PASSO, suavizada mais uma vez para as perpendiculares não oscilarem
+    const xs = [], cs = [];
+    for (let x = CORTE_E - EXT; x <= CORTE_D + EXT; x += PASSO) { xs.push(x); cs.push(centro(x)); }
+    const J = 3, cl = cs.map((_, i) => {
+      let s = 0, n = 0;
+      for (let j = Math.max(0, i - J); j <= Math.min(cs.length - 1, i + J); j++) { s += cs[j]; n++; }
+      return s / n;
+    });
+    const h = ESPESSURA / 2, cima = [], baixo = [];
+    for (let i = 0; i < xs.length; i++) {
+      const a = Math.max(0, i - 1), b = Math.min(xs.length - 1, i + 1);
+      const inc = (cl[b] - cl[a]) / (xs[b] - xs[a]), nl = Math.hypot(1, inc);
+      const nx = -inc / nl, ny = 1 / nl;      // perpendicular apontando para baixo
+      const ht = h + serra(xs[i], 1), hb = h + serra(xs[i], 3);   // borda levemente irregular, como no desenho
+      cima.push([+(xs[i] - nx * ht).toFixed(1), cl[i] - ny * ht]);
+      baixo.push([+(xs[i] + nx * hb).toFixed(1), cl[i] + ny * hb]);
+    }
+    POLI = [...cima, ...baixo.reverse()];
     // linha do meio (por onde as palavras correm), estendida do mesmo jeito
-    const sE = sEm(CORTE_E), sD = sEm(CORTE_D), meio = [];
+    const meio = [];
     for (let d = EXT; d > 0; d -= 128) meio.push([CORTE_E - d, sE - incE * desvio(d)]);
     suave.filter((p, i) => i % 8 === 0 && p[0] >= CORTE_E && p[0] <= CORTE_D).forEach(p => meio.push(p));
     if (meio[meio.length - 1][0] !== CORTE_D) meio.push([CORTE_D, sD]);
