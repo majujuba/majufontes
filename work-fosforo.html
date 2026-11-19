@@ -15,9 +15,9 @@
 <!-- visualizador de modelos 3D (caixas de fósforo) -->
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <script>
-  /* resolução cheia nos 3D: por padrão o visualizador desenha em até metade da resolução quando acha que o computador está pesado.
-     Ele só desenha enquanto a caixa está na tela, então isso não pesa no resto da página. */
-  customElements.whenDefined("model-viewer").then(() => { customElements.get("model-viewer").minimumRenderScale = 1; });
+  /* resolução dos 3D: o visualizador baixa a resolução quando o computador está pesado (para não engasgar);
+     aqui ela nunca fica abaixo de 80% (o padrão deixaria cair até 50%, que fica borrado). */
+  customElements.whenDefined("model-viewer").then(() => { customElements.get("model-viewer").minimumRenderScale = 0.8; });
 </script>
 <!-- transição de pixels que se dissolvem (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script>
@@ -178,12 +178,12 @@
 
   <!-- caixas em 3D (arraste para girar) -->
   <div class="bloco modelo fade-in-element" style="left:50px; top:3581px">
-    <model-viewer src="assets/fosforo/caixa-primaria.glb" alt="Caixa de fósforo Paraná em 3D, com os palitos" camera-controls disable-zoom auto-rotate auto-rotate-delay="0" rotation-per-second="14deg" interaction-prompt="none" shadow-intensity="0.8" shadow-softness="0.6" interpolation-decay="80" exposure="1.05" loading="lazy" data-cursor="link"></model-viewer>
+    <model-viewer src="assets/fosforo/caixa-primaria.glb" alt="Caixa de fósforo Paraná em 3D, com os palitos" camera-controls disable-zoom auto-rotate auto-rotate-delay="0" rotation-per-second="14deg" interaction-prompt="none" shadow-intensity="0.8" shadow-softness="0.6" exposure="1.05" loading="lazy" data-cursor="link"></model-viewer>
     <p class="legenda">caixa de fósforo<small>arraste para girar</small></p>
     <span class="c1"></span><span class="c2"></span>
   </div>
   <div class="bloco modelo fade-in-element" style="left:749px; top:3581px">
-    <model-viewer src="assets/fosforo/caixa-secundaria.glb" alt="Embalagem secundária do Fósforo Paraná em 3D" camera-controls disable-zoom camera-orbit="auto auto 130%" max-camera-orbit="auto auto 200%" auto-rotate auto-rotate-delay="0" rotation-per-second="14deg" interaction-prompt="none" shadow-intensity="0.8" shadow-softness="0.6" interpolation-decay="80" exposure="1.05" loading="lazy" data-cursor="link"></model-viewer>
+    <model-viewer src="assets/fosforo/caixa-secundaria.glb" alt="Embalagem secundária do Fósforo Paraná em 3D" camera-controls disable-zoom camera-orbit="auto auto 130%" max-camera-orbit="auto auto 200%" auto-rotate auto-rotate-delay="0" rotation-per-second="14deg" interaction-prompt="none" shadow-intensity="0.8" shadow-softness="0.6" exposure="1.05" loading="lazy" data-cursor="link"></model-viewer>
     <p class="legenda">caixa secundária<small>arraste para girar</small></p>
     <span class="c1"></span><span class="c2"></span>
   </div>
@@ -261,23 +261,6 @@
     if (window.__modelosLocais && window.__modelosLocais[nome]) m.setAttribute('src', window.__modelosLocais[nome]);
   });
   document.head.appendChild(s);
-})();
-</script>
-<script>
-/* 3D mais leves:
-   - enquanto a página rola, as caixas param de girar sozinhas (voltam quando a rolagem termina), para a rolagem não engasgar;
-   - quando a pessoa está arrastando uma caixa, a outra para de girar, e só uma é desenhada de cada vez. */
-(() => {
-  const mvs = [...document.querySelectorAll('model-viewer')];
-  if (!mvs.length) return;
-  let rolando = false, segurando = null;
-  const atualiza = () => mvs.forEach(m => { m.autoRotate = !rolando && (segurando === null || segurando === m); });
-  addEventListener('rolagem-inicio', () => { rolando = true; atualiza(); });
-  addEventListener('rolagem-fim', () => { rolando = false; atualiza(); });
-  mvs.forEach(m => {
-    m.addEventListener('pointerdown', () => { segurando = m; atualiza(); });
-    addEventListener('pointerup', () => { if (segurando === m) { segurando = null; atualiza(); } });
-  });
 })();
 </script>
 <script src="assets/desempenho.js"></script>
