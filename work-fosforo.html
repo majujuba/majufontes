@@ -287,11 +287,14 @@ if (canvases.length) {
     renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.NeutralToneMapping;
-    renderer.toneMappingExposure = 1.05;
+    renderer.toneMappingExposure = 1.0;
     const scene = new THREE.Scene();
     const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
     pmrem.dispose();
+    // luz natural de estúdio: o ambiente dá os reflexos suaves; o céu/chão dá um tom quente vindo de baixo (como o fundo amarelo)
+    scene.environmentIntensity = 0.55;
+    scene.add(new THREE.HemisphereLight(0xfff6ea, 0xe0a650, 0.9));
 
     const src = canvas.dataset.modelo, nome = src.split('/').pop();
     const gltf = await new GLTFLoader().loadAsync((mapa && mapa[nome]) || src);
@@ -314,6 +317,18 @@ if (canvases.length) {
     const camera = new THREE.PerspectiveCamera(fov, 1, dist / 100, dist * 10);
     const fi = THREE.MathUtils.degToRad(75);
     camera.position.set(0, dist * Math.cos(fi), dist * Math.sin(fi));
+    // luz principal e de preenchimento presas à câmera: a face que a pessoa está vendo fica sempre bem iluminada
+    scene.add(camera);
+    const principal = new THREE.DirectionalLight(0xfff3e2, 1.9);
+    principal.position.set(-0.8 * dist, 1.1 * dist, 0.6 * dist);
+    camera.add(principal);
+    const preenche = new THREE.DirectionalLight(0xffffff, 0.55);
+    preenche.position.set(1.0 * dist, 0.2 * dist, 0.4 * dist);
+    camera.add(preenche);
+    // contorno: luz fixa por trás e de cima, separa a caixa do fundo
+    const contorno = new THREE.DirectionalLight(0xffffff, 0.7);
+    contorno.position.set(0.3 * dist, 1.2 * dist, -1.0 * dist);
+    scene.add(contorno);
 
     const controles = new OrbitControls(camera, canvas);
     controles.enableZoom = false; controles.enablePan = false;
