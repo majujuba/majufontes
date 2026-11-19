@@ -1,7 +1,6 @@
 /* Cursor Trail — Pixels v2 (copiado de "Cursor Trail — Pixels v2.html") */
   @media (hover: hover) and (pointer: fine) {
     html.cts-on, html.cts-on * { cursor: none !important; }
-    html.cts-on.cts-text, html.cts-on.cts-text * { cursor: auto !important; }
   }
   #cts-canvas {
     position: fixed; inset: 0; width: 100%; height: 100%;
@@ -23,3 +22,8 @@
   #cts-cursor.cts-link .cts-n { opacity: 0; }
   #cts-cursor.cts-link .cts-l { opacity: 1; transform: translate(-2%, -2.5%) scale(1.15); }
   #cts-cursor.cts-down svg { transform: translate(-2%, -2.5%) scale(.88); }
+  /* cursor de texto: barra "I" de pixels, centrada no ponteiro, na mesma cor da seta */
+  #cts-cursor .cts-t { opacity: 0; height: 22px; transform: translate(-50%, -50%); }
+  #cts-cursor.cts-texto .cts-n, #cts-cursor.cts-texto .cts-l { opacity: 0; }
+  #cts-cursor.cts-texto .cts-t { opacity: 1; }
+  #cts-cursor.cts-texto.cts-down .cts-t { transform: translate(-50%, -50%); }
