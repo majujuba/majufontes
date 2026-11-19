@@ -77,8 +77,11 @@
     background: var(--roxo); color: var(--cinza); font: 500 22px/1 var(--pixel); opacity: 0; pointer-events: none; transition: opacity .4s ease, transform .4s ease; }
   .quadro.usado .limpar { opacity: 1; pointer-events: auto; }
   .quadro .limpar:hover { transform: scale(1.05); }
-  .quadro .limpar::before, .quadro .limpar::after { content: ""; position: absolute; width: 6px; height: 6px; background: #FFF2C5; }
-  .quadro .limpar::before { left: 0; top: 0; } .quadro .limpar::after { right: 0; top: 0; }
+  /* quatro cantinhos de pixel na cor do quadro; 1px além da borda esconde o fio roxo em volta deles */
+  .quadro .limpar::before, .quadro .limpar::after, .quadro .limpar > .c1, .quadro .limpar > .c2 {
+    content: ""; position: absolute; width: 7px; height: 7px; margin: -1px; background: #FFF2C5; pointer-events: none; }
+  .quadro .limpar::before { left: 0; top: 0; }   .quadro .limpar::after { right: 0; top: 0; }
+  .quadro .limpar > .c1   { left: 0; bottom: 0; } .quadro .limpar > .c2  { right: 0; bottom: 0; }
 
   /* ── anterior / próximo ── */
   .navega { left: 0; right: 0; top: 5014px; height: 142px; }
@@ -166,7 +169,7 @@
   <!-- quadro amarelo: a pessoa clica e vai carimbando cajus e folhas para criar a própria composição -->
   <section class="bloco quadro fade-in-element" aria-label="quadro para criar uma composição com os cajus: clique para carimbar">
     <p class="dica">clique para carimbar cajus e folhas</p>
-    <button class="limpar" type="button">limpar</button>
+    <button class="limpar" type="button">limpar<span class="c1"></span><span class="c2"></span></button>
     <span class="c1"></span><span class="c2"></span>
   </section>
 
