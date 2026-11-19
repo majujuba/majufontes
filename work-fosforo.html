@@ -12,8 +12,13 @@
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
-<!-- 3D das caixas de fósforo: biblioteca three.js (as caixas são montadas no fim da página) -->
-<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/" } }</script>
+<!-- visualizador de modelos 3D (caixas de fósforo) -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<script>
+  /* resolução cheia nos 3D: por padrão o visualizador desenha em até metade da resolução quando acha que o computador está pesado.
+     Ele só desenha enquanto a caixa está na tela, então isso não pesa no resto da página. */
+  customElements.whenDefined("model-viewer").then(() => { customElements.get("model-viewer").minimumRenderScale = 1; });
+</script>
 <!-- transição de pixels que se dissolvem (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script>
 <style>
@@ -78,8 +83,8 @@
 
   /* ── caixas em 3D: a pessoa arrasta para girar (modelos do Blender) ── */
   .modelo { width: 691px; height: 621px; background: #FFC662; }
-  .modelo canvas.cena3d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: grab; outline: none; }
-  .modelo canvas.cena3d:active { cursor: grabbing; }
+  .modelo model-viewer { position: absolute; inset: 0; width: 100%; height: 100%; --poster-color: transparent; background: transparent; cursor: grab; }
+  .modelo model-viewer:active { cursor: grabbing; }
   .modelo .legenda { position: absolute; left: 0; right: 0; bottom: 22px; text-align: center; pointer-events: none;
     font: 500 20px/1.2 var(--pixel); color: #731212; z-index: 3; }
   .modelo .legenda small { display: block; font: 400 15px/1.2 var(--pixel); color: rgba(115,18,18,.6); }
@@ -173,12 +178,12 @@
 
   <!-- caixas em 3D (arraste para girar) -->
   <div class="bloco modelo fade-in-element" style="left:50px; top:3581px">
-    <canvas class="cena3d" data-modelo="assets/fosforo/caixa-primaria.glb" data-distancia="1" data-cursor="link" role="img" aria-label="Caixa de fósforo Paraná em 3D, com os palitos (arraste para girar)"></canvas>
+    <model-viewer src="assets/fosforo/caixa-primaria.glb" alt="Caixa de fósforo Paraná em 3D, com os palitos" camera-controls disable-zoom auto-rotate auto-rotate-delay="0" rotation-per-second="14deg" interaction-prompt="none" shadow-intensity="0.8" shadow-softness="0.6" interpolation-decay="80" exposure="1.05" loading="lazy" data-cursor="link"></model-viewer>
     <p class="legenda">caixa de fósforo<small>arraste para girar</small></p>
     <span class="c1"></span><span class="c2"></span>
   </div>
   <div class="bloco modelo fade-in-element" style="left:749px; top:3581px">
-    <canvas class="cena3d" data-modelo="assets/fosforo/caixa-secundaria.glb" data-distancia="1.3" data-cursor="link" role="img" aria-label="Embalagem secundária do Fósforo Paraná em 3D (arraste para girar)"></canvas>
+    <model-viewer src="assets/fosforo/caixa-secundaria.glb" alt="Embalagem secundária do Fósforo Paraná em 3D" camera-controls disable-zoom camera-orbit="auto auto 130%" max-camera-orbit="auto auto 200%" auto-rotate auto-rotate-delay="0" rotation-per-second="14deg" interaction-prompt="none" shadow-intensity="0.8" shadow-softness="0.6" interpolation-decay="80" exposure="1.05" loading="lazy" data-cursor="link"></model-viewer>
     <p class="legenda">caixa secundária<small>arraste para girar</small></p>
     <span class="c1"></span><span class="c2"></span>
   </div>
@@ -244,140 +249,36 @@
   videos.forEach(v => io.observe(v));
 })();
 </script>
-<script type="module">
-/* CAIXAS EM 3D (three.js) — versão enxuta, feita para girar liso:
-   - cada caixa desenha direto no seu próprio bloco (sem a cópia por quadro que o visualizador anterior fazia);
-   - resolução sempre a da tela (não fica mudando, que é o que causava os "trancos" e o borrado);
-   - a sombra é uma imagem parada embaixo da caixa (antes era desenhada de novo a cada quadro);
-   - só desenha quando a caixa está na tela, e o giro automático para enquanto a página rola;
-   - o giro anda pelo relógio (não pelo número de quadros), então fica na mesma velocidade mesmo se algum quadro atrasar. */
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-
-const canvases = [...document.querySelectorAll('canvas.cena3d')];
-if (canvases.length) {
-  // abrindo a página direto do arquivo (file://), o navegador não deixa ler os .glb: usa os modelos embutidos
-  const locais = () => new Promise(res => {
-    if (location.protocol !== 'file:') return res(null);
-    const s = document.createElement('script');
-    s.src = 'assets/fosforo/modelos-locais.js';
-    s.onload = () => res(window.__modelosLocais || null);
-    s.onerror = () => res(null);
-    document.head.appendChild(s);
+<script>
+/* abrindo a página direto do arquivo (file://), o navegador bloqueia a leitura dos .glb:
+   nesse caso usa os modelos embutidos em modelos-locais.js (no site publicado nada disso acontece) */
+(() => {
+  if (location.protocol !== 'file:') return;
+  const s = document.createElement('script');
+  s.src = 'assets/fosforo/modelos-locais.js';
+  s.onload = () => document.querySelectorAll('model-viewer').forEach(m => {
+    const nome = m.getAttribute('src').split('/').pop();
+    if (window.__modelosLocais && window.__modelosLocais[nome]) m.setAttribute('src', window.__modelosLocais[nome]);
   });
-
+  document.head.appendChild(s);
+})();
+</script>
+<script>
+/* 3D mais leves:
+   - enquanto a página rola, as caixas param de girar sozinhas (voltam quando a rolagem termina), para a rolagem não engasgar;
+   - quando a pessoa está arrastando uma caixa, a outra para de girar, e só uma é desenhada de cada vez. */
+(() => {
+  const mvs = [...document.querySelectorAll('model-viewer')];
+  if (!mvs.length) return;
   let rolando = false, segurando = null;
-  addEventListener('rolagem-inicio', () => { rolando = true; });
-  addEventListener('rolagem-fim', () => { rolando = false; });
-
-  // sombra macia: um degradê redondo desenhado uma vez só
-  const sombraTex = (() => {
-    const c = document.createElement('canvas'); c.width = c.height = 128;
-    const g = c.getContext('2d'), gr = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-    gr.addColorStop(0, 'rgba(110,45,10,.42)'); gr.addColorStop(.55, 'rgba(110,45,10,.16)'); gr.addColorStop(1, 'rgba(110,45,10,0)');
-    g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
-    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
-  })();
-
-  const cenas = [];
-  const montar = async (canvas, mapa) => {
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.NeutralToneMapping;
-    renderer.toneMappingExposure = 1.08;
-    const scene = new THREE.Scene();
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-    pmrem.dispose();
-    // luz natural de estúdio: o ambiente dá os reflexos suaves; o céu/chão dá um tom quente vindo de baixo (como o fundo amarelo)
-    scene.environmentIntensity = 0.8;
-    scene.add(new THREE.HemisphereLight(0xfff6ea, 0xe0a650, 1.3));
-
-    const src = canvas.dataset.modelo, nome = src.split('/').pop();
-    const gltf = await new GLTFLoader().loadAsync((mapa && mapa[nome]) || src);
-    const obj = gltf.scene;
-    const caixa = new THREE.Box3().setFromObject(obj);
-    const tam = caixa.getSize(new THREE.Vector3()), centro = caixa.getCenter(new THREE.Vector3());
-    obj.position.sub(centro);
-    scene.add(obj);
-
-    const sombra = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: sombraTex, transparent: true, depthWrite: false, toneMapped: false }));
-    sombra.rotation.x = -Math.PI / 2;
-    sombra.position.y = -tam.y / 2 - tam.y * 0.01;
-    const lado = Math.max(tam.x, tam.z) * 1.7;
-    sombra.scale.set(lado, lado, 1);
-    scene.add(sombra);
-
-    // câmera: enquadra a caixa inteira (como o visualizador anterior), um pouco de cima
-    const raio = tam.length() / 2;
-    const fov = 30, dist = raio / Math.sin(THREE.MathUtils.degToRad(fov / 2)) * (+canvas.dataset.distancia || 1);
-    const camera = new THREE.PerspectiveCamera(fov, 1, dist / 100, dist * 10);
-    const fi = THREE.MathUtils.degToRad(75);
-    camera.position.set(0, dist * Math.cos(fi), dist * Math.sin(fi));
-    // luz principal e de preenchimento presas à câmera: a face que a pessoa está vendo fica sempre bem iluminada
-    scene.add(camera);
-    const principal = new THREE.DirectionalLight(0xfff3e2, 2.2);
-    principal.position.set(-0.8 * dist, 1.1 * dist, 0.6 * dist);
-    camera.add(principal);
-    const preenche = new THREE.DirectionalLight(0xffffff, 1.2);
-    preenche.position.set(1.0 * dist, 0.2 * dist, 0.4 * dist);
-    camera.add(preenche);
-    // contorno: luz fixa por trás e de cima, separa a caixa do fundo
-    const contorno = new THREE.DirectionalLight(0xffffff, 0.7);
-    contorno.position.set(0.3 * dist, 1.2 * dist, -1.0 * dist);
-    scene.add(contorno);
-
-    const controles = new OrbitControls(camera, canvas);
-    controles.enableZoom = false; controles.enablePan = false;
-    controles.enableDamping = true; controles.dampingFactor = 0.08;
-    controles.rotateSpeed = 0.7;
-    controles.autoRotate = true; controles.autoRotateSpeed = 2.33;   // ≈ 14° por segundo
-    controles.update();
-
-    const ajusta = () => {
-      const w = canvas.clientWidth, h = canvas.clientHeight;
-      if (!w || !h) return;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h; camera.updateProjectionMatrix();
-      cena.desenhar = true;
-    };
-    const cena = { canvas, renderer, scene, camera, controles, visivel: false, desenhar: true };
-    new ResizeObserver(ajusta).observe(canvas);
-    ajusta();
-    new IntersectionObserver(es => { cena.visivel = es[0].isIntersecting; cena.desenhar = true; }, { rootMargin: '100px 0px' }).observe(canvas);
-    canvas.addEventListener('pointerdown', () => { segurando = canvas; });
-    controles.addEventListener('change', () => { cena.desenhar = true; });
-    cenas.push(cena);
-  };
-
-  // um único laço para as duas caixas
-  let anterior = performance.now();
-  const quadro = agora => {
-    const dt = Math.min(0.05, (agora - anterior) / 1000); anterior = agora;
-    for (const c of cenas) {
-      if (!c.visivel) continue;
-      c.controles.autoRotate = !rolando && (segurando === null || segurando === c.canvas);
-      c.controles.update(dt);
-      if (c.desenhar || c.controles.autoRotate) { c.renderer.render(c.scene, c.camera); c.desenhar = false; }
-    }
-    requestAnimationFrame(quadro);
-  };
-  addEventListener('pointerup', () => { segurando = null; });
-  addEventListener('pointercancel', () => { segurando = null; });
-
-  // só começa a baixar os modelos quando os blocos estão chegando na tela
-  const inicio = new IntersectionObserver(async es => {
-    if (!es.some(e => e.isIntersecting)) return;
-    inicio.disconnect();
-    const mapa = await locais();
-    await Promise.all(canvases.map(c => montar(c, mapa).catch(err => console.error('3D:', err))));
-    requestAnimationFrame(quadro);
-  }, { rootMargin: '150% 0px' });
-  canvases.forEach(c => inicio.observe(c));
-}
+  const atualiza = () => mvs.forEach(m => { m.autoRotate = !rolando && (segurando === null || segurando === m); });
+  addEventListener('rolagem-inicio', () => { rolando = true; atualiza(); });
+  addEventListener('rolagem-fim', () => { rolando = false; atualiza(); });
+  mvs.forEach(m => {
+    m.addEventListener('pointerdown', () => { segurando = m; atualiza(); });
+    addEventListener('pointerup', () => { if (segurando === m) { segurando = null; atualiza(); } });
+  });
+})();
 </script>
 <script src="assets/desempenho.js"></script>
 <script src="assets/barra-rolagem.js"></script>
