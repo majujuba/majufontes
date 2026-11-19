@@ -14,6 +14,11 @@
 <link rel="stylesheet" href="assets/barra-rolagem.css">
 <!-- visualizador de modelos 3D (caixas de fósforo) -->
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<script>
+  /* resolução cheia nos 3D: por padrão o visualizador desenha em até metade da resolução quando acha que o computador está pesado.
+     Ele só desenha enquanto a caixa está na tela, então isso não pesa no resto da página. */
+  customElements.whenDefined("model-viewer").then(() => { customElements.get("model-viewer").minimumRenderScale = 1; });
+</script>
 <!-- transição de pixels que se dissolvem (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script>
 <style>
