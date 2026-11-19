@@ -355,8 +355,35 @@
       voltar.classList.toggle('mostra', i > 0);
       voltar.tabIndex = i > 0 ? 0 : -1;
     };
-    c.querySelector('.seta.avancar').addEventListener('click', () => vai(i + 1));
-    voltar.addEventListener('click', () => vai(i - 1));
+    let usou = false;   // depois que a pessoa passa uma foto, a dica não aparece mais
+    c.querySelector('.seta.avancar').addEventListener('click', () => { usou = true; vai(i + 1); });
+    voltar.addEventListener('click', () => { usou = true; vai(i - 1); });
+
+    /* dica de que há mais fotos: quando o carrossel aparece na tela, a foto atual desliza um pouquinho
+       para a esquerda e a próxima espia pela direita; depois as duas voltam ao lugar */
+    const ESPIA = 120, VAO = 10;   // quanto a próxima foto aparece e o espaço roxo entre as duas
+    let espiando = false;
+    async function espia() {
+      if (usou || espiando || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      espiando = true;
+      const atual = fotos[i], prox = fotos[(i + 1) % fotos.length];
+      prox.loading = 'eager';
+      try { await prox.decode(); } catch (_) {}
+      if (usou) { espiando = false; return; }
+      prox.style.transition = 'none'; prox.style.opacity = '1';
+      const tempo = { duration: 1700, easing: 'cubic-bezier(.45,0,.2,1)' };
+      const passos = (de, ate) => [{ transform: de }, { transform: ate, offset: .38 }, { transform: ate, offset: .62 }, { transform: de }];
+      atual.animate(passos('translateX(0)', `translateX(${-ESPIA}px)`), tempo);
+      const a = prox.animate(passos(`translateX(calc(100% + ${VAO}px))`, `translateX(calc(100% + ${VAO - ESPIA}px))`), tempo);
+      a.onfinish = a.oncancel = () => { prox.style.opacity = ''; prox.style.transition = ''; espiando = false; };
+    }
+    if ('IntersectionObserver' in window) {
+      let fora = true;
+      new IntersectionObserver(es => es.forEach(e => {
+        if (e.intersectionRatio >= .6 && fora) { fora = false; setTimeout(espia, 700); }   // espera o carrossel terminar de aparecer
+        else if (e.intersectionRatio < .1) fora = true;
+      }), { threshold: [0, .1, .6] }).observe(c);
+    }
     // setas do teclado (← →) passam as fotos quando o carrossel está visível na tela
     addEventListener('keydown', e => {
       if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
