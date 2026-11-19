@@ -70,7 +70,7 @@
   /* seta sobre a foto do livro aberto (image 28 do Figma) */
   /* carrossel da foto larga: a seta (image 28 do Figma) fica por cima da foto, perto da borda direita,
      e passa para a próxima imagem (volta à primeira depois da última) */
-  .carrossel > img { opacity: 0; transition: opacity .6s ease; }
+  .carrossel > img { opacity: 0; }   /* as fotos passam deslizando (script do carrossel), sem fade */
   .carrossel > img.ativa { opacity: 1; }
   /* 630px de altura (no Figma 690): assim a foto inteira cabe na tela abaixo da header, a pedido dela (600 ficou pequeno) */
   .carrossel .seta { position: absolute; left: 1352px; top: 297px; width: 32.5px; height: 35.4px; z-index: 3;
@@ -345,19 +345,34 @@
     const fotos = [...c.querySelectorAll(':scope > img')];
     const voltar = c.querySelector('.seta.voltar');
     let i = 0;
-    const vai = n => {
-      fotos[i].classList.remove('ativa');
+    const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // passagem: a foto atual sai deslizando por um lado e a nova entra pelo outro, as duas juntas
+    // (dir 1 = próxima, vem da direita; -1 = anterior, vem da esquerda)
+    const vai = (n, dir = 1) => {
+      // se a pessoa clicar rápido, a passagem anterior (ou a espiada) termina na hora antes da nova
+      fotos.forEach(f => f.getAnimations().forEach(a => a.finish()));
+      const antes = fotos[i];
+      antes.classList.remove('ativa');
       i = (n + fotos.length) % fotos.length;
-      fotos[i].loading = 'eager';
-      fotos[i].classList.add('ativa');
+      const nova = fotos[i];
+      nova.loading = 'eager';
+      nova.classList.add('ativa');
       fotos[(i + 1) % fotos.length].loading = 'eager';   // já vai carregando a seguinte
+      fotos[(i - 1 + fotos.length) % fotos.length].loading = 'eager';
+      if (!calmo && antes !== nova) {
+        const tempo = { duration: 650, easing: 'cubic-bezier(.65,0,.25,1)' };
+        antes.style.opacity = '1';
+        const a = antes.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${-dir * 100}%)` }], tempo);
+        nova.animate([{ transform: `translateX(${dir * 100}%)` }, { transform: 'translateX(0)' }], tempo);
+        a.onfinish = a.oncancel = () => { antes.style.opacity = ''; };
+      }
       // a seta da esquerda aparece depois da primeira foto (e some de novo ao voltar a ela)
       voltar.classList.toggle('mostra', i > 0);
       voltar.tabIndex = i > 0 ? 0 : -1;
     };
     let usou = false;   // depois que a pessoa passa uma foto, a dica não aparece mais
     c.querySelector('.seta.avancar').addEventListener('click', () => { usou = true; vai(i + 1); });
-    voltar.addEventListener('click', () => { usou = true; vai(i - 1); });
+    voltar.addEventListener('click', () => { usou = true; vai(i - 1, -1); });
 
     /* dica de que há mais fotos: quando o carrossel aparece na tela, a foto atual desliza um pouquinho
        para a esquerda e a próxima espia pela direita; depois as duas voltam ao lugar */
@@ -394,7 +409,7 @@
       if (r.bottom < 42 || r.top > innerHeight) return;   // carrossel fora da tela (42 = header)
       e.preventDefault();
       if (e.key === 'ArrowRight') vai(i + 1);
-      else if (i > 0) vai(i - 1);                         // na primeira foto, ← não faz nada (como a seta, que ainda não aparece)
+      else if (i > 0) vai(i - 1, -1);                        // na primeira foto, ← não faz nada (como a seta, que ainda não aparece)
     });
   });
 })();
