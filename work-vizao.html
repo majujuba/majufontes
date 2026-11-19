@@ -361,7 +361,7 @@
 
     /* dica de que há mais fotos: quando o carrossel aparece na tela, a foto atual desliza um pouquinho
        para a esquerda e a próxima espia pela direita; depois as duas voltam ao lugar */
-    const ESPIA = 120, VAO = 10;   // quanto a próxima foto aparece e o espaço roxo entre as duas
+    const ESPIA = 200, VAO = 0;   // quanto a próxima foto aparece; as duas fotos andam juntas, sem espaço entre elas
     let espiando = false;
     async function espia() {
       if (usou || espiando || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
