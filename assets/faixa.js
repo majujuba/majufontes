@@ -41,8 +41,53 @@
   });
   /* curva contínua (Catmull-Rom → Bézier): sem "quinas" entre segmentos, as letras não mudam
      de inclinação aos saltos — era isso que fazia o texto tremer ao andar */
-  const P0 = suave.filter((p, i) => i % 8 === 0 || i === suave.length - 1);
-  const POLI = POLIGONO.trim().split(/\s+/).map(s => s.split(',').map(Number));
+  const POLI_ORIG = POLIGONO.trim().split(/\s+/).map(s => s.split(',').map(Number));
+
+  /* corda contínua: as pontas arredondadas do desenho apareciam em telas mais largas que 1490px.
+     A corda é cortada onde já tem a espessura cheia (CORTE_E / CORTE_D) e continua para fora da tela,
+     com a mesma espessura e uma curva que vai se acalmando aos poucos. */
+  const CORTE_E = 200, CORTE_D = 3900;
+  const ESCALA = 1670.5 / 4096;                  // px de tela por unidade da imagem
+  const ACALMA = 250;                           // quão rápido a inclinação some nas pontas
+  const PASSO = 16;
+  const iTopoFim = POLI_ORIG.findIndex(p => p[0] === 4092);
+  const topo = POLI_ORIG.slice(0, iTopoFim + 1).filter(p => p[0] >= CORTE_E && p[0] <= CORTE_D);
+  const base = POLI_ORIG.slice(iTopoFim + 1).filter(p => p[0] >= CORTE_E && p[0] <= CORTE_D);   // da direita para a esquerda
+  const yEm = (lista, x) => lista.find(p => p[0] === x)[1];
+  const sEm = x => suave.find(p => p[0] === x)[1];
+  // inclinação da linha do meio perto de cada corte (média de 64 unidades para não pegar serrilhado)
+  const incE = (sEm(CORTE_E + 64) - sEm(CORTE_E)) / 64;
+  const incD = (sEm(CORTE_D) - sEm(CORTE_D - 64)) / 64;
+  const desvio = d => ACALMA * (1 - Math.exp(-d / ACALMA));
+  // borda irregular nas extensões, parecida com a do desenho (pseudoaleatória, sempre igual)
+  const serra = (x, s) => 2.2 * Math.sin(x * 0.37 + s) + 1.4 * Math.sin(x * 0.113 + 2 * s) + 0.9 * Math.sin(x * 1.71 + s);
+
+  let POLI = [], P0 = [], EXT = 0;
+  function geometria() {
+    const largura = Math.max(screen.width || 0, innerWidth, 1490);
+    EXT = Math.ceil(((largura - 1490) / 2 + 160) / ESCALA / PASSO) * PASSO;
+    const tE = yEm(topo, CORTE_E), bE = yEm(base, CORTE_E), tD = yEm(topo, CORTE_D), bD = yEm(base, CORTE_D);
+    const cE = (tE + bE) / 2, cD = (tD + bD) / 2;
+    const extE = [], extD = [];
+    for (let d = EXT; d > 0; d -= PASSO) extE.push([CORTE_E - d, cE - incE * desvio(d)]);
+    for (let d = PASSO; d <= EXT; d += PASSO) extD.push([CORTE_D + d, cD + incD * desvio(d)]);
+    POLI = [
+      ...extE.map(([x, c]) => [x, c - (cE - tE) + serra(x, 1)]),
+      ...topo,
+      ...extD.map(([x, c]) => [x, c - (cD - tD) + serra(x, 2)]),
+      ...extD.slice().reverse().map(([x, c]) => [x, c + (bD - cD) + serra(x, 3)]),
+      ...base,
+      ...extE.slice().reverse().map(([x, c]) => [x, c + (bE - cE) + serra(x, 4)]),
+    ];
+    // linha do meio (por onde as palavras correm), estendida do mesmo jeito
+    const sE = sEm(CORTE_E), sD = sEm(CORTE_D), meio = [];
+    for (let d = EXT; d > 0; d -= 128) meio.push([CORTE_E - d, sE - incE * desvio(d)]);
+    suave.filter((p, i) => i % 8 === 0 && p[0] >= CORTE_E && p[0] <= CORTE_D).forEach(p => meio.push(p));
+    if (meio[meio.length - 1][0] !== CORTE_D) meio.push([CORTE_D, sD]);
+    for (let d = 128; d <= EXT; d += 128) meio.push([CORTE_D + d, sD + incD * desvio(d)]);
+    P0 = meio;
+  }
+  geometria();
 
   /* deslocamento vertical da corda no ponto x, no tempo tt (s): duas ondas suaves,
      uma andando para a direita e outra, mais curta, para a esquerda — o encontro delas
@@ -75,7 +120,16 @@
   recorte.appendChild(poliRecorte);
   defs.append(recorte, cria('path', { id: 'faixa-meio', d: caminhoEm(0), fill: 'none' }));
   svg.appendChild(defs);
-  const filtro = cria('filter', { id: 'faixa-onda', filterUnits: 'userSpaceOnUse', x: -100, y: -100, width: 4296, height: 897 });
+  const filtro = cria('filter', { id: 'faixa-onda', filterUnits: 'userSpaceOnUse' });
+  // a área do filtro cobre só a corda (com as extensões): área maior = filtro mais pesado
+  function areaFiltro() {
+    let y0 = Infinity, y1 = -Infinity;
+    for (const [, y] of POLI) { if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    const m = CURVA_ALTURA + ONDA_AMPLITUDE + 40;
+    filtro.setAttribute('x', -EXT - 100 + CORTE_E); filtro.setAttribute('width', 2 * EXT + 200 + CORTE_D - CORTE_E);
+    filtro.setAttribute('y', Math.floor(y0 - m)); filtro.setAttribute('height', Math.ceil(y1 - y0 + 2 * m));
+  }
+  areaFiltro();
   const ruido = cria('feTurbulence', { type: 'fractalNoise', baseFrequency: ONDA_FREQ.join(' '), numOctaves: 2, seed: 7, result: 'n' });
   const desloca = cria('feDisplacementMap', { in: 'SourceGraphic', in2: 'n', scale: ONDA_AMPLITUDE * 0.89, xChannelSelector: 'R', yChannelSelector: 'G' });
   filtro.append(ruido, desloca); defs.appendChild(filtro);
@@ -186,6 +240,11 @@
   inicia();
   // quando a fonte The Seasons terminar de carregar, mede as palavras de novo
   if (document.fonts) document.fonts.ready.then(() => { const antes = ciclo; monta(); if (ciclo !== antes || calmo) posiciona(0); });
+  // janela aumentada além do previsto (ex.: arrastada para um monitor maior): estica a corda
+  addEventListener('resize', () => {
+    if ((innerWidth - 1490) / 2 + 160 <= EXT * ESCALA) return;
+    geometria(); areaFiltro(); curvaCorda(tempoCorda / 1000); monta(); posiciona(0);
+  });
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(es => { visivel = es[es.length - 1].isIntersecting; if (visivel) liga(); }).observe(svg);
   }
