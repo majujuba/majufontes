@@ -145,10 +145,14 @@
   /* quadro dos adesivos (como na Dengo: dá para pegar e arrastar para qualquer lugar da página) */
   .quadro-adesivos { background: var(--cinza); }
   .quadro-adesivos .dica { position: absolute; left: 0; right: 0; top: 413px; text-align: center; font: 500 13px/15px var(--pixel); color: var(--roxo); }
+  /* simulação de adesivo: colado = sombra curtinha; segurado = descola (sobe, inclina em 3D, sombra grande)
+     e balança conforme o movimento; solto = é apertado contra a página e assenta */
   .adesivo { position: absolute; display: block; z-index: 5; cursor: grab; touch-action: none; user-select: none; -webkit-user-drag: none;
-    filter: drop-shadow(0 2px 3px rgba(63,49,102,.18)); }
-  .js .adesivo.fade-in-element.visivel { transition: opacity 1.2s cubic-bezier(.22,1,.36,1), transform .25s ease, filter .25s ease; }
-  .adesivo.segurando { cursor: grabbing; filter: drop-shadow(0 14px 16px rgba(63,49,102,.35)); }
+    transform-origin: 50% 50%; filter: drop-shadow(0 1px 1.5px rgba(30,20,60,.28)); }
+  .adesivo img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none;
+    -webkit-user-drag: none; transform: rotate(var(--giro, 0deg)); }
+  .js .adesivo.fade-in-element.visivel { transition: opacity 1.2s cubic-bezier(.22,1,.36,1), filter .3s ease; }
+  .adesivo.segurando { cursor: grabbing; filter: drop-shadow(0 22px 18px rgba(30,20,60,.32)) drop-shadow(0 4px 4px rgba(30,20,60,.18)); }
 
   /* espaço do site interativo (no Figma: "site interativo com um monitor") */
   .site-interativo { background: var(--branco); }
@@ -192,10 +196,12 @@
   </section>
   <div class="bloco fade-in-element" style="left:546px; top:1622px; width:894px; height:443px"><video src="assets/tiposp/instagram.mp4" poster="assets/tiposp/instagram.jpg" muted loop playsinline preload="metadata" aria-label="Animação: posts do Instagram do TipoSP"></video><span class="c1"></span><span class="c2"></span></div>
   <!-- adesivos soltos (ordem do Figma: sinalização embaixo, tSP em cima) -->
-  <img decoding="async" class="adesivo fade-in-element" src="assets/tiposp/adesivo-sinal.webp" alt="Adesivo metro metro" draggable="false" style="left:236.5px; top:1689px; width:263px; height:118px">
-  <img decoding="async" class="adesivo fade-in-element" src="assets/tiposp/adesivo-iden.webp" alt="Adesivo do elemento da identidade" draggable="false" style="left:93px; top:1655.5px; width:121px; height:197px">
-  <img decoding="async" class="adesivo fade-in-element" src="assets/tiposp/adesivo-hist.webp" alt="Adesivo LETRAS LETRAS" draggable="false" style="left:280px; top:1829px; width:213px; height:180px">
-  <img decoding="async" class="adesivo fade-in-element" src="assets/tiposp/adesivo-tsp.webp" alt="Adesivo tSP" draggable="false" style="left:87.5px; top:1867.5px; width:170px; height:128px">
+  <!-- cada adesivo fica numa "capa" (.adesivo) que levanta, balança e é apertada de volta; a imagem dentro
+       guarda a inclinação do Figma (--giro). LETRAS vem do PNG original (no Figma a imagem estava cortada) -->
+  <div class="adesivo fade-in-element" style="left:235.5px; top:1688px; width:264px; height:121px"><img decoding="async" src="assets/tiposp/adesivo-sinal.webp" alt="Adesivo metro metro" draggable="false"></div>
+  <div class="adesivo fade-in-element" style="left:92px; top:1654.5px; width:124px; height:199px"><img decoding="async" src="assets/tiposp/adesivo-iden.webp" alt="Adesivo do elemento da identidade" draggable="false"></div>
+  <div class="adesivo fade-in-element" style="left:289.5px; top:1847.5px; width:191px; height:149px; --giro:12.3deg"><img decoding="async" src="assets/tiposp/adesivo-hist.webp" alt="Adesivo LETRAS LETRAS" draggable="false"></div>
+  <div class="adesivo fade-in-element" style="left:87.5px; top:1866.5px; width:170px; height:129px"><img decoding="async" src="assets/tiposp/adesivo-tsp.webp" alt="Adesivo tSP" draggable="false"></div>
 
   <div class="bloco fade-in-element" style="left:51px; top:2075px; width:1389px; height:554px"><video src="assets/tiposp/sistema.mp4" poster="assets/tiposp/sistema.jpg" muted loop playsinline preload="metadata" aria-label="Animação: tipografia, elementos e cores do sistema"></video><span class="c1"></span><span class="c2"></span></div>
   <img decoding="async" class="peca fade-in-element" src="assets/tiposp/logos.jpg" alt="Posts do TipoSP sobre totens, letras e zonas da cidade" loading="lazy" style="left:51px; top:2639px; width:914px; height:702px">
@@ -284,23 +290,58 @@
 })();
 </script>
 <script>
-/* adesivos soltos (como na Dengo): a pessoa segura um, arrasta para qualquer lugar da página e solta.
-   Enquanto está segurando, o adesivo cresce um pouco e inclina; o último segurado fica por cima dos outros. */
+/* adesivos soltos com simulação de adesivo: a pessoa segura um, arrasta para qualquer lugar da página e solta.
+   - segurar: o adesivo DESCOLA — sobe, cresce um pouco e inclina em 3D, com o lado por onde foi pego
+     vindo para a frente (como quando a gente puxa um adesivo pela ponta); a sombra fica grande e suave
+   - arrastar: ele balança conforme a velocidade do movimento, como papel no ar
+   - soltar: ele é APERTADO contra a página (achata um instante, a sombra some) e assenta colado
+   O último segurado fica por cima dos outros. */
 (() => {
   const pagina = document.querySelector('.page');
+  const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const SOMBRA_COLADO = 'drop-shadow(0 1px 1.5px rgba(30,20,60,.28))';
+  const SOMBRA_SOLTO = 'drop-shadow(0 22px 18px rgba(30,20,60,.32)) drop-shadow(0 4px 4px rgba(30,20,60,.18))';
+  const lim = (v, a) => Math.max(-a, Math.min(a, v));
   let topo = 6;
+
   document.querySelectorAll('.adesivo').forEach(el => {
-    let ini = null;
+    let ini = null, quadro = 0, aperto = null;
+    // estado da "física": quanto está descolado (0–1), inclinação 3D e balanço, com mola suave
+    const s = { lev: 0, rx: 0, ry: 0, rz: 0, alvoLev: 0, alvoRx: 0, alvoRy: 0, alvoRz: 0, giro: 0, vx: 0, ux: 0, ut: 0 };
+    const transforma = () =>
+      `perspective(800px) translateY(${(-8 * s.lev).toFixed(2)}px) rotateX(${s.rx.toFixed(2)}deg) ` +
+      `rotateY(${s.ry.toFixed(2)}deg) rotate(${s.rz.toFixed(2)}deg) scale(${(1 + .1 * s.lev).toFixed(4)})`;
+
+    function anima() {
+      // o balanço do arraste vai se acalmando quando a pessoa para de mexer
+      s.vx *= .86;
+      const balanco = lim(s.vx * 22, 14);
+      const k = .22;
+      s.lev += (s.alvoLev - s.lev) * k;
+      s.rx += (s.alvoRx - s.rx) * k;
+      s.ry += (s.alvoRy - balanco * .6 - s.ry) * k;
+      s.rz += (s.giro + balanco - s.rz) * k;
+      el.style.transform = transforma();
+      quadro = ini ? requestAnimationFrame(anima) : 0;
+    }
+
     el.addEventListener('pointerdown', e => {
       if (e.button !== 0) return;
       e.preventDefault();
-      el.setPointerCapture(e.pointerId);
+      try { el.setPointerCapture(e.pointerId); } catch (_) {}
+      if (aperto) { aperto.cancel(); aperto = null; }
+      const r = el.getBoundingClientRect();
+      // onde foi pego, de -1 a 1: esse lado descola e vem para a frente
+      const px = lim((e.clientX - r.left) / r.width * 2 - 1, 1), py = lim((e.clientY - r.top) / r.height * 2 - 1, 1);
       ini = { x: e.clientX, y: e.clientY, l: el.offsetLeft, t: el.offsetTop, rolagem: scrollY };
       el.style.zIndex = ++topo;
       el.classList.add('segurando');
-      const giro = (Math.random() * 8 - 4).toFixed(1);
-      el.style.transform = 'scale(1.1) rotate(' + giro + 'deg)';
+      el.style.filter = '';
+      Object.assign(s, { alvoLev: 1, alvoRx: py * 16, alvoRy: -px * 16, giro: Math.random() * 8 - 4, vx: 0, ux: e.clientX, ut: e.timeStamp });
+      if (calmo) { Object.assign(s, { lev: 1, rx: 0, ry: 0, rz: 0 }); el.style.transform = transforma(); return; }
+      if (!quadro) quadro = requestAnimationFrame(anima);
     });
+
     const move = e => {
       if (!ini) return;
       const W = pagina.offsetWidth, H = pagina.offsetHeight;
@@ -310,11 +351,35 @@
       t = Math.max(42, Math.min(H - el.offsetHeight, t));
       el.style.left = l + 'px'; el.style.top = t + 'px';
     };
-    el.addEventListener('pointermove', move);
     let ultimo = null;
-    el.addEventListener('pointermove', e => { ultimo = e; });
+    el.addEventListener('pointermove', e => {
+      if (!ini) return;
+      ultimo = e;
+      const dt = Math.max(8, e.timeStamp - s.ut);
+      s.vx = s.vx * .5 + ((e.clientX - s.ux) / dt) * .5;   // velocidade horizontal (px/ms), suavizada
+      s.ux = e.clientX; s.ut = e.timeStamp;
+      move(e);
+    });
     addEventListener('scroll', () => { if (ini && ultimo) move(ultimo); }, { passive: true });
-    const solta = () => { if (!ini) return; ini = null; el.classList.remove('segurando'); el.style.transform = 'none'; };
+
+    const solta = () => {
+      if (!ini) return;
+      ini = null;
+      cancelAnimationFrame(quadro); quadro = 0;
+      el.classList.remove('segurando');
+      const de = transforma();
+      Object.assign(s, { lev: 0, rx: 0, ry: 0, rz: 0, alvoLev: 0, alvoRx: 0, alvoRy: 0, vx: 0 });
+      if (calmo) { el.style.transform = ''; return; }
+      // apertado contra a página: desce, achata um instante (a sombra some) e assenta colado
+      aperto = el.animate([
+        { transform: de, filter: SOMBRA_SOLTO },
+        { transform: 'perspective(800px) translateY(0) rotateX(0) rotateY(0) rotate(0) scale(.94)', filter: 'drop-shadow(0 0 0 rgba(30,20,60,.3))', offset: .45 },
+        { transform: 'perspective(800px) translateY(0) rotateX(0) rotateY(0) rotate(0) scale(1.025)', filter: SOMBRA_COLADO, offset: .75 },
+        { transform: 'perspective(800px) translateY(0) rotateX(0) rotateY(0) rotate(0) scale(1)', filter: SOMBRA_COLADO }
+      ], { duration: 420, easing: 'cubic-bezier(.3,.7,.4,1)' });
+      el.style.transform = '';
+      aperto.onfinish = () => { aperto = null; };
+    };
     el.addEventListener('pointerup', solta);
     el.addEventListener('pointercancel', solta);
   });
