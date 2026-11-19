@@ -49,7 +49,7 @@
   const CORTE_E = 200, CORTE_D = 3900;
   const ESCALA = 1670.5 / 4096;                  // px de tela por unidade da imagem
   const ACALMA = 250;                           // quão rápido a inclinação some nas pontas
-  const PASSO = 8;    // um ponto da borda a cada 8 unidades (≈ 3 px de tela): dá para ver o serrilhado
+  const PASSO = 4;    // um ponto da borda a cada 4 unidades (≈ 1,6 px de tela), como o desenho original: calombos redondos
   /* espessura igual do começo ao fim (pedido dela): a corda é desenhada a partir da linha do meio,
      com a mesma distância para cima e para baixo, medida na perpendicular da curva
      (assim ela não afina nos trechos inclinados). 240 = espessura do trecho do meio no desenho do Figma */
@@ -60,10 +60,11 @@
   const incD = (sEm(CORTE_D) - sEm(CORTE_D - 64)) / 64;
   const desvio = d => ACALMA * (1 - Math.exp(-d / ACALMA));
   // borda irregular nas extensões, parecida com a do desenho (pseudoaleatória, sempre igual)
-  // várias "frequências" somadas: ondinhas largas + recortes médios + serrilhado miúdo, como papel rasgado
+  /* textura da borda como a do desenho original e a das flores: calombinhos arredondados e irregulares
+     (sem serrilhado fino), que a ondulação do filtro deixa ainda mais orgânicos */
   const serra = (x, s) =>
-    5.0 * Math.sin(x * 0.021 + s) + 3.6 * Math.sin(x * 0.067 + 2 * s) + 2.8 * Math.sin(x * 0.19 + 3 * s) +
-    2.2 * Math.sin(x * 0.53 + s * 5) + 1.6 * Math.sin(x * 1.37 + s * 7) + 1.2 * Math.sin(x * 2.9 + s * 11);
+    5.0 * Math.sin(x * 0.019 + s) + 4.0 * Math.sin(x * 0.057 + 2 * s) +
+    3.5 * Math.sin(x * 0.118 + 3 * s) * (0.55 + 0.45 * Math.sin(x * 0.009 + s));
 
   let POLI = [], P0 = [], EXT = 0;
   function geometria() {
@@ -75,7 +76,7 @@
     // linha do meio a cada PASSO, suavizada mais uma vez para as perpendiculares não oscilarem
     const xs = [], cs = [];
     for (let x = CORTE_E - EXT; x <= CORTE_D + EXT; x += PASSO) { xs.push(x); cs.push(centro(x)); }
-    const J = 6, cl = cs.map((_, i) => {
+    const J = 12, cl = cs.map((_, i) => {
       let s = 0, n = 0;
       for (let j = Math.max(0, i - J); j <= Math.min(cs.length - 1, i + J); j++) { s += cs[j]; n++; }
       return s / n;
