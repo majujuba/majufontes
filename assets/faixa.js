@@ -70,9 +70,15 @@
   };
   /* textura "de pincel" (referência dela): ondinhas largas e suaves + muitos calombinhos miúdos
      e arredondados, a cada ~3–5 px de tela, de alturas diferentes */
-  const serra = (x, s) =>
-    4.0 * Math.sin(x * 0.019 + s) + 3.0 * Math.sin(x * 0.057 + 2 * s) +
-    4.5 * ruido1d(x / 11, s) + 1.2 * ruido1d(x / 7, s + 0.5) + 2.5 * ruido1d(x / 37, s + 0.25);
+  /* borda da referência dela: quase reta, com "bolinhas" arredondadas lado a lado (escalope),
+     uma a cada ~12 unidades (≈ 5 px de tela), de altura um pouco variada */
+  const BOLINHA = 15;
+  const serra = (x, s) => {
+    const fase = x / BOLINHA + 0.35 * ruido1d(x / 40, s + 0.7);            // espaçamento levemente irregular
+    const altura = 5.5 + 2 * ruido1d(x / 11, s);                           // bolinhas de alturas diferentes
+    // raiz do seno: cada bolinha sai redonda (meia-lua), e não pontuda como um dente
+    return altura * Math.sqrt(Math.abs(Math.sin(Math.PI * fase))) + 1.5 * ruido1d(x / 60, s + 0.3);
+  };
 
   let POLI = [], P0 = [], EXT = 0;
   function geometria() {
