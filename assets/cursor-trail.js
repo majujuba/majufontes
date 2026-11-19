@@ -46,6 +46,20 @@
   cur.insertAdjacentHTML('beforeend', '<img class="cts-s" src="assets/cursor-segurar.png" alt="" aria-hidden="true" decoding="async">');
   if (fine) { document.body.appendChild(cur); root.classList.add('cts-on'); }
 
+  /* o visualizador 3D (model-viewer) põe a "mãozinha" do sistema por dentro, onde o CSS da página não chega:
+     esconde lá também, para só a bolinha roxa aparecer */
+  function semMaozinha(mv) {
+    if (!fine || !mv.shadowRoot || mv.shadowRoot.querySelector('style[data-cts]')) return;
+    const st = document.createElement('style'); st.dataset.cts = '';
+    st.textContent = '*, *::before, *::after { cursor: none !important; }';
+    mv.shadowRoot.appendChild(st);
+  }
+  if (fine && window.customElements) customElements.whenDefined('model-viewer').then(() => {
+    document.querySelectorAll('model-viewer').forEach(semMaozinha);
+    new MutationObserver(() => document.querySelectorAll('model-viewer').forEach(semMaozinha))
+      .observe(document.body, { childList: true, subtree: true });
+  });
+
   /* ---------- luminância do fundo sob o cursor ---------- */
   const pc = document.createElement('canvas'); pc.width = pc.height = 1;
   const pctx = pc.getContext('2d', { willReadFrequently: true });
