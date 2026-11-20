@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>contact — maju. designer</title>
+<!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
+<link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/cursor-trail.css">
+<!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
+<link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- transição de pixels que se dissolvem (precisa ficar no head) -->
+<script src="assets/transicao-dissolve.js"></script>
+<style>
+  :root {
+    --roxo: #3F3166;
+    --cinza: #D8D8D8;
+    --branco: #FFFFFF;
+    --vinho: #5F0C0C;       /* fundo da página */
+    --vermelho: #731212;    /* links da header */
+    --campo: #B2C3D8;
+    --seasons: "the-seasons", "The Seasons", serif;
+    --cambria: Cambria, Caladea, Georgia, serif;
+    --pixel: "Pixelify Sans", monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--vinho); }
+  body { -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
+  a { color: inherit; text-decoration: none; }
+
+  /* Figma: /contact · Desktop 1490 × 2148 — conteúdo centralizado, fundos de borda a borda */
+  .frame { position: relative; width: 100%; height: 2148px; overflow: hidden; overflow: clip; background: var(--vinho); }
+  .page { position: absolute; top: 0; left: 50%; margin-left: -745px; width: 1490px; height: 2148px; }
+  .abs { position: absolute; }
+  .decor { pointer-events: none; }
+
+  /* ── topo: roxo que vira vinho (home p01: 1492 × 647 a partir de y 37) + flor azul com pixels ── */
+  .topo-bg { left: -3000px; right: -3000px; top: 0; height: 684px;
+    background: linear-gradient(180deg, #55427D 37px, #5E0B0B 684px); }
+  .flor-topo { left: 639px; top: 56px; width: 851px; height: 647px; display: block; }
+  .titulo { left: 52px; top: 253px; font: 700 182px/131px var(--seasons);   /* medido no Figma: "contato" com 631px de largura */ color: var(--cinza); white-space: nowrap; }
+  .titulo em { display: block; font-style: italic; }
+
+  /* ── que tal nos conectarmos? + ingressos ── */
+  .chamada { color: var(--cinza); }
+  .chamada h2 { font: 700 48px/50px var(--cambria); }
+  .chamada p { font: 400 22px/26px var(--cambria); }
+  .conectar    { left: 79px; top: 775px; width: 420px; }
+  .conectar p  { margin-top: 30px; width: 330px; }
+  .criar       { left: 79px; top: 1478px; width: 520px; }
+  .criar p     { margin-top: 26px; width: 362px; line-height: 28px; }
+
+  /* ingressos: imagens exportadas do Figma (já inclinadas); o clique vale só onde o ingresso aparece
+     (o script lê a transparência de cada imagem), e o de cima na pilha ganha */
+  /* z-index 0: a pilha dos ingressos fica "presa" aqui dentro, e o formulário (que vem depois) os cobre embaixo */
+  .ingressos { left: 0; top: 0; width: 1490px; height: 1440px; pointer-events: none; z-index: 0; }
+  .ingresso { position: absolute; display: block; outline: none; }
+  .ingresso img { display: block; width: 100%; height: 100%; pointer-events: none; -webkit-user-drag: none;
+    transition: transform .45s cubic-bezier(.3,.7,.4,1), filter .45s ease; }
+  .ingresso.email    { left: 571px; top: 804.5px; width: 481px; height: 726px; z-index: 3; }
+  .ingresso.behance  { left: 767px; top: 768px;   width: 452.5px; height: 721px; z-index: 2; }
+  .ingresso.linkedin { left: 936px; top: 775px;   width: 502px; height: 745px; z-index: 1; }
+  /* passar o mouse (ou focar pelo teclado): o ingresso sobe um pouquinho, como se fosse puxado */
+  .ingresso.ativo img, .ingresso:focus-visible img { transform: translateY(-18px) rotate(-1.2deg); filter: drop-shadow(0 14px 14px rgba(30,0,0,.35)); }
+  /* surgem suavemente, da direita para a esquerda (o da direita primeiro) */
+  .js .ingresso { opacity: 0; transform: translateX(420px) rotate(7deg); }
+  .js .ingressos.chegou .ingresso { opacity: 1; transform: none;
+    transition: opacity .9s ease, transform 1.4s cubic-bezier(.16,1,.3,1); }
+  .js .ingressos.chegou .linkedin { transition-delay: 0s; }
+  .js .ingressos.chegou .behance  { transition-delay: .18s; }
+  .js .ingressos.chegou .email    { transition-delay: .36s; }
+  @media (prefers-reduced-motion: reduce) { .js .ingresso { opacity: 1; transform: none; } }
+
+  /* ── vamos criar juntos! (formulário) — fica por cima da parte de baixo dos ingressos, como no Figma ── */
+  .form-sec { left: -3000px; right: -3000px; top: 1440px; height: 525px; background: var(--vinho); }
+  .flor-baixo { left: -2px; top: 1721px; width: 813px; height: 251px; display: block; }
+  .form-contato { left: 672px; top: 1440px; width: 749px; height: 447px; }
+
+  /* botão com "cantos de pixel": quadradinhos na cor do fundo em cada canto */
+  .botao-pixel { display: flex; align-items: center; justify-content: center; background: var(--cinza);
+    color: var(--roxo); font: 500 32px/28px var(--pixel); letter-spacing: -0.32px; border: 0; outline: none; cursor: pointer;
+    --canto: var(--vinho); }
+  .botao-pixel::before, .botao-pixel::after, .botao-pixel > .c1, .botao-pixel > .c2 {
+    content: ""; position: absolute; width: 8px; height: 8px; margin: -1px; background: var(--canto); }
+  .botao-pixel::before { left: 0; top: 0; }
+  .botao-pixel::after  { right: 0; top: 0; }
+  .botao-pixel > .c1   { left: 0; bottom: 0; }
+  .botao-pixel > .c2   { right: 0; bottom: 0; }
+  .campo { position: absolute; left: 0; width: 749px; background: var(--campo); --canto: var(--vinho);
+    transition: background-color .4s ease; }
+  .campo input, .campo textarea { width: 100%; height: 100%; border: 0; background: transparent; outline: none; resize: none;
+    padding: 12px 19px; color: var(--roxo); font: 400 22px/28px var(--cambria); }
+  .campo input::placeholder, .campo textarea::placeholder { color: var(--roxo); opacity: .5; transition: opacity .4s ease; }
+  /* interação: ao passar o mouse e ao selecionar, o campo fica #799FD3; selecionado, o texto de exemplo esmaece */
+  .campo:hover, .campo:focus-within { background: #799FD3; }
+  .campo:focus-within input::placeholder, .campo:focus-within textarea::placeholder { opacity: .25; }
+  .campo::before, .campo::after, .campo > .c1, .campo > .c2 {
+    content: ""; position: absolute; width: 7px; height: 7px; background: var(--canto); z-index: 1; pointer-events: none; }
+  .campo::before { left: 0; top: 0; }  .campo::after { right: 0; top: 0; }
+  .campo > .c1 { left: 0; bottom: 0; } .campo > .c2 { right: 0; bottom: 0; }
+  .campo.nome  { top: 0;   height: 52px; }
+  .campo.email { top: 79px; height: 52px; }
+  .campo.msg   { top: 158px; height: 210px; }
+  .enviar { position: absolute; left: 229px; top: 395px; width: 291px; height: 52px; font-size: 28px; }
+  /* botões com cantos de pixel: ao passar o mouse o botão cresce um pouco; o texto não muda de cor */
+  .botao-pixel, .js .botao-pixel.fade-in-element.visivel { transition: color .9s ease, transform .9s ease; }
+  .botao-pixel:hover, .js .botao-pixel.fade-in-element.visivel:hover { transform: scale(1.04); transition: color .4s ease, transform .4s ease; }
+  .botao-pixel:active, .js .botao-pixel.fade-in-element.visivel:active { transform: scale(.98); transition-duration: .1s; }
+  /* "enviando…" / "enviado!": o botão fica parado, sem reagir ao mouse */
+  .botao-pixel:disabled { cursor: default; color: var(--roxo); transform: none; }
+  .aviso-envio { position: absolute; left: 0; right: 0; top: 460px; text-align: center; font: 400 18px/1.2 var(--cambria); color: var(--cinza); }
+  .aviso-envio a { text-decoration: underline; }
+
+  /* ── header (cinza com links vermelhos, como no Figma do contact) ── */
+  .header { position: fixed; left: 0; right: 0; top: 0; height: 42px; z-index: 10; background: var(--cinza); }
+  .header .estrela { left: 51px; top: 5px; width: 32px; height: 32px; }
+  .nav { font: 700 20px/1 var(--seasons); color: var(--vermelho); white-space: nowrap; }
+  .nav.work    { right: 395px; top: 10px; }
+  .nav.about   { right: 228px; top: 10px; }
+  .nav.contact { right: 51px;  top: 9px; }
+  .header .nav { transform-origin: 50% 60%; transition: color .9s ease, transform .9s ease; }
+  .header .estrela { transition: transform .9s ease; }
+  .header .estrela:hover { transform: scale(1.08); transition: transform .4s ease; }
+  .header .nav:hover { color: var(--roxo); transform: scale(1.08); transition: color .4s ease, transform .4s ease; }
+
+  /* ── rodapé (igual às outras páginas) ── */
+  .rodape { left: 0; right: 0; top: 1965px; height: 183px; z-index: 2; }
+  .rodape::before { content: ""; position: absolute; top: 0; bottom: 0; left: -3000px; right: -3000px; background: var(--roxo); z-index: -1; }
+  .rodape .contato { left: 60px; top: 46px; width: 365px; color: var(--branco); }
+  .rodape .contato small { display: block; font: 400 16px/15px var(--cambria); }
+  .rodape .contato a { display: block; font: 700 28px/28px var(--cambria); white-space: nowrap; }
+  .rodape .estrela { left: 690px; top: 40px; width: 111px; height: 111px; }
+  .rodape .links { top: 38px; width: 147px; text-align: right; font: 400 20px/23px var(--cambria); color: var(--branco); }
+  .rodape .links a { display: block; height: 46px; }
+  .rodape .links.sociais { right: 264px; }
+  .rodape .links.paginas { right: 58px; }
+  .rodape .copy { left: 60px; bottom: 23px; font: 400 15px/1 var(--cambria); color: var(--cinza); white-space: nowrap; }
+
+  /* ── fade in (igual às outras páginas) ── */
+  .js .fade-in-element { opacity: 0; transform: translateY(20px);
+    transition: opacity 1.2s cubic-bezier(.22,1,.36,1), transform 1.2s cubic-bezier(.22,1,.36,1);
+    transition-delay: var(--atraso, 0s); }
+  .js .fade-in-element.visivel { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .js .fade-in-element { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+<script>
+  document.documentElement.classList.add('js');
+  window.__carregou = !window.__chegandoDissolve;
+  window.quandoCarregar = fn => { if (window.__carregou) fn(); else addEventListener('carregou', fn, { once: true }); };
+  addEventListener('transicao-fim', () => { window.__carregou = true; dispatchEvent(new Event('carregou')); });
+</script>
+</head>
+<body>
+
+<div class="frame"><main class="page">
+
+  <!-- topo -->
+  <div class="abs topo-bg"></div>
+  <img decoding="async" class="abs flor-topo decor fade-in-element" style="--atraso:.3s" src="assets/contato/flor-topo.webp" alt="">
+  <h1 class="abs titulo fade-in-element" style="--atraso:.2s">contato<em>contact</em></h1>
+
+  <!-- que tal nos conectarmos? -->
+  <section class="abs chamada conectar fade-in-element">
+    <h2>Que tal nos<br>conectarmos?</h2>
+    <p>Escolha seu ingresso e descubra por onde começar: tem trabalho, tem um pouco de mim e até um jeito de entrar em contato :)</p>
+  </section>
+
+  <!-- ingressos: roxo → LinkedIn, azul-claro → Behance, azul → e-mail -->
+  <div class="abs ingressos" id="ingressos">
+    <a class="ingresso linkedin" href="https://www.linkedin.com/in/maria-j%C3%BAlia-fontes-leite/" target="_blank" rel="noopener" aria-label="LinkedIn"><img decoding="async" src="assets/contato/ingresso-linkedin.webp" alt="Ingresso roxo do LinkedIn" draggable="false"></a>
+    <a class="ingresso behance" href="https://www.behance.net/majufontes" target="_blank" rel="noopener" aria-label="Behance"><img decoding="async" src="assets/contato/ingresso-behance.webp" alt="Ingresso azul-claro do Behance" draggable="false"></a>
+    <a class="ingresso email" href="mailto:mariafontesju@gmail.com" aria-label="mandar um e-mail para mariafontesju@gmail.com"><img decoding="async" src="assets/contato/ingresso-email.webp" alt="Ingresso azul do e-mail" draggable="false"></a>
+  </div>
+
+  <!-- vamos criar juntos! -->
+  <div class="abs form-sec"></div>
+  <img decoding="async" class="abs flor-baixo decor fade-in-element" src="assets/contato/flor-baixo.webp" alt="" loading="lazy">
+  <section class="abs chamada criar fade-in-element">
+    <h2>Vamos criar juntos!</h2>
+    <p>Estou animada para começar a materializar as suas ideias!<br>Preencha o formulário ao lado para entrarmos em contato ;)</p>
+  </section>
+  <form class="abs form-contato fade-in-element" style="--atraso:.15s" id="form-contato" novalidate>
+    <label class="campo nome"><input name="nome" type="text" placeholder="nome e sobrenome" autocomplete="name" required aria-label="nome e sobrenome"><span class="c1"></span><span class="c2"></span></label>
+    <label class="campo email"><input name="email" type="email" placeholder="e-mail favorito" autocomplete="email" required aria-label="e-mail favorito"><span class="c1"></span><span class="c2"></span></label>
+    <label class="campo msg"><textarea name="mensagem" placeholder="sobre o que iremos criar?" required aria-label="sobre o que iremos criar?"></textarea><span class="c1"></span><span class="c2"></span></label>
+    <button class="botao-pixel enviar" type="submit">enviar!<span class="c1"></span><span class="c2"></span></button>
+    <p class="aviso-envio" id="aviso-envio" aria-live="polite"></p>
+  </form>
+
+  <!-- rodapé -->
+  <footer class="abs rodape" data-cursor-bg="dark">
+    <div class="abs contato">
+      <small>entre em contato </small>
+      <a href="mailto:mariafontesju@gmail.com">mariafontesju@gmail.com</a>
+    </div>
+    <img decoding="async" class="abs estrela" src="assets/estrela-rodape.webp" alt="">
+    <nav class="abs links sociais"><a href="https://www.linkedin.com/in/maria-j%C3%BAlia-fontes-leite/" target="_blank" rel="noopener">linkedIn</a><a href="https://www.behance.net/majufontes" target="_blank" rel="noopener">behance</a></nav>
+    <nav class="abs links paginas"><a href="work.html">work</a><a href="about.html">about</a><a href="contact.html">contact</a></nav>
+    <p class="abs copy">©2026 maju. designer</p>
+  </footer>
+
+</main>
+
+<!-- header -->
+<header class="abs header">
+  <a href="index.html" aria-label="início"><img decoding="async" class="abs estrela" src="assets/estrela-vermelha.svg" alt=""></a>
+  <a class="abs nav work" href="work.html">work</a>
+  <a class="abs nav about" href="about.html">about</a>
+  <a class="abs nav contact" href="contact.html">contact</a>
+</header>
+</div>
+
+<script>
+/* fade in: cada .fade-in-element aparece (uma vez) quando entra na tela */
+(() => {
+  const MARGEM = 16;
+  let pendentes = [...document.querySelectorAll('.fade-in-element')];
+  let pedido = false;
+  function confere() {
+    pedido = false;
+    if (!window.__carregou) return;
+    pendentes = pendentes.filter(e => {
+      if (e.getBoundingClientRect().top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
+      return true;
+    });
+    if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
+  }
+  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(confere); } }
+  addEventListener('scroll', agenda, { passive: true });
+  addEventListener('resize', agenda);
+  quandoCarregar(agenda);
+})();
+</script>
+<script>
+/* ingressos: surgem da direita para a esquerda quando aparecem na tela; o clique e o "passar o mouse"
+   valem só onde o ingresso é visível (lê a transparência de cada imagem), e o de cima na pilha ganha */
+(() => {
+  const caixa = document.getElementById('ingressos');
+  const ingressos = [...caixa.querySelectorAll('.ingresso')].sort((a, b) => getComputedStyle(b).zIndex - getComputedStyle(a).zIndex);
+
+  // surgir: quando a parte de cima dos ingressos entra na tela
+  const chega = () => caixa.classList.add('chegou');
+  const vigia = () => {
+    if (!window.__carregou) return;
+    const r = ingressos[0].getBoundingClientRect();
+    if (r.top < innerHeight - 80) { chega(); removeEventListener('scroll', vigia); }
+  };
+  addEventListener('scroll', vigia, { passive: true });
+  quandoCarregar(vigia);
+
+  // mapa de transparência de cada ingresso (em tamanho menor, basta para saber onde há ingresso)
+  const mapas = new Map();
+  ingressos.forEach(a => {
+    const img = a.querySelector('img');
+    const faz = () => {
+      try {
+        const c = document.createElement('canvas'), k = 4;
+        c.width = Math.ceil(img.naturalWidth / k); c.height = Math.ceil(img.naturalHeight / k);
+        const x = c.getContext('2d', { willReadFrequently: true });
+        x.drawImage(img, 0, 0, c.width, c.height);
+        mapas.set(a, { w: c.width, h: c.height, d: x.getImageData(0, 0, c.width, c.height).data });
+      } catch (_) { /* abrindo o arquivo direto no computador o navegador não deixa ler: vale a caixa inteira */ }
+    };
+    if (img.complete && img.naturalWidth) faz(); else img.addEventListener('load', faz, { once: true });
+  });
+  const acerta = (a, x, y) => {
+    const r = a.getBoundingClientRect();
+    if (x < r.left || x > r.right || y < r.top || y > r.bottom) return false;
+    const m = mapas.get(a);
+    if (!m) return true;
+    const px = Math.min(m.w - 1, Math.floor((x - r.left) / r.width * m.w));
+    const py = Math.min(m.h - 1, Math.floor((y - r.top) / r.height * m.h));
+    return m.d[(py * m.w + px) * 4 + 3] > 40;
+  };
+  // abaixo do topo do formulário a parte de baixo dos ingressos fica escondida: ali não vale
+  const qual = (x, y) => (caixa.classList.contains('chegou') && y < caixa.getBoundingClientRect().bottom)
+    ? ingressos.find(a => acerta(a, x, y)) : null;
+
+  // a área de cima dos ingressos (onde eles podem estar) "ouve" o mouse; o resto da página continua normal
+  let ativo = null;
+  const marca = a => {
+    if (a === ativo) return;
+    if (ativo) ativo.classList.remove('ativo');
+    ativo = a || null;
+    if (ativo) ativo.classList.add('ativo');
+    document.body.style.cursor = ativo ? 'pointer' : '';
+    if (ativo) document.body.dataset.cursor = 'link'; else delete document.body.dataset.cursor;   // cursor de link do site
+  };
+  addEventListener('pointermove', e => marca(qual(e.clientX, e.clientY)), { passive: true });
+  addEventListener('scroll', () => marca(null), { passive: true });
+  addEventListener('click', e => {
+    const a = qual(e.clientX, e.clientY);
+    if (!a || e.target.closest('input, textarea, button, header, footer')) return;
+    e.preventDefault();
+    if (a.target === '_blank') window.open(a.href, '_blank', 'noopener'); else location.href = a.href;
+  });
+})();
+</script>
+<script>
+/* formulário: envia a mensagem automaticamente para o e-mail da maju pelo FormSubmit (formsubmit.co).
+   No PRIMEIRO envio, o FormSubmit manda um e-mail de confirmação para mariafontesju@gmail.com;
+   depois de confirmar, as mensagens chegam direto na caixa de entrada.
+   (Só funciona com o site publicado na internet; abrindo o arquivo direto no computador o envio falha.) */
+(() => {
+  const DESTINO = 'https://formsubmit.co/ajax/mariafontesju@gmail.com';
+  const form = document.getElementById('form-contato'), aviso = document.getElementById('aviso-envio');
+  const botao = form.querySelector('.enviar');
+  const textoBotao = t => { botao.firstChild.nodeValue = t; };   // mantém os cantinhos de pixel
+  let enviado = false;
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (enviado) return;
+    const nome = form.nome.value.trim(), email = form.email.value.trim(), msg = form.mensagem.value.trim();
+    if (!nome || !email || !msg) { aviso.textContent = 'preencha os três campos, por favor :)'; return; }
+    if (!form.email.checkValidity()) { aviso.textContent = 'confere o e-mail? parece que falta alguma coisa.'; return; }
+    aviso.textContent = '';
+    botao.disabled = true;
+    textoBotao('enviando…');
+    try {
+      const r = await fetch(DESTINO, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          nome, email, mensagem: msg,
+          _subject: 'vamos criar juntos — ' + nome,
+          _replyto: email,
+          _template: 'table'
+        })
+      });
+      const dados = await r.json().catch(() => ({}));
+      if (!r.ok || String(dados.success) === 'false') throw new Error(dados.message || 'falha no envio');
+      enviado = true;
+      textoBotao('enviado!');
+      form.reset();
+      form.querySelectorAll('input, textarea').forEach(c => c.disabled = true);
+    } catch (err) {
+      botao.disabled = false;
+      textoBotao('enviar!');
+      aviso.innerHTML = 'não consegui enviar agora. tenta de novo, ou escreve direto para <a href="mailto:mariafontesju@gmail.com" style="text-decoration:underline">mariafontesju@gmail.com</a>';
+    }
+  });
+})();
+</script>
+<!-- pausa as animações pesadas enquanto a página rola -->
+<script src="assets/desempenho.js"></script>
+<script src="assets/barra-rolagem.js"></script>
+<!-- cursor com rastro de pixels -->
+<script src="assets/cursor-trail.js"></script>
+</body>
+</html>
