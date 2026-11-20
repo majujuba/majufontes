@@ -40,8 +40,16 @@
   /* ── topo: roxo que vira vinho (home p01: 1492 × 647 a partir de y 37) + flor azul com pixels ── */
   .topo-bg { left: -3000px; right: -3000px; top: 0; height: 684px;
     background: linear-gradient(180deg, #55427D 37px, #5E0B0B 684px); }
-  .flor-topo { left: 639px; top: 56px; width: 851px; height: 647px; display: block; }
-  .titulo { left: 52px; top: 253px; font: 700 182px/131px var(--seasons);   /* medido no Figma: "contato" com 631px de largura */ color: var(--cinza); white-space: nowrap; }
+  /* flores animadas (assets/desenho-azul-contato.html: a linha azul ondulando + os pixels piscando, com os pixels
+     lidos da imagem do Figma do contact). No Figma a flor está espelhada: aqui o iframe é virado com scaleX(-1).
+     O desenho ocupa x 90,2–969 / y 53,8–491,4 do viewBox 920 × 485; a caixa do Figma (1315 × 647 em 639, 56)
+     dá a escala 1,4964 × 1,4785 (o SVG estica sem manter a proporção, como a imagem do Figma) */
+  .flor { border: 0; background: transparent; pointer-events: none; transform: scaleX(-1); }
+  .flor-topo { left: 607.6px; top: 20.8px; width: 1376.7px; height: 717.1px; }
+  /* embaixo a mesma flor, 0,78 do tamanho, recortada numa caixa de 813 × 251 (como a imagem do Figma) */
+  .flor-baixo-caixa { left: -2px; top: 1721px; width: 813px; height: 251px; overflow: hidden; pointer-events: none; }
+  .flor-baixo { position: absolute; left: -238.6px; top: -27.5px; width: 1073.8px; height: 559.3px; }
+  .titulo { left: 52px; top: 230px; font: 700 176px/154px var(--seasons);   /* mesmo tamanho do "projetos works" (pedido dela); mesmo centro vertical do Figma */ color: var(--cinza); white-space: nowrap; }
   .titulo em { display: block; font-style: italic; }
 
   /* ── que tal nos conectarmos? + ingressos ── */
@@ -65,18 +73,25 @@
   .ingresso.linkedin { left: 936px; top: 775px;   width: 502px; height: 745px; z-index: 1; }
   /* passar o mouse (ou focar pelo teclado): o ingresso sobe um pouquinho, como se fosse puxado */
   .ingresso.ativo img, .ingresso:focus-visible img { transform: translateY(-18px) rotate(-1.2deg); filter: drop-shadow(0 14px 14px rgba(30,0,0,.35)); }
-  /* surgem suavemente, da direita para a esquerda (o da direita primeiro) */
-  .js .ingresso { opacity: 0; transform: translateX(420px) rotate(7deg); }
-  .js .ingressos.chegou .ingresso { opacity: 1; transform: none;
-    transition: opacity .9s ease, transform 1.4s cubic-bezier(.16,1,.3,1); }
-  .js .ingressos.chegou .linkedin { transition-delay: 0s; }
-  .js .ingressos.chegou .behance  { transition-delay: .18s; }
-  .js .ingressos.chegou .email    { transition-delay: .36s; }
-  @media (prefers-reduced-motion: reduce) { .js .ingresso { opacity: 1; transform: none; } }
+  /* entrada como um baralho sendo distribuído: cada ingresso vem da direita (translateX) aparecendo aos poucos
+     (fade-in), em cascata (animation-delay) — o de baixo da pilha primeiro, o de cima por último —, cada um com
+     um ângulo e um deslocamento um pouco diferentes; passa um tiquinho do lugar e assenta onde está no Figma.
+     "both" = fica invisível antes de começar e permanece visível no fim (forwards) */
+  @keyframes distribui {
+    0%   { opacity: 0; transform: translate(var(--de-x), var(--de-y)) rotate(var(--giro-ini)); }
+    40%  { opacity: 1; }
+    72%  { opacity: 1; transform: translate(var(--passa-x), 0) rotate(var(--giro-meio)); }
+    100% { opacity: 1; transform: none; }
+  }
+  .js .ingresso { opacity: 0; }
+  .js .ingressos.chegou .ingresso { animation: distribui 1.25s cubic-bezier(.22,.9,.3,1) var(--atraso) both; }
+  .ingresso.linkedin { --atraso: 0s;   --de-x: 640px; --de-y: -26px; --giro-ini: 15deg;  --passa-x: -14px; --giro-meio: -2.4deg; }
+  .ingresso.behance  { --atraso: .26s; --de-x: 720px; --de-y: 18px;  --giro-ini: -11deg; --passa-x: -22px; --giro-meio: 1.8deg; }
+  .ingresso.email    { --atraso: .52s; --de-x: 800px; --de-y: -12px; --giro-ini: 13deg;  --passa-x: -18px; --giro-meio: -1.5deg; }
+  @media (prefers-reduced-motion: reduce) { .js .ingresso { opacity: 1; } .js .ingressos.chegou .ingresso { animation: none; } }
 
   /* ── vamos criar juntos! (formulário) — fica por cima da parte de baixo dos ingressos, como no Figma ── */
   .form-sec { left: -3000px; right: -3000px; top: 1440px; height: 525px; background: var(--vinho); }
-  .flor-baixo { left: -2px; top: 1721px; width: 813px; height: 251px; display: block; }
   .form-contato { left: 672px; top: 1440px; width: 749px; height: 447px; }
 
   /* botão com "cantos de pixel": quadradinhos na cor do fundo em cada canto */
@@ -161,7 +176,7 @@
 
   <!-- topo -->
   <div class="abs topo-bg"></div>
-  <img decoding="async" class="abs flor-topo decor fade-in-element" style="--atraso:.3s" src="assets/contato/flor-topo.webp" alt="">
+  <div class="abs fade-in-element" style="--atraso:.3s; left:0; top:0; width:0; height:0"><iframe class="abs flor flor-topo" src="assets/desenho-azul-contato.html" title="flor e pixels — azul" scrolling="no" tabindex="-1" aria-hidden="true"></iframe></div>
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">contato<em>contact</em></h1>
 
   <!-- que tal nos conectarmos? -->
@@ -179,7 +194,7 @@
 
   <!-- vamos criar juntos! -->
   <div class="abs form-sec"></div>
-  <img decoding="async" class="abs flor-baixo decor fade-in-element" src="assets/contato/flor-baixo.webp" alt="" loading="lazy">
+  <div class="abs flor-baixo-caixa fade-in-element"><iframe class="flor flor-baixo" src="assets/desenho-azul-contato.html" title="flor e pixels — azul" scrolling="no" tabindex="-1" aria-hidden="true" loading="lazy"></iframe></div>
   <section class="abs chamada criar fade-in-element">
     <h2>Vamos criar juntos!</h2>
     <p>Estou animada para começar a materializar as suas ideias!<br>Preencha o formulário ao lado para entrarmos em contato ;)</p>
