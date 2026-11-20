@@ -29,9 +29,9 @@
   body { -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
   a { color: inherit; text-decoration: none; }
 
-  /* Figma: /about · Desktop 1490 × 2275 — conteúdo centralizado, fundos de borda a borda */
-  .frame { position: relative; width: 100%; height: 2275px; overflow: hidden; overflow: clip; background: #FFFFFF; }
-  .page { position: absolute; top: 0; left: 50%; margin-left: -745px; width: 1490px; height: 2275px; }
+  /* Figma: /about · Desktop 1490 × 1902 (atualizado: sem o formulário "vamos criar juntos") — conteúdo centralizado, fundos de borda a borda */
+  .frame { position: relative; width: 100%; height: 1902px; overflow: hidden; overflow: clip; background: #FFFFFF; }
+  .page { position: absolute; top: 0; left: 50%; margin-left: -745px; width: 1490px; height: 1902px; }
   .abs { position: absolute; }
   .decor { pointer-events: none; }   /* imagens decorativas: o cursor lê o fundo por trás delas */
 
@@ -64,16 +64,16 @@
   .ola-texto { left: 60px; top: 459px; width: 485px; font: 400 24px/24px var(--cambria); color: var(--cinza); }
 
   /* ── works: faixa com as áreas + quem sou / o que construo / para onde caminho ── */
-  .works-bg { left: -3000px; right: -3000px; top: 704px; height: 809px; background: var(--azul-about); }
+  .works-bg { left: -3000px; right: -3000px; top: 704px; height: 1015px; background: var(--azul-about); }
   .faixa { left: -73px; top: 711.5px; width: 1670.5px; height: 284.3px; overflow: visible; }
   .bloco { color: var(--roxo); }
   .bloco h3 { font: 700 20px/1.3 var(--pixel); letter-spacing: 1.2px; text-transform: uppercase; }
   .bloco p  { margin-top: 10px; font: 400 18px/21px var(--cambria); }
-  .quem      { left: 60px;   top: 982px;  width: 355px; }
-  .construo  { left: 521px;  top: 1042px; width: 409px; }
-  .caminho   { left: 1036px; top: 1123px; width: 391px; }
-  .linha { left: 51px; top: 1322px; width: 1390px; height: 2px; background: linear-gradient(90deg, #3F3166 0%, #7562AA 100%); }
-  .formacao  { left: 60px; top: 1367px; width: 411px; }
+  .quem      { left: 89px;   top: 982px;  width: 300px; }
+  .construo  { left: 557px;  top: 1131px; width: 342px; }
+  .caminho   { left: 1065px; top: 1301px; width: 326px; }
+  .linha { left: 49px; top: 1534px; width: 1390px; height: 2px; background: linear-gradient(90deg, #3F3166 0%, #7562AA 100%); }
+  .formacao  { left: 59px; top: 1588px; width: 411px; }
   .formacao p { margin-top: 8px; line-height: 1.2; }
   .formacao em { font-style: italic; }
 
@@ -87,40 +87,11 @@
   .botao-pixel::after  { right: 0; top: 0; }
   .botao-pixel > .c1   { left: 0; bottom: 0; }
   .botao-pixel > .c2   { right: 0; bottom: 0; }
-  .curriculo { left: 1150px; top: 1392px; width: 291px; height: 52px; }
-
-  /* ── vamos criar juntos (formulário) — cores conferidas com a captura do Figma ── */
-  .contato-sec { left: -3000px; right: -3000px; top: 1512px; height: 580px; background: var(--cinza); overflow: hidden; }   /* vai até o rodapé (y = 2092), sem fresta */
-  .contato-sec iframe { position: absolute; left: calc(3000px - 290px); top: 255px;   /* 20px mais à esquerda que o Figma (pedido dela; 40px foi demais) */ width: 1239px; height: 635px;
-    border: 0; background: transparent; pointer-events: none; }
-  .criar { left: 80px; top: 1566px; width: 460px; color: var(--roxo); }
-  .criar span { display: block; font: 700 48px/46px var(--cambria); }
-  .criar span.pixel { font: 700 48px/46px var(--pixel); }
-  .criar-texto { left: 80px; top: 1685px; width: 408px; font: 400 22px/28px var(--cambria); color: var(--roxo); }
-  .form-contato { left: 672px; top: 1575px; width: 749px; height: 447px; }
-  .campo { position: absolute; left: 0; width: 749px; background: #B2C3D8; --canto: var(--cinza);
-    transition: background-color .4s ease; }
-  .campo input, .campo textarea { width: 100%; height: 100%; border: 0; background: transparent; outline: none; resize: none;
-    padding: 12px 19px; color: var(--roxo); font: 400 22px/28px var(--cambria); }
-  .campo input::placeholder, .campo textarea::placeholder { color: var(--roxo); opacity: .5; transition: opacity .4s ease; }
-  /* interação: ao passar o mouse e ao selecionar, o campo fica #799FD3; selecionado, o texto de exemplo esmaece */
-  .campo:hover, .campo:focus-within { background: #799FD3; }
-  .campo:focus-within input::placeholder, .campo:focus-within textarea::placeholder { opacity: .25; }
-  .campo::before, .campo::after, .campo > .c1, .campo > .c2 {
-    content: ""; position: absolute; width: 7px; height: 7px; background: var(--canto); z-index: 1; pointer-events: none; }
-  .campo::before { left: 0; top: 0; }  .campo::after { right: 0; top: 0; }
-  .campo > .c1 { left: 0; bottom: 0; } .campo > .c2 { right: 0; bottom: 0; }
-  .campo.nome  { top: 0;   height: 52px; }
-  .campo.email { top: 79px; height: 52px; }
-  .campo.msg   { top: 158px; height: 210px; }
-  .enviar { position: absolute; left: 229px; top: 395px; width: 291px; height: 52px; --canto: var(--cinza); font-size: 28px; }
+  .curriculo { left: 1148px; top: 1613px; width: 291px; height: 52px; }
   /* botões com cantos de pixel: ao passar o mouse o botão cresce um pouco; o texto não muda de cor */
   .botao-pixel, .js .botao-pixel.fade-in-element.visivel { transition: color .9s ease, transform .9s ease; }
   .botao-pixel:hover, .js .botao-pixel.fade-in-element.visivel:hover { transform: scale(1.04); transition: color .4s ease, transform .4s ease; }   /* texto mantém a cor padrão */
   .botao-pixel:active, .js .botao-pixel.fade-in-element.visivel:active { transform: scale(.98); transition-duration: .1s; }
-  /* "enviando…" / "enviado!": o botão fica parado, sem reagir ao mouse */
-  .botao-pixel:disabled { cursor: default; color: var(--cinza); transform: none; }
-  .aviso-envio { position: absolute; left: 0; right: 0; top: 460px; text-align: center; font: 400 18px/1.2 var(--cambria); color: var(--roxo); }
 
   /* ── header (igual à Home, nas cores do Figma da about: cinza com links roxos) ── */
   .header { position: fixed; left: 0; right: 0; top: 0; height: 42px; z-index: 10; background: var(--cinza); }
@@ -135,7 +106,7 @@
   .header .nav:hover { color: #84A9D9; transform: scale(1.08); transition: color .4s ease, transform .4s ease; }
 
   /* ── rodapé (igual à Home) ─────────────────── */
-  .rodape { left: 0; right: 0; top: 2092px; height: 183px; z-index: 2; }
+  .rodape { left: 0; right: 0; top: 1719px; height: 183px; z-index: 2; }
   .rodape::before { content: ""; position: absolute; top: 0; bottom: 0; left: -3000px; right: -3000px; background: var(--roxo); z-index: -1; }
   .rodape .contato { left: 60px; top: 46px; width: 365px; color: var(--branco); }
   .rodape .contato small { display: block; font: 400 16px/15px var(--cambria); }
@@ -209,20 +180,6 @@
   <!-- currículo (cópia de Desktop\2026-1\estágio pliguer\PDF\MariaFontes_Currículo2026-2.pdf) -->
   <a class="abs botao-pixel curriculo fade-in-element" href="assets/MariaFontes_Curriculo2026-2.pdf" target="_blank" rel="noopener">meu currículo<span class="c1"></span><span class="c2"></span></a>
 
-  <!-- vamos criar juntos -->
-  <div class="abs contato-sec">
-    <iframe id="flor-contato" src="assets/desenho-vermelho-flor.html?sem-desenho" title="flor e pixels — vermelho" scrolling="no" tabindex="-1" aria-hidden="true"></iframe>
-  </div>
-  <h2 class="abs criar fade-in-element"><span>Vamos criar</span><span class="pixel">juntos!</span></h2>
-  <p class="abs criar-texto fade-in-element" style="--atraso:.15s">Estou animada para começar a materializar as suas ideias! Preencha o formulário ao lado para entrarmos em contato ;)</p>
-  <form class="abs form-contato fade-in-element" id="form-contato" style="--atraso:.2s" novalidate>
-    <label class="campo nome"><input name="nome" type="text" placeholder="nome e sobrenome" autocomplete="name" required aria-label="nome e sobrenome"><span class="c1"></span><span class="c2"></span></label>
-    <label class="campo email"><input name="email" type="email" placeholder="e-mail favorito" autocomplete="email" required aria-label="e-mail favorito"><span class="c1"></span><span class="c2"></span></label>
-    <label class="campo msg"><textarea name="mensagem" placeholder="sobre o que iremos criar?" required aria-label="sobre o que iremos criar?"></textarea><span class="c1"></span><span class="c2"></span></label>
-    <button class="botao-pixel enviar" type="submit">enviar!<span class="c1"></span><span class="c2"></span></button>
-    <p class="aviso-envio" id="aviso-envio" aria-live="polite"></p>
-  </form>
-
   <!-- rodapé -->
   <footer class="abs rodape" data-cursor-bg="dark">
     <div class="abs contato">
@@ -266,51 +223,6 @@
   addEventListener('scroll', agenda, { passive: true });
   addEventListener('resize', agenda);
   quandoCarregar(agenda);
-})();
-</script>
-<script>
-/* formulário: envia a mensagem automaticamente para o e-mail da maju pelo FormSubmit (formsubmit.co).
-   No PRIMEIRO envio, o FormSubmit manda um e-mail de confirmação para mariafontesju@gmail.com;
-   depois de confirmar, as mensagens chegam direto na caixa de entrada.
-   (Só funciona com o site publicado na internet; abrindo o arquivo direto no computador o envio falha.) */
-(() => {
-  const DESTINO = 'https://formsubmit.co/ajax/mariafontesju@gmail.com';
-  const form = document.getElementById('form-contato'), aviso = document.getElementById('aviso-envio');
-  const botao = form.querySelector('.enviar');
-  const textoBotao = t => { botao.firstChild.nodeValue = t; };   // mantém os cantinhos de pixel
-  let enviado = false;
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    if (enviado) return;
-    const nome = form.nome.value.trim(), email = form.email.value.trim(), msg = form.mensagem.value.trim();
-    if (!nome || !email || !msg) { aviso.textContent = 'preencha os três campos, por favor :)'; return; }
-    if (!form.email.checkValidity()) { aviso.textContent = 'confere o e-mail? parece que falta alguma coisa.'; return; }
-    aviso.textContent = '';
-    botao.disabled = true;
-    textoBotao('enviando…');
-    try {
-      const r = await fetch(DESTINO, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-          nome, email, mensagem: msg,
-          _subject: 'vamos criar juntos — ' + nome,
-          _replyto: email,
-          _template: 'table'
-        })
-      });
-      const dados = await r.json().catch(() => ({}));
-      if (!r.ok || String(dados.success) === 'false') throw new Error(dados.message || 'falha no envio');
-      enviado = true;
-      textoBotao('enviado!');
-      form.reset();
-      form.querySelectorAll('input, textarea').forEach(c => c.disabled = true);
-    } catch (err) {
-      botao.disabled = false;
-      textoBotao('enviar!');
-      aviso.innerHTML = 'não consegui enviar agora. tenta de novo, ou escreve direto para <a href="mailto:mariafontesju@gmail.com" style="text-decoration:underline">mariafontesju@gmail.com</a>';
-    }
-  });
 })();
 </script>
 <script>
