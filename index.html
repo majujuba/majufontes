@@ -169,11 +169,11 @@
     display: flex; flex-direction: column; padding-top: var(--hero); }
   /* topo: ocupa a tela; flor roxa em cima, "maju." no meio, flor vermelha embaixo indo para o cinza */
   html.celular .hero-bg { left: 0; right: 0; height: var(--hero); background: linear-gradient(180deg, #84A9D9 56px, #D8D8D8 100%); }
-  html.celular .desenho-branco { left: -16vw; top: -34px; width: 215vw; height: calc(215vw * 639 / 1249); }
-  html.celular .desenho-roxo { left: -42vw; top: calc(var(--hero) * .64); width: 210vw; height: calc(210vw * 617 / 1205); }
-  html.celular .logo { left: 50%; top: calc(var(--hero) * .54); width: min(84vw, 380px); height: auto; aspect-ratio: 909 / 353; transform: translate(-50%, -50%); }
-  html.js.celular .logo.fade-in-element { transform: translate(-50%, calc(-50% + 20px)); }
-  html.js.celular .logo.fade-in-element.visivel { transform: translate(-50%, -50%); }
+  /* posições medidas na referência dela (tela de 450px): os pixels das flores e as letras do logo foram
+     casados com os desenhos — flor roxa 1,05 px por unidade, flor vermelha 0,98; tudo proporcional à largura */
+  html.celular .desenho-branco { left: -0.33vw; top: -28.1vw; width: 214.67vw; height: 113.17vw; }
+  html.celular .desenho-roxo { left: -52.69vw; top: calc(var(--hero) - 71.69vw); width: 187.94vw; height: 105.84vw; }
+  html.celular .logo { left: 4.3vw; top: calc(var(--hero) * .451); width: 87.2vw; height: auto; aspect-ratio: 909 / 353; }
   html.celular .fade { left: 0; right: 0; top: calc(var(--hero) - 170px); height: 170px; }
 
   /* "projetos works" e a linha: logo abaixo do topo, na largura da tela */
@@ -187,15 +187,15 @@
     --topo-pilha: 72px; --degrau: 14px; --folga: 22px; }
   html.celular .card { width: 100%; height: 352px; border-radius: 24px; }
   html.celular .card .foto { left: 0; right: 0; top: 0; width: 100%; height: 214px; object-fit: cover; border-radius: 0; }
-  html.celular .card .nome { left: 22px; top: 238px; font-size: 40px !important; line-height: 38px; }
-  html.celular .card .cat  { left: 23px; top: 290px; font-size: 20px; line-height: 22px; }
-  html.celular .card .espiral, html.celular .card .espiral.maior { left: auto; right: 22px; top: 290.5px; }   /* centro alinhado com o subtítulo (290 + 22/2) */
+  html.celular .card .nome { left: 28px; top: 238px; font-size: 40px !important; line-height: 38px; }
+  html.celular .card .cat  { left: 29px; top: 290px; font-size: 20px; line-height: 22px; }
+  html.celular .card .espiral, html.celular .card .espiral.maior { left: auto; right: 28px; top: 290.5px; }   /* centro alinhado com o subtítulo (290 + 22/2) */
   html.celular .card .espiral.maior { top: 289px; }
-  html.celular .card.mais .chamada { left: 22px; top: 28px; width: calc(100% - 44px); font-size: 36px; line-height: 36px; white-space: normal; }
+  html.celular .card.mais .chamada { left: 28px; top: 30px; width: calc(100% - 56px); font-size: 36px; line-height: 36px; white-space: normal; }
   html.celular .quebra-celular { display: block; }   /* "projetos →" na segunda linha */
-  html.celular .card.mais .sub { left: 22px; top: 112px; width: calc(100% - 44px); font-size: 18px; line-height: 22px; }
-  html.celular .card.mais .espiral { left: 22px; right: auto; top: 310px; }
-  html.celular .card.mais .desenho-caixa { left: 0; right: 0; top: 150px; bottom: 0; width: auto; height: auto; border-radius: 0; }
+  html.celular .card.mais .sub { left: 28px; top: 126px; width: calc(100% - 56px); font-size: 18px; line-height: 22px; }
+  html.celular .card.mais .espiral { left: 28px; right: auto; top: 312px; }
+  html.celular .card.mais .desenho-caixa { left: 0; right: 0; top: 186px; bottom: 0; width: auto; height: auto; border-radius: 0; }
   html.celular .card.mais .desenho-caixa iframe { left: -36%; top: -14%; width: 175%; height: auto; aspect-ratio: 920 / 485; }
 
   html.celular .rodape { order: 2; }
