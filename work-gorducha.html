@@ -32,8 +32,8 @@
 
   /* Figma: /work-gorducha · Desktop 1490 × 7256 — conteúdo centralizado, fundos de borda a borda.
      Posições = Figma (as da seção "works" somadas a 720, o topo dela) */
-  .frame { position: relative; width: 100%; height: 7256px; overflow: hidden; overflow: clip; background: var(--roxo); }
-  .page { position: absolute; top: 0; left: 50%; margin-left: -745px; width: 1490px; height: 7256px; }
+  .frame { position: relative; width: 100%; height: 7198px; overflow: hidden; overflow: clip; background: var(--roxo); }
+  .page { position: absolute; top: 0; left: 50%; margin-left: -745px; width: 1490px; height: 7198px; }
   .abs { position: absolute; }
 
   /* ── topo: cartão e sorvetes da Gorducha que se dissolvem no roxo ── */
@@ -99,18 +99,18 @@
   .escrever .rotulo { position: absolute; left: 0; right: 0; bottom: 78px; text-align: center; font: 500 18px/1 var(--pixel); color: var(--tinta); opacity: .75; transition: color .45s ease; }
 
   /* ── anterior / próximo ── */
-  .navega { left: 0; right: 0; top: 6931px; height: 142px; }
+  .navega { left: 0; right: 0; top: 6931px; height: 84px; }
   .navega::before { content: ""; position: absolute; top: 0; bottom: 0; left: -3000px; right: -3000px; background: var(--azul); }
-  .botao-pixel { position: absolute; display: flex; align-items: center; justify-content: center; height: 52px; background: var(--roxo);
-    color: var(--cinza); font: 500 32px/28px var(--pixel); letter-spacing: -0.32px; white-space: nowrap; --canto: var(--azul);
+  .botao-pixel { position: absolute; display: flex; align-items: center; justify-content: center; height: 36px; background: var(--roxo);
+    color: var(--cinza); font: 500 22px/1 var(--pixel); letter-spacing: 0; white-space: nowrap; padding: 0 16px 1px; --canto: var(--azul);
     transition: transform .9s ease; }
   .botao-pixel::before, .botao-pixel::after, .botao-pixel > .c1, .botao-pixel > .c2 {
-    content: ""; position: absolute; width: 8px; height: 8px; margin: -1px; background: var(--canto); }
+    content: ""; position: absolute; width: 6px; height: 6px; margin: -1px; background: var(--canto); }
   .botao-pixel::before { left: 0; top: 0; }  .botao-pixel::after { right: 0; top: 0; }
   .botao-pixel > .c1 { left: 0; bottom: 0; } .botao-pixel > .c2 { right: 0; bottom: 0; }
   .botao-pixel:hover { transform: scale(1.04); transition: transform .4s ease; }
-  .anterior { left: 60px; top: 45px; width: 208px; }
-  .proximo  { left: 1230px; top: 45px; width: 200px; }
+  .anterior { left: 60px; top: 24px; }   /* botões menores e mais delicados, a pedido dela (antes 52px de altura e letra 32) */
+  .proximo  { right: 60px; top: 24px; }
 
   /* ── header (como a work: azul-claro com links roxos) ── */
   .header { position: fixed; left: 0; right: 0; top: 0; height: 42px; z-index: 9999; background: var(--azul-header); }
@@ -125,7 +125,7 @@
   .header .nav:hover { color: #731212; transform: scale(1.08); transition: color .4s ease, transform .4s ease; }
 
   /* ── rodapé (igual às outras páginas) ── */
-  .rodape { left: 0; right: 0; top: 7073px; height: 183px; z-index: 2; }
+  .rodape { left: 0; right: 0; top: 7015px; height: 183px; z-index: 2; }
   .rodape::before { content: ""; position: absolute; top: 0; bottom: 0; left: -3000px; right: -3000px; background: var(--roxo); z-index: -1; }
   .rodape .contato { left: 60px; top: 46px; width: 365px; color: var(--branco); }
   .rodape .contato small { display: block; font: 400 16px/15px var(--cambria); }
