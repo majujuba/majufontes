@@ -2,17 +2,26 @@
    Só aparece no layout de celular (classe "celular" no <html>, ver assets/celular.js);
    no computador nada muda. O visual está em assets/celular.css.
 
-   - o botão usa a cor dos links da header de cada página (roxo, vermelho, cinza…)
-   - o menu abre num círculo que cresce a partir do botão; os links entram um depois do outro
+   - o botão usa a cor dos links da header de cada página
+   - o fundo do menu é a cor da header da página (na home roxo, na about cinza…), com os links na cor dos links
+   - abre com quadradinhos (pixels) que preenchem a tela de cima à direita até embaixo à esquerda;
+     depois os links entram um depois do outro. Fecha com os pixels sumindo no mesmo sentido
    - fecha no ✕, na tecla Esc ou ao escolher um link; a página por trás não rola enquanto ele está aberto */
 (() => {
   const header = document.querySelector('header.header');
   if (!header) return;
   const html = document.documentElement;
   const aqui = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-  const corLink = (() => { const n = header.querySelector('.nav'); return n ? getComputedStyle(n).color : '#D8D8D8'; })();
+  const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // botão (duas linhas que viram um ✕)
+  // cores da página: fundo = cor da header; texto = cor dos links da header
+  const corFundo = getComputedStyle(header).backgroundColor || 'rgb(63, 49, 102)';
+  const corLink = (() => { const n = header.querySelector('.nav'); return n ? getComputedStyle(n).color : '#D8D8D8'; })();
+  const rgb = c => (c.match(/[\d.]+/g) || [0, 0, 0]).slice(0, 3).map(Number);
+  const [fr, fg, fb] = rgb(corFundo);
+  const claro = (0.299 * fr + 0.587 * fg + 0.114 * fb) > 150;   // fundo claro (ex.: cinza da about)
+
+  // botão (as duas linhas desenhadas)
   const botao = document.createElement('button');
   botao.type = 'button';
   botao.className = 'menu-botao';
@@ -24,49 +33,105 @@
   header.appendChild(botao);
 
   // o menu
-  const ativo = nome => (aqui === nome || (nome === 'work.html' && aqui.startsWith('work-'))) ? ' aqui' : '';
+  const ativo = nome => (aqui === nome || (nome === 'work.html' && aqui.startsWith('work-'))) ? 'aqui' : '';
   const menu = document.createElement('nav');
-  menu.className = 'menu-celular';
+  menu.className = 'menu-celular' + (claro ? ' claro' : '');
   menu.id = 'menu-celular';
   menu.setAttribute('aria-label', 'menu');
   menu.setAttribute('aria-hidden', 'true');
+  menu.style.setProperty('--menu-fundo', corFundo);
+  menu.style.setProperty('--menu-texto', claro ? corLink : '#D8D8D8');
   menu.innerHTML =
     '<div class="menu-topo">' +
-      '<a class="menu-estrela" href="index.html" aria-label="início"><img src="assets/estrela-header.svg" alt=""></a>' +
+      '<a class="menu-estrela" href="index.html" aria-label="início"><img src="assets/' + (claro ? 'estrela-roxa.svg' : 'estrela-header.svg') + '" alt=""></a>' +
       '<button type="button" class="menu-fechar" aria-label="fechar o menu"><span></span><span></span></button>' +
     '</div>' +
     '<ul class="menu-links">' +
-      '<li><a class="' + ativo('index.html').trim() + '" href="index.html"><small>00</small>home</a></li>' +
-      '<li><a class="' + ativo('work.html').trim() + '" href="work.html"><small>01</small>work</a></li>' +
-      '<li><a class="' + ativo('about.html').trim() + '" href="about.html"><small>02</small>about</a></li>' +
-      '<li><a class="' + ativo('contact.html').trim() + '" href="contact.html"><small>03</small>contact</a></li>' +
+      '<li><a class="' + ativo('index.html') + '" href="index.html"><small>00</small>home</a></li>' +
+      '<li><a class="' + ativo('work.html') + '" href="work.html"><small>01</small>work</a></li>' +
+      '<li><a class="' + ativo('about.html') + '" href="about.html"><small>02</small>about</a></li>' +
+      '<li><a class="' + ativo('contact.html') + '" href="contact.html"><small>03</small>contact</a></li>' +
     '</ul>' +
-    '<div class="menu-contato">' +
-      '<small>entre em contato</small>' +
-      '<a class="menu-email" href="mailto:mariafontesju@gmail.com">mariafontesju@gmail.com</a>' +
-      '<p><a href="https://www.linkedin.com/in/maria-j%C3%BAlia-fontes-leite/" target="_blank" rel="noopener">linkedIn</a>' +
-      '<a href="https://www.behance.net/majufontes" target="_blank" rel="noopener">behance</a></p>' +
-    '</div>' +
     '<div class="menu-flor" aria-hidden="true"></div>';
   document.body.appendChild(menu);
   const fechar = menu.querySelector('.menu-fechar');
+
+  // flor azul animada (carregada na primeira abertura); em fundo claro os pixels ficam roxos para aparecerem
+  function poeFlor() {
+    const caixa = menu.querySelector('.menu-flor');
+    if (caixa.firstChild) return;
+    const f = document.createElement('iframe');
+    f.src = 'assets/desenho-azul-flor.html';
+    f.title = ''; f.tabIndex = -1; f.setAttribute('scrolling', 'no');
+    if (claro) f.addEventListener('load', () => {
+      try {
+        const r = f.contentDocument.documentElement;
+        r.style.setProperty('--pixel', corLink);
+        r.style.setProperty('--linha', '#799FD3');
+      } catch (e) { /* abrindo o arquivo direto do computador o navegador não deixa mexer: fica a cor padrão */ }
+    });
+    caixa.appendChild(f);
+  }
+
+  /* ── pixels: uma tela de quadradinhos na cor do fundo do menu ──
+     cada quadradinho aparece (ou some) num tempo que depende da distância até o canto de cima à direita,
+     com um pouco de acaso, como a transição de pixels do site */
+  const LADO = 22, DURA = 620, ESPALHA = 0.18;
+  let tela = null, ctx = null, cels = [], quadro = 0;
+  function preparaTela() {
+    if (!tela) {
+      tela = document.createElement('canvas');
+      tela.className = 'menu-pixels';
+      tela.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(tela);
+      ctx = tela.getContext('2d');
+    }
+    const dpr = Math.min(2, devicePixelRatio || 1), W = innerWidth, H = innerHeight;
+    tela.width = Math.ceil(W * dpr); tela.height = Math.ceil(H * dpr);
+    tela.style.width = W + 'px'; tela.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cels = [];
+    const nx = Math.ceil(W / LADO), ny = Math.ceil(H / LADO), max = (nx - 1) + (ny - 1) || 1;
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+      const d = ((nx - 1 - i) + j) / max;                        // 0 no canto de cima à direita, 1 no de baixo à esquerda
+      cels.push({ x: i * LADO, y: j * LADO, t: Math.min(1, Math.max(0, d * (1 - ESPALHA) + Math.random() * ESPALHA)) });
+    }
+  }
+  // enchendo = true: os quadradinhos vão aparecendo; false: vão sumindo (mesmo sentido)
+  function anima(enchendo, fim) {
+    cancelAnimationFrame(quadro);
+    preparaTela();
+    tela.style.display = 'block';
+    const cor = corFundo, t0 = performance.now();
+    const passo = agora => {
+      const p = Math.min(1, (agora - t0) / DURA);
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      ctx.fillStyle = cor;
+      for (const c of cels) {
+        const visivel = enchendo ? c.t <= p : c.t > p;
+        if (visivel) ctx.fillRect(c.x, c.y, LADO + 0.5, LADO + 0.5);
+      }
+      if (p < 1) quadro = requestAnimationFrame(passo);
+      else { if (!enchendo) tela.style.display = 'none'; if (fim) fim(); }
+    };
+    quadro = requestAnimationFrame(passo);
+  }
 
   let aberto = false;
   function abre() {
     if (aberto || !html.classList.contains('celular')) return;
     aberto = true;
-    // a flor animada só é carregada na primeira vez que o menu abre
-    const flor = menu.querySelector('.menu-flor');
-    if (!flor.firstChild) flor.innerHTML = '<iframe src="assets/desenho-azul-flor.html" title="" tabindex="-1" scrolling="no"></iframe>';
-    // o círculo cresce a partir do centro do botão
-    const r = botao.getBoundingClientRect();
-    menu.style.setProperty('--cx', (r.left + r.width / 2) + 'px');
-    menu.style.setProperty('--cy', (r.top + r.height / 2) + 'px');
-    menu.setAttribute('aria-hidden', 'false');
+    poeFlor();
     botao.setAttribute('aria-expanded', 'true');
     html.classList.add('menu-aberto');
-    requestAnimationFrame(() => menu.classList.add('aberto'));
-    setTimeout(() => fechar.focus({ preventScroll: true }), 350);
+    const mostra = () => {
+      if (!aberto) return;
+      menu.setAttribute('aria-hidden', 'false');
+      menu.classList.add('aberto');
+      if (tela) tela.style.display = 'none';
+      setTimeout(() => fechar.focus({ preventScroll: true }), 300);
+    };
+    if (calmo) mostra(); else anima(true, mostra);
   }
   function fecha(devolveFoco) {
     if (!aberto) return;
@@ -75,13 +140,14 @@
     menu.setAttribute('aria-hidden', 'true');
     botao.setAttribute('aria-expanded', 'false');
     html.classList.remove('menu-aberto');
+    if (!calmo) anima(false, null);   // a tela começa cheia de pixels e eles vão sumindo
     if (devolveFoco) botao.focus({ preventScroll: true });
   }
   botao.addEventListener('click', abre);
   fechar.addEventListener('click', () => fecha(true));
   addEventListener('keydown', e => { if (e.key === 'Escape') fecha(true); });
-  // escolher um link: o menu fecha por baixo da transição de pixels (ou na hora, se for o mesmo endereço)
-  menu.addEventListener('click', e => { if (e.target.closest('.menu-links a, .menu-contato a')) setTimeout(() => fecha(false), 400); });
-  // se a janela voltar ao layout de computador, o menu fecha
+  // escolher um link: o menu fica por baixo da transição de pixels da página
+  menu.addEventListener('click', e => { if (e.target.closest('.menu-links a')) setTimeout(() => { aberto && (menu.classList.remove('aberto'), aberto = false, html.classList.remove('menu-aberto')); }, 900); });
+  addEventListener('resize', () => { if (tela && tela.style.display === 'block') preparaTela(); });
   addEventListener('celular-mudou', () => { if (!html.classList.contains('celular')) fecha(false); });
 })();

@@ -30,67 +30,62 @@ html.celular .menu-botao::before {
 }
 html.celular .menu-botao:active::before { transform: scale(.9); }
 
-/* ── menu de tela cheia ── */
+/* ── menu de tela cheia ──
+   fundo e texto vêm da página (--menu-fundo = cor da header, --menu-texto = cor dos links);
+   os pixels que enchem a tela ao abrir são desenhados num <canvas> (.menu-pixels), logo abaixo do menu */
+html.celular .menu-pixels { display: none; position: fixed; left: 0; top: 0; z-index: 2147469990; pointer-events: none; }
 html.celular .menu-celular {
   display: flex; flex-direction: column; position: fixed; inset: 0; z-index: 2147470000;
-  background: #3F3166; color: #D8D8D8; overflow: hidden; overscroll-behavior: contain;
+  background: var(--menu-fundo, #3F3166); color: var(--menu-texto, #D8D8D8); overflow: hidden; overscroll-behavior: contain;
   padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
-  clip-path: circle(0px at var(--cx, 100%) var(--cy, 0px)); visibility: hidden;
-  transition: clip-path .65s cubic-bezier(.65,0,.35,1), visibility 0s linear .65s;
+  --menu-destaque: #84A9D9;
+  visibility: hidden; opacity: 0; transition: opacity .18s ease, visibility 0s linear .18s;
 }
-html.celular .menu-celular.aberto {
-  clip-path: circle(150vmax at var(--cx, 100%) var(--cy, 0px)); visibility: visible;
-  transition: clip-path .7s cubic-bezier(.65,0,.35,1), visibility 0s;
-}
+html.celular .menu-celular.claro { --menu-destaque: #799FD3; }
+html.celular .menu-celular.aberto { visibility: visible; opacity: 1; transition: opacity .12s ease, visibility 0s; }
 html.menu-aberto, html.menu-aberto body { overflow: hidden; }
 
-html.celular .menu-topo { position: relative; height: 56px; flex: none; }
+html.celular .menu-topo { position: relative; height: 56px; flex: none; z-index: 2; }
 html.celular .menu-estrela { position: absolute; left: 18px; top: 12px; width: 32px; height: 32px; }
 html.celular .menu-estrela img { display: block; width: 100%; height: 100%; }
 html.celular .menu-fechar {
   position: absolute; right: 10px; top: 6px; width: 44px; height: 44px; border: 0; padding: 0;
-  background: transparent; color: #D8D8D8; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  background: transparent; color: var(--menu-texto, #D8D8D8); cursor: pointer; -webkit-tap-highlight-color: transparent;
 }
 html.celular .menu-fechar span {
   position: absolute; left: 9px; top: 21px; width: 26px; height: 2px; border-radius: 2px; background: currentColor;
-  transform: rotate(0); transition: transform .45s cubic-bezier(.65,0,.35,1) .15s;
+  transform: rotate(0); transition: transform .45s cubic-bezier(.65,0,.35,1) .1s;
 }
 html.celular .menu-celular.aberto .menu-fechar span:first-child { transform: rotate(45deg); }
 html.celular .menu-celular.aberto .menu-fechar span:last-child  { transform: rotate(-45deg); }
 
-html.celular .menu-links { list-style: none; margin: 0; padding: 4vh 24px 0; flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: 2px; position: relative; z-index: 1; }
+/* links um pouco abaixo do meio da tela, como na referência */
+html.celular .menu-links { list-style: none; margin: 0; padding: 0 24px 14vh; flex: 1 1 auto; display: flex; flex-direction: column;
+  justify-content: flex-end; gap: 2px; position: relative; z-index: 2; max-height: 72vh; }
 html.celular .menu-links a {
   display: flex; align-items: baseline; gap: 14px; padding: 4px 0;
-  font: 700 clamp(48px, 15vw, 72px)/1.05 "the-seasons", "The Seasons", serif; color: #D8D8D8;
+  font: 700 clamp(48px, 15vw, 72px)/1.05 "the-seasons", "The Seasons", serif; color: var(--menu-texto, #D8D8D8);
   -webkit-tap-highlight-color: transparent;
-  opacity: 0; transform: translateY(26px); transition: opacity .3s ease, transform .3s ease, color .3s ease;
+  opacity: 0; transform: translateY(26px); transition: opacity .2s ease, transform .2s ease, color .3s ease;
 }
-html.celular .menu-links small { font: 400 14px/1 "Pixelify Sans", monospace; color: #84A9D9; letter-spacing: .04em; transform: translateY(-.15em); }
-html.celular .menu-links a.aqui { font-style: italic; color: #84A9D9; }
-html.celular .menu-links a:active { color: #84A9D9; }
+html.celular .menu-links small { font: 400 14px/1 "Pixelify Sans", monospace; color: var(--menu-destaque); letter-spacing: .04em; transform: translateY(-.15em); }
+html.celular .menu-links a.aqui { font-style: italic; color: var(--menu-destaque); }
+html.celular .menu-links a:active { color: var(--menu-destaque); }
 html.celular .menu-celular.aberto .menu-links a { opacity: 1; transform: none; transition: opacity .6s ease, transform .7s cubic-bezier(.22,1,.36,1), color .3s ease; }
-html.celular .menu-celular.aberto .menu-links li:nth-child(1) a { transition-delay: .22s; }
-html.celular .menu-celular.aberto .menu-links li:nth-child(2) a { transition-delay: .29s; }
-html.celular .menu-celular.aberto .menu-links li:nth-child(3) a { transition-delay: .36s; }
-html.celular .menu-celular.aberto .menu-links li:nth-child(4) a { transition-delay: .43s; }
+html.celular .menu-celular.aberto .menu-links li:nth-child(1) a { transition-delay: .05s; }
+html.celular .menu-celular.aberto .menu-links li:nth-child(2) a { transition-delay: .12s; }
+html.celular .menu-celular.aberto .menu-links li:nth-child(3) a { transition-delay: .19s; }
+html.celular .menu-celular.aberto .menu-links li:nth-child(4) a { transition-delay: .26s; }
 
-html.celular .menu-contato {
-  position: relative; z-index: 1; padding: 0 24px 30px; flex: none;
-  font-family: Cambria, Caladea, Georgia, serif; color: #FFFFFF;
-  opacity: 0; transform: translateY(16px); transition: opacity .3s ease, transform .3s ease;
-}
-html.celular .menu-celular.aberto .menu-contato { opacity: 1; transform: none; transition: opacity .6s ease .5s, transform .7s cubic-bezier(.22,1,.36,1) .5s; }
-html.celular .menu-contato small { display: block; font-size: 14px; line-height: 1.2; }
-html.celular .menu-contato .menu-email { display: inline-block; font-weight: 700; font-size: 21px; line-height: 1.3; word-break: break-all; }
-html.celular .menu-contato p { margin-top: 14px; display: flex; gap: 22px; font: 400 15px/1 "Pixelify Sans", monospace; color: #D8D8D8; }
-
-/* a flor azul animada (a mesma do card "veja mais projetos" da home) no canto de baixo */
-html.celular .menu-flor { position: absolute; right: -34%; bottom: -6%; width: 120%; aspect-ratio: 920 / 485; z-index: 0; pointer-events: none; opacity: .55; }
+/* a flor azul animada no canto de baixo à direita, grande e de pé (como na referência) */
+html.celular .menu-flor { position: absolute; left: calc(50vw + 150vw * 485 / 920); top: 60vh; width: 150vw; aspect-ratio: 920 / 485; z-index: 1; pointer-events: none;
+  transform-origin: 0 0; transform: rotate(90deg);   /* de pé: a caixa girada vai de x 50vw para a direita (sai da tela) e de 60vh para baixo */ opacity: 0; transition: opacity .5s ease .2s; }
+html.celular .menu-celular.aberto .menu-flor { opacity: 1; }
 html.celular .menu-flor iframe { width: 100%; height: 100%; border: 0; background: transparent; }
 
 @media (prefers-reduced-motion: reduce) {
   html.celular .menu-celular, html.celular .menu-celular.aberto { transition: none; }
-  html.celular .menu-links a, html.celular .menu-contato { transition: none !important; }
+  html.celular .menu-links a, html.celular .menu-flor { transition: none !important; }
 }
 
 /* ── rodapé: empilhado, mesmas cores e fontes ── */
