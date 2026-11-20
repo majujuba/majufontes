@@ -64,7 +64,10 @@
   /* ingressos: imagens exportadas do Figma (já inclinadas); o clique vale só onde o ingresso aparece
      (o script lê a transparência de cada imagem), e o de cima na pilha ganha */
   /* z-index 0: a pilha dos ingressos fica "presa" aqui dentro, e o formulário (que vem depois) os cobre embaixo */
-  .ingressos { left: 0; top: 0; width: 1490px; height: 1440px; pointer-events: none; z-index: 0; }
+  /* os ingressos são cortados aqui mesmo, 1px abaixo do topo do campo "nome" (que fica por cima): assim não aparece
+     nenhuma fresta vermelha entre eles e o formulário. Só o corte de baixo; dos lados e em cima eles podem sair */
+  .ingressos { left: 0; top: 0; width: 1490px; height: 1441px; pointer-events: none; z-index: 0;
+    clip-path: inset(-1000px -3000px 0 -3000px); }
   .ingresso { position: absolute; display: block; outline: none; }
   .ingresso img { display: block; width: 100%; height: 100%; pointer-events: none; -webkit-user-drag: none;
     transition: transform .45s cubic-bezier(.3,.7,.4,1), filter .45s ease; }
@@ -85,13 +88,15 @@
   }
   .js .ingresso { opacity: 0; }
   .js .ingressos.chegou .ingresso { animation: distribui 1.25s cubic-bezier(.22,.9,.3,1) var(--atraso) both; }
-  .ingresso.linkedin { --atraso: 0s;   --de-x: 640px; --de-y: -26px; --giro-ini: 15deg;  --passa-x: -14px; --giro-meio: -2.4deg; }
+  /* ordem pedida por ela: primeiro o azul (e-mail), depois o azul-claro (Behance), por último o roxo (LinkedIn);
+     a pilha continua a do Figma (e-mail por cima) */
+  .ingresso.email    { --atraso: 0s;   --de-x: 800px; --de-y: -12px; --giro-ini: 13deg;  --passa-x: -18px; --giro-meio: -1.5deg; }
   .ingresso.behance  { --atraso: .26s; --de-x: 720px; --de-y: 18px;  --giro-ini: -11deg; --passa-x: -22px; --giro-meio: 1.8deg; }
-  .ingresso.email    { --atraso: .52s; --de-x: 800px; --de-y: -12px; --giro-ini: 13deg;  --passa-x: -18px; --giro-meio: -1.5deg; }
+  .ingresso.linkedin { --atraso: .52s; --de-x: 640px; --de-y: -26px; --giro-ini: 15deg;  --passa-x: -14px; --giro-meio: -2.4deg; }
   @media (prefers-reduced-motion: reduce) { .js .ingresso { opacity: 1; } .js .ingressos.chegou .ingresso { animation: none; } }
 
   /* ── vamos criar juntos! (formulário) — fica por cima da parte de baixo dos ingressos, como no Figma ── */
-  .form-sec { left: -3000px; right: -3000px; top: 1440px; height: 525px; background: var(--vinho); }
+  .form-sec { left: -3000px; right: -3000px; top: 1442px; height: 523px; background: var(--vinho); }
   .form-contato { left: 672px; top: 1440px; width: 749px; height: 447px; }
 
   /* botão com "cantos de pixel": quadradinhos na cor do fundo em cada canto */
