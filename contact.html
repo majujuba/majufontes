@@ -69,13 +69,16 @@
   .ingressos { left: 0; top: 0; width: 1490px; height: 1441px; pointer-events: none; z-index: 0;
     clip-path: inset(-1000px -3000px 0 -3000px); }
   .ingresso { position: absolute; display: block; outline: none; }
+  /* passar o mouse: o mesmo tilt 3D dos cards da home — o ponto do ingresso sob o cursor vem para a frente
+     (até 6°), girando em torno do centro; ao sair, volta devagar */
   .ingresso img { display: block; width: 100%; height: 100%; pointer-events: none; -webkit-user-drag: none;
-    transition: transform .45s cubic-bezier(.3,.7,.4,1), filter .45s ease; }
+    --rx: 0deg; --ry: 0deg; transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry));
+    transition: transform .4s ease; }
   .ingresso.email    { left: 571px; top: 804.5px; width: 481px; height: 726px; z-index: 3; }
   .ingresso.behance  { left: 767px; top: 768px;   width: 452.5px; height: 721px; z-index: 2; }
   .ingresso.linkedin { left: 936px; top: 775px;   width: 502px; height: 745px; z-index: 1; }
   /* passar o mouse (ou focar pelo teclado): o ingresso sobe um pouquinho, como se fosse puxado */
-  .ingresso.ativo img, .ingresso:focus-visible img { transform: translateY(-18px) rotate(-1.2deg); filter: drop-shadow(0 14px 14px rgba(30,0,0,.35)); }
+  .ingresso:focus-visible img { --rx: -4deg; --ry: -4deg; }   /* pelo teclado (Tab): inclina um pouco */
   /* entrada como um baralho sendo distribuído: cada ingresso vem da direita (translateX) aparecendo aos poucos
      (fade-in), em cascata (animation-delay) — o de baixo da pilha primeiro, o de cima por último —, cada um com
      um ângulo e um deslocamento um pouco diferentes; passa um tiquinho do lugar e assenta onde está no Figma.
@@ -98,6 +101,8 @@
   /* ── vamos criar juntos! (formulário) — fica por cima da parte de baixo dos ingressos, como no Figma ── */
   .form-sec { left: -3000px; right: -3000px; top: 1442px; height: 523px; background: var(--vinho); }
   .form-contato { left: 672px; top: 1440px; width: 749px; height: 447px; }
+  /* o formulário só aparece (fade), sem subir: subindo, abria uma faixa vermelha entre os ingressos e o campo "nome" */
+  .js .form-contato.fade-in-element { transform: none; }
 
   /* botão com "cantos de pixel": quadradinhos na cor do fundo em cada canto */
   .botao-pixel { display: flex; align-items: center; justify-content: center; background: var(--cinza);
@@ -303,15 +308,36 @@
 
   // a área de cima dos ingressos (onde eles podem estar) "ouve" o mouse; o resto da página continua normal
   let ativo = null;
+  // tilt 3D igual ao dos cards da home: o ponto sob o cursor vem para a frente, até ANGULO graus nas bordas
+  const ANGULO = 6;
+  const tiltOk = matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const solta = a => {
+    const img = a.querySelector('img');
+    img.style.transition = 'transform 0.4s ease';
+    img.style.setProperty('--rx', '0deg'); img.style.setProperty('--ry', '0deg');
+  };
+  const inclina = (a, x, y) => {
+    if (!tiltOk) return;
+    const img = a.querySelector('img'), r = img.getBoundingClientRect();
+    const nx = Math.max(-1, Math.min(1, (x - (r.left + r.width / 2)) / (r.width / 2)));
+    const ny = Math.max(-1, Math.min(1, (y - (r.top + r.height / 2)) / (r.height / 2)));
+    img.style.transition = 'transform 0.1s ease-out';
+    // embaixo → rotateX positivo; à direita → rotateY negativo (o lado sob o cursor vem para a frente)
+    img.style.setProperty('--rx', (ny * ANGULO).toFixed(2) + 'deg');
+    img.style.setProperty('--ry', (-nx * ANGULO).toFixed(2) + 'deg');
+  };
   const marca = a => {
     if (a === ativo) return;
-    if (ativo) ativo.classList.remove('ativo');
+    if (ativo) { ativo.classList.remove('ativo'); solta(ativo); }
     ativo = a || null;
     if (ativo) ativo.classList.add('ativo');
     document.body.style.cursor = ativo ? 'pointer' : '';
     if (ativo) document.body.dataset.cursor = 'link'; else delete document.body.dataset.cursor;   // cursor de link do site
   };
-  addEventListener('pointermove', e => marca(qual(e.clientX, e.clientY)), { passive: true });
+  addEventListener('pointermove', e => {
+    marca(qual(e.clientX, e.clientY));
+    if (ativo) inclina(ativo, e.clientX, e.clientY);
+  }, { passive: true });
   addEventListener('scroll', () => marca(null), { passive: true });
   addEventListener('click', e => {
     const a = qual(e.clientX, e.clientY);
