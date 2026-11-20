@@ -169,9 +169,9 @@
     display: flex; flex-direction: column; padding-top: var(--hero); }
   /* topo: ocupa a tela; flor roxa em cima, "maju." no meio, flor vermelha embaixo indo para o cinza */
   html.celular .hero-bg { left: 0; right: 0; height: var(--hero); background: linear-gradient(180deg, #84A9D9 56px, #D8D8D8 100%); }
-  html.celular .desenho-branco { left: -12vw; top: -22px; width: 150vw; height: calc(150vw * 639 / 1249); }
-  html.celular .desenho-roxo { left: -36vw; top: calc(var(--hero) * .55); width: 150vw; height: calc(150vw * 617 / 1205); }
-  html.celular .logo { left: 50%; top: calc(var(--hero) * .45); width: min(84vw, 380px); height: auto; aspect-ratio: 909 / 353; transform: translate(-50%, -50%); }
+  html.celular .desenho-branco { left: -16vw; top: -34px; width: 215vw; height: calc(215vw * 639 / 1249); }
+  html.celular .desenho-roxo { left: -42vw; top: calc(var(--hero) * .64); width: 210vw; height: calc(210vw * 617 / 1205); }
+  html.celular .logo { left: 50%; top: calc(var(--hero) * .54); width: min(84vw, 380px); height: auto; aspect-ratio: 909 / 353; transform: translate(-50%, -50%); }
   html.js.celular .logo.fade-in-element { transform: translate(-50%, calc(-50% + 20px)); }
   html.js.celular .logo.fade-in-element.visivel { transform: translate(-50%, -50%); }
   html.celular .fade { left: 0; right: 0; top: calc(var(--hero) - 170px); height: 170px; }
@@ -189,12 +189,14 @@
   html.celular .card .foto { left: 0; right: 0; top: 0; width: 100%; height: 214px; object-fit: cover; border-radius: 0; }
   html.celular .card .nome { left: 22px; top: 238px; font-size: 40px !important; line-height: 38px; }
   html.celular .card .cat  { left: 23px; top: 290px; font-size: 20px; line-height: 22px; }
-  html.celular .card .espiral, html.celular .card .espiral.maior { left: auto; right: 22px; top: 300px; }
+  html.celular .card .espiral, html.celular .card .espiral.maior { left: auto; right: 22px; top: 290.5px; }   /* centro alinhado com o subtítulo (290 + 22/2) */
+  html.celular .card .espiral.maior { top: 289px; }
   html.celular .card.mais .chamada { left: 22px; top: 28px; width: calc(100% - 44px); font-size: 36px; line-height: 36px; white-space: normal; }
+  html.celular .quebra-celular { display: block; }   /* "projetos →" na segunda linha */
   html.celular .card.mais .sub { left: 22px; top: 112px; width: calc(100% - 44px); font-size: 18px; line-height: 22px; }
   html.celular .card.mais .espiral { left: 22px; right: auto; top: 310px; }
-  html.celular .card.mais .desenho-caixa { left: 0; right: 0; top: 168px; bottom: 0; width: auto; height: auto; border-radius: 0; }
-  html.celular .card.mais .desenho-caixa iframe { left: -8%; top: -8%; width: 120%; height: auto; aspect-ratio: 920 / 485; }
+  html.celular .card.mais .desenho-caixa { left: 0; right: 0; top: 150px; bottom: 0; width: auto; height: auto; border-radius: 0; }
+  html.celular .card.mais .desenho-caixa iframe { left: -36%; top: -14%; width: 175%; height: auto; aspect-ratio: 920 / 485; }
 
   html.celular .rodape { order: 2; }
 </style>
@@ -295,7 +297,7 @@
       <img decoding="async" class="abs espiral" src="assets/espiral-roxa.svg" alt="">
     </a>
     <a class="card tilt-3d roxo mais" style="--i:4" href="work.html">
-      <span class="abs chamada">veja mais projetos →</span>
+      <span class="abs chamada">veja mais <span class="quebra-celular"></span>projetos →</span>
       <span class="abs sub">mais de 10 ideias que<br>saíram do papel!</span>
       <img decoding="async" class="abs espiral" src="assets/espiral-clara.svg" alt="">
       <div class="abs desenho-caixa"><iframe class="abs" src="assets/desenho-azul-flor.html" title="flor e pixels — azul" scrolling="no" tabindex="-1" aria-hidden="true"></iframe></div>
