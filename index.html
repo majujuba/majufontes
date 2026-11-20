@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1280">
+<!-- celular: troca a viewport e liga o layout de celular antes de desenhar (ver assets/celular.js) -->
+<script src="assets/celular.js"></script>
 <title>maju. — designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
@@ -13,6 +15,7 @@
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
+<link rel="stylesheet" href="assets/celular.css">
 <!-- transição de pixels que se dissolvem, da Home para a about (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script><style>
   :root {
@@ -160,6 +163,44 @@
   .carregando.sai img { opacity: 0; transform: scale(1.1); transition: opacity .5s ease, transform .5s ease; }
   .carregando.some { opacity: 0; pointer-events: none; }
   html.js-carregando { overflow: hidden; }
+
+  /* ══════════ VERSÃO CELULAR (só com html.celular — ver assets/celular.js; o desktop acima não muda) ══════════ */
+  html.celular { --hero: max(600px, 100svh); --lado: 18px; }
+  html.celular .frame { height: auto; overflow: clip; }
+  html.celular .page { position: relative; left: 0; margin: 0; width: 100%; height: auto; overflow: visible;
+    display: flex; flex-direction: column; padding-top: var(--hero); }
+  /* topo: ocupa a tela; flor roxa em cima, "maju." no meio, flor vermelha embaixo indo para o cinza */
+  html.celular .hero-bg { left: 0; right: 0; height: var(--hero); background: linear-gradient(180deg, #84A9D9 56px, #D8D8D8 100%); }
+  html.celular .desenho-branco { left: -12vw; top: -22px; width: 150vw; height: calc(150vw * 639 / 1249); }
+  html.celular .desenho-roxo { left: -36vw; top: calc(var(--hero) - 150vw * 617 / 1205 * .78); width: 150vw; height: calc(150vw * 617 / 1205); }
+  html.celular .logo { left: 50%; top: calc(var(--hero) * .45); width: min(84vw, 380px); height: auto; aspect-ratio: 909 / 353; transform: translate(-50%, -50%); }
+  html.js.celular .logo.fade-in-element { transform: translate(-50%, calc(-50% + 20px)); }
+  html.js.celular .logo.fade-in-element.visivel { transform: translate(-50%, -50%); }
+  html.celular .intro { left: 50%; top: calc(var(--hero) * .45 + min(84vw, 380px) * 353 / 909 / 2 + 12px); width: min(78vw, 340px);
+    margin-left: calc(min(78vw, 340px) / -2); text-align: center; font-size: 16px; line-height: 1.3; }
+  html.celular .fade { left: 0; right: 0; top: calc(var(--hero) - 170px); height: 170px; }
+
+  /* "projetos works" e a linha: logo abaixo do topo, na largura da tela */
+  html.celular .titulo { left: var(--lado); top: calc(var(--hero) + 30px); width: auto; height: auto; font-size: 56px; line-height: 50px; z-index: 3; }
+  html.celular .linha { left: var(--lado); right: var(--lado); top: calc(var(--hero) + 30px + 100px + 22px); z-index: 3; }
+
+  /* cards: continuam empilhando ao rolar (foto em cima, nome e área embaixo) */
+  html.celular .secao-work { position: relative; left: auto; right: auto; top: auto; height: auto; order: 1; padding: 176px 0 56px; }
+  html.celular .secao-work .fundo { left: 0; right: 0; top: 0; bottom: 0; height: auto; }
+  html.celular .pilha { position: relative; left: auto; top: auto; width: auto; margin: 0 var(--lado);
+    --topo-pilha: 72px; --degrau: 14px; --folga: 22px; }
+  html.celular .card { width: 100%; height: 352px; border-radius: 24px; }
+  html.celular .card .foto { left: 0; right: 0; top: 0; width: 100%; height: 214px; object-fit: cover; border-radius: 0; }
+  html.celular .card .nome { left: 22px; top: 238px; font-size: 40px !important; line-height: 38px; }
+  html.celular .card .cat  { left: 23px; top: 290px; font-size: 20px; line-height: 22px; }
+  html.celular .card .espiral, html.celular .card .espiral.maior { left: auto; right: 22px; top: 300px; }
+  html.celular .card.mais .chamada { left: 22px; top: 28px; width: calc(100% - 44px); font-size: 36px; line-height: 36px; white-space: normal; }
+  html.celular .card.mais .sub { left: 22px; top: 112px; width: calc(100% - 44px); font-size: 18px; line-height: 22px; }
+  html.celular .card.mais .espiral { left: 22px; right: auto; top: 310px; }
+  html.celular .card.mais .desenho-caixa { left: 0; right: 0; top: 168px; bottom: 0; width: auto; height: auto; border-radius: 0; }
+  html.celular .card.mais .desenho-caixa iframe { left: -8%; top: -8%; width: 120%; height: auto; aspect-ratio: 920 / 485; }
+
+  html.celular .rodape { order: 2; }
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -509,6 +550,8 @@
 <script src="assets/desempenho.js"></script>
 <script src="assets/barra-rolagem.js"></script>
 <script src="assets/cursor-trail.js"></script>
+<!-- menu do celular (botão hambúrguer) -->
+<script src="assets/menu-celular.js"></script>
 </body>
 
 </html>

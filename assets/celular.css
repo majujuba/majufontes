@@ -1,0 +1,111 @@
+/* VERSÃO CELULAR — peças comuns a todas as páginas (header, menu, rodapé, barra de rolagem).
+   Tudo aqui só vale com a classe "celular" no <html> (ver assets/celular.js): no computador nada muda.
+   O layout de cada página fica no <style> da própria página, também com html.celular. */
+
+/* o botão do menu não existe no computador */
+.menu-botao, .menu-celular { display: none; }
+
+html.celular { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html.celular body { overflow-x: hidden; }
+/* a barra de rolagem desenhada é para mouse; no celular fica a do próprio aparelho */
+html.celular .barra-trilho { display: none !important; }
+
+/* ── header: mais alta, só a estrela e o botão do menu ── */
+html.celular .header { height: 56px !important; padding-top: env(safe-area-inset-top, 0px); }
+html.celular .header .estrela { left: 18px !important; top: 12px !important; width: 32px !important; height: 32px !important; }
+html.celular .header .nav { display: none !important; }
+
+html.celular .menu-botao {
+  display: block; position: absolute; right: 10px; top: 6px; width: 44px; height: 44px;
+  border: 0; padding: 0; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+/* duas linhas finas, como na referência; a de baixo é um pouco mais curta */
+html.celular .menu-botao span {
+  position: absolute; right: 9px; height: 2px; border-radius: 2px; background: currentColor;
+  transition: transform .35s cubic-bezier(.65,0,.35,1), width .35s cubic-bezier(.65,0,.35,1);
+}
+html.celular .menu-botao span:first-child { top: 17px; width: 26px; }
+html.celular .menu-botao span:last-child  { top: 25px; width: 18px; }
+html.celular .menu-botao:active span:last-child { width: 26px; }
+
+/* ── menu de tela cheia ── */
+html.celular .menu-celular {
+  display: flex; flex-direction: column; position: fixed; inset: 0; z-index: 2147470000;
+  background: #3F3166; color: #D8D8D8; overflow: hidden; overscroll-behavior: contain;
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+  clip-path: circle(0px at var(--cx, 100%) var(--cy, 0px)); visibility: hidden;
+  transition: clip-path .65s cubic-bezier(.65,0,.35,1), visibility 0s linear .65s;
+}
+html.celular .menu-celular.aberto {
+  clip-path: circle(150vmax at var(--cx, 100%) var(--cy, 0px)); visibility: visible;
+  transition: clip-path .7s cubic-bezier(.65,0,.35,1), visibility 0s;
+}
+html.menu-aberto, html.menu-aberto body { overflow: hidden; }
+
+html.celular .menu-topo { position: relative; height: 56px; flex: none; }
+html.celular .menu-estrela { position: absolute; left: 18px; top: 12px; width: 32px; height: 32px; }
+html.celular .menu-estrela img { display: block; width: 100%; height: 100%; }
+html.celular .menu-fechar {
+  position: absolute; right: 10px; top: 6px; width: 44px; height: 44px; border: 0; padding: 0;
+  background: transparent; color: #D8D8D8; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+html.celular .menu-fechar span {
+  position: absolute; left: 9px; top: 21px; width: 26px; height: 2px; border-radius: 2px; background: currentColor;
+  transform: rotate(0); transition: transform .45s cubic-bezier(.65,0,.35,1) .15s;
+}
+html.celular .menu-celular.aberto .menu-fechar span:first-child { transform: rotate(45deg); }
+html.celular .menu-celular.aberto .menu-fechar span:last-child  { transform: rotate(-45deg); }
+
+html.celular .menu-links { list-style: none; margin: 0; padding: 4vh 24px 0; flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: 2px; position: relative; z-index: 1; }
+html.celular .menu-links a {
+  display: flex; align-items: baseline; gap: 14px; padding: 4px 0;
+  font: 700 clamp(48px, 15vw, 72px)/1.05 "the-seasons", "The Seasons", serif; color: #D8D8D8;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0; transform: translateY(26px); transition: opacity .3s ease, transform .3s ease, color .3s ease;
+}
+html.celular .menu-links small { font: 400 14px/1 "Pixelify Sans", monospace; color: #84A9D9; letter-spacing: .04em; transform: translateY(-.15em); }
+html.celular .menu-links a.aqui { font-style: italic; color: #84A9D9; }
+html.celular .menu-links a:active { color: #84A9D9; }
+html.celular .menu-celular.aberto .menu-links a { opacity: 1; transform: none; transition: opacity .6s ease, transform .7s cubic-bezier(.22,1,.36,1), color .3s ease; }
+html.celular .menu-celular.aberto .menu-links li:nth-child(1) a { transition-delay: .22s; }
+html.celular .menu-celular.aberto .menu-links li:nth-child(2) a { transition-delay: .29s; }
+html.celular .menu-celular.aberto .menu-links li:nth-child(3) a { transition-delay: .36s; }
+html.celular .menu-celular.aberto .menu-links li:nth-child(4) a { transition-delay: .43s; }
+
+html.celular .menu-contato {
+  position: relative; z-index: 1; padding: 0 24px 30px; flex: none;
+  font-family: Cambria, Caladea, Georgia, serif; color: #FFFFFF;
+  opacity: 0; transform: translateY(16px); transition: opacity .3s ease, transform .3s ease;
+}
+html.celular .menu-celular.aberto .menu-contato { opacity: 1; transform: none; transition: opacity .6s ease .5s, transform .7s cubic-bezier(.22,1,.36,1) .5s; }
+html.celular .menu-contato small { display: block; font-size: 14px; line-height: 1.2; }
+html.celular .menu-contato .menu-email { display: inline-block; font-weight: 700; font-size: 21px; line-height: 1.3; word-break: break-all; }
+html.celular .menu-contato p { margin-top: 14px; display: flex; gap: 22px; font: 400 15px/1 "Pixelify Sans", monospace; color: #D8D8D8; }
+
+/* a flor azul animada (a mesma do card "veja mais projetos" da home) no canto de baixo */
+html.celular .menu-flor { position: absolute; right: -34%; bottom: -6%; width: 120%; aspect-ratio: 920 / 485; z-index: 0; pointer-events: none; opacity: .55; }
+html.celular .menu-flor iframe { width: 100%; height: 100%; border: 0; background: transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+  html.celular .menu-celular, html.celular .menu-celular.aberto { transition: none; }
+  html.celular .menu-links a, html.celular .menu-contato { transition: none !important; }
+}
+
+/* ── rodapé: empilhado, mesmas cores e fontes ── */
+html.celular .rodape {
+  position: relative !important; left: auto !important; right: auto !important; top: auto !important; bottom: auto !important;
+  width: auto !important; height: auto !important; background: #3F3166; z-index: 2;
+  display: grid; grid-template-columns: 1fr auto; column-gap: 16px; row-gap: 26px;
+  padding: 40px 24px calc(26px + env(safe-area-inset-bottom, 0px));
+}
+html.celular .rodape::before { display: none; }
+html.celular .rodape > * { position: static !important; left: auto !important; right: auto !important; top: auto !important; bottom: auto !important; width: auto !important; height: auto !important; }
+html.celular .rodape .contato { grid-column: 1; grid-row: 1; align-self: center; min-width: 0; }
+html.celular .rodape .contato small { font-size: 14px; }
+html.celular .rodape .contato a { font-size: 19px !important; line-height: 1.25 !important; white-space: normal !important; word-break: break-all; }
+html.celular .rodape .estrela { grid-column: 2; grid-row: 1; width: 64px !important; height: 64px !important; align-self: center; }
+html.celular .rodape .links { grid-row: 2; text-align: left !important; font-size: 18px !important; }
+html.celular .rodape .links a, html.celular .rodape .links span { height: auto !important; padding: 6px 0; }
+html.celular .rodape .links.sociais { grid-column: 1; }
+html.celular .rodape .links.paginas { grid-column: 2; text-align: right !important; }
+html.celular .rodape .copy { grid-column: 1 / -1; grid-row: 3; font-size: 13px !important; }
