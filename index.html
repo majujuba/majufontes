@@ -49,8 +49,6 @@
   .desenho-branco { left: -275px; top: -278px; width: 1249px; height: 639px; }
   .desenho-roxo { left: 413px; top: 489px; width: 1205px; height: 617px; }
   .logo { left: 41px; top: 284px; width: 818px; height: 318px; }   /* 10% menor que o Figma (909 × 353); logo e texto descidos 10px */
-  .intro { left: 1016px; top: 457px; width: 335px;
-    font: 400 20px/1 var(--cambria); color: var(--roxo); }
   /* esmaecimento longo e gradual até o cinza da seção de projetos (que começa em y = 812) */
   /* curva "smoothstep": começa e termina devagar, para não marcar nenhuma das pontas */
   .fade { left: -3000px; right: -3000px; top: 622px; height: 190px;
@@ -172,12 +170,10 @@
   /* topo: ocupa a tela; flor roxa em cima, "maju." no meio, flor vermelha embaixo indo para o cinza */
   html.celular .hero-bg { left: 0; right: 0; height: var(--hero); background: linear-gradient(180deg, #84A9D9 56px, #D8D8D8 100%); }
   html.celular .desenho-branco { left: -12vw; top: -22px; width: 150vw; height: calc(150vw * 639 / 1249); }
-  html.celular .desenho-roxo { left: -36vw; top: calc(var(--hero) - 150vw * 617 / 1205 * .78); width: 150vw; height: calc(150vw * 617 / 1205); }
+  html.celular .desenho-roxo { left: -36vw; top: calc(var(--hero) * .55); width: 150vw; height: calc(150vw * 617 / 1205); }
   html.celular .logo { left: 50%; top: calc(var(--hero) * .45); width: min(84vw, 380px); height: auto; aspect-ratio: 909 / 353; transform: translate(-50%, -50%); }
   html.js.celular .logo.fade-in-element { transform: translate(-50%, calc(-50% + 20px)); }
   html.js.celular .logo.fade-in-element.visivel { transform: translate(-50%, -50%); }
-  html.celular .intro { left: 50%; top: calc(var(--hero) * .45 + min(84vw, 380px) * 353 / 909 / 2 + 12px); width: min(78vw, 340px);
-    margin-left: calc(min(78vw, 340px) / -2); text-align: center; font-size: 16px; line-height: 1.3; }
   html.celular .fade { left: 0; right: 0; top: calc(var(--hero) - 170px); height: 170px; }
 
   /* "projetos works" e a linha: logo abaixo do topo, na largura da tela */
@@ -254,7 +250,6 @@
   <!-- home p01 -->
   <div class="abs hero-bg"></div>
   <img decoding="async" class="abs logo fade-in-element" style="--atraso:1.4s" src="assets/logo-maju.svg" alt="maju.">
-  <p class="abs intro fade-in-element" style="--atraso:1.7s">designer, inspirada na pluralidade humana, na música e na atmosfera dos grandes espetáculos.</p>
   <iframe class="abs desenho-roxo" src="assets/desenho-vermelho-flor.html?esperar" title="flor e pixels — vermelho" scrolling="no" tabindex="-1" aria-hidden="true"></iframe>
   <iframe class="abs desenho-branco" src="assets/desenho-roxo-flor.html?esperar" title="flor e pixels — roxo" scrolling="no" tabindex="-1" aria-hidden="true"></iframe>
 
