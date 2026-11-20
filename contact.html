@@ -387,7 +387,17 @@
     } catch (err) {
       botao.disabled = false;
       textoBotao('enviar!');
-      aviso.innerHTML = 'não consegui enviar agora. tenta de novo, ou escreve direto para <a href="mailto:mariafontesju@gmail.com" style="text-decoration:underline">mariafontesju@gmail.com</a>';
+      const motivo = String(err && err.message || '');
+      console.warn('formulário (FormSubmit):', motivo);   // a resposta do FormSubmit, para entender o que houve
+      if (/activat|ativa/i.test(motivo)) {
+        // primeiro envio: o FormSubmit ainda não foi ativado para este e-mail (só acontece uma vez)
+        aviso.innerHTML = 'quase lá! o formulário precisa ser ativado uma única vez: confira a caixa de entrada (e o spam) de mariafontesju@gmail.com e clique em "Activate Form".';
+      } else if (/web server|html file|referer|referrer/i.test(motivo) || location.protocol === 'file:' || /^(localhost|127\.)/.test(location.hostname)) {
+        // aberto direto do computador (ou no servidor de teste): o FormSubmit só aceita o site publicado
+        aviso.innerHTML = 'o envio só funciona no site publicado (majujuba.github.io). por aqui, escreve direto para <a href="mailto:mariafontesju@gmail.com">mariafontesju@gmail.com</a>';
+      } else {
+        aviso.innerHTML = 'não consegui enviar agora. tenta de novo, ou escreve direto para <a href="mailto:mariafontesju@gmail.com">mariafontesju@gmail.com</a>';
+      }
     }
   });
 })();
