@@ -61,7 +61,7 @@
     const caixa = menu.querySelector('.menu-flor');
     if (caixa.firstChild) return;
     const f = document.createElement('iframe');
-    f.src = 'assets/desenho-azul-flor.html';
+    f.src = 'assets/desenho-azul-menu.html';   // o vetor da flor que ela mandou ("flor e pixels azul.svg"), animado
     f.title = ''; f.tabIndex = -1; f.setAttribute('scrolling', 'no');
     if (claro) f.addEventListener('load', () => {
       try {

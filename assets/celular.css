@@ -78,14 +78,13 @@ html.celular .menu-celular.aberto .menu-links li:nth-child(2) a { transition-del
 html.celular .menu-celular.aberto .menu-links li:nth-child(3) a { transition-delay: .19s; }
 html.celular .menu-celular.aberto .menu-links li:nth-child(4) a { transition-delay: .26s; }
 
-/* a flor azul animada no canto de baixo à direita, grande e de pé (como na referência) */
-/* medida na referência dela (tela de 432 × 940): os 253 pixels da flor casaram com o desenho na escala 0,784,
-   girado 90° e espelhado, com o canto preso embaixo à direita; tudo proporcional à largura da tela */
-/* recorte: na referência a flor só aparece da altura do "contact" para baixo (84% da largura acima do pé da tela);
-   o resto do desenho (a ponta enrolada que subia até o "about") fica escondido */
-html.celular .menu-flor-caixa { position: absolute; left: 0; right: 0; bottom: 0; height: 84vw; overflow: hidden; z-index: 1; pointer-events: none; }
-html.celular .menu-flor { position: absolute; left: 129.05vw; top: calc(100% + 55.12vw); width: 166.97vw; height: 88.01vw; z-index: 1; pointer-events: none;
-  transform-origin: 0 0; transform: rotate(90deg) scaleX(-1); opacity: 0; transition: opacity .5s ease .2s; }
+/* a flor azul animada no canto de baixo à direita: o vetor que ela mandou (assets/desenho-azul-menu.html, 1920 × 1080),
+   medido na referência dela (tela de 367 × 793) — os 253 pixels que aparecem caíram exatamente nos dela:
+   escala 0,42, girado 90° e espelhado (x e y trocados), canto do desenho em x 89 / 457px acima do pé da tela.
+   Tudo proporcional à largura da tela e preso embaixo, como os links (ver .menu-links) */
+html.celular .menu-flor-caixa { position: absolute; left: 0; right: 0; top: 0; bottom: 0; overflow: hidden; z-index: 1; pointer-events: none; }
+html.celular .menu-flor { position: absolute; left: 24.25vw; top: calc(100% - 124.52vw); width: 219.73vw; height: 123.6vw; z-index: 1; pointer-events: none;
+  transform-origin: 0 0; transform: rotate(90deg) scaleY(-1); opacity: 0; transition: opacity .5s ease .2s; }
 html.celular .menu-celular.aberto .menu-flor { opacity: 1; }
 html.celular .menu-flor iframe { width: 100%; height: 100%; border: 0; background: transparent; }
 
