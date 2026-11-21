@@ -39,10 +39,10 @@ html.celular .menu-celular {
   background: var(--menu-fundo, #3F3166); color: var(--menu-texto, #D8D8D8); overflow: hidden; overscroll-behavior: contain;
   padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
   --menu-destaque: #84A9D9;
-  visibility: hidden; opacity: 0; transition: opacity .18s ease, visibility 0s linear .18s;
+  visibility: hidden; opacity: 0; transition: none;
 }
 html.celular .menu-celular.claro { --menu-destaque: #799FD3; }
-html.celular .menu-celular.aberto { visibility: visible; opacity: 1; transition: opacity .12s ease, visibility 0s; }
+html.celular .menu-celular.aberto { visibility: visible; opacity: 1; transition: none; }   /* aparece de uma vez, já por cima dos pixels: sem piscar */
 html.menu-aberto, html.menu-aberto body { overflow: hidden; }
 
 html.celular .menu-topo { position: relative; height: 56px; flex: none; z-index: 2; }
@@ -78,8 +78,10 @@ html.celular .menu-celular.aberto .menu-links li:nth-child(3) a { transition-del
 html.celular .menu-celular.aberto .menu-links li:nth-child(4) a { transition-delay: .26s; }
 
 /* a flor azul animada no canto de baixo à direita, grande e de pé (como na referência) */
-html.celular .menu-flor { position: absolute; left: calc(50vw + 150vw * 485 / 920); top: 60vh; width: 150vw; aspect-ratio: 920 / 485; z-index: 1; pointer-events: none;
-  transform-origin: 0 0; transform: rotate(90deg);   /* de pé: a caixa girada vai de x 50vw para a direita (sai da tela) e de 60vh para baixo */ opacity: 0; transition: opacity .5s ease .2s; }
+/* medida na referência dela (tela de 432 × 940): os 253 pixels da flor casaram com o desenho na escala 0,784,
+   girado 90° e espelhado, com o canto preso embaixo à direita; tudo proporcional à largura da tela */
+html.celular .menu-flor { position: absolute; left: 129.05vw; top: calc(100% + 55.12vw); width: 166.97vw; height: 88.01vw; z-index: 1; pointer-events: none;
+  transform-origin: 0 0; transform: rotate(90deg) scaleX(-1); opacity: 0; transition: opacity .5s ease .2s; }
 html.celular .menu-celular.aberto .menu-flor { opacity: 1; }
 html.celular .menu-flor iframe { width: 100%; height: 100%; border: 0; background: transparent; }
 
@@ -88,21 +90,20 @@ html.celular .menu-flor iframe { width: 100%; height: 100%; border: 0; backgroun
   html.celular .menu-links a, html.celular .menu-flor { transition: none !important; }
 }
 
-/* ── rodapé: empilhado, mesmas cores e fontes ── */
+/* ── rodapé: mais simples (referência dela) — estrela no meio, e-mail, LinkedIn e Behance; sem os links das páginas ── */
 html.celular .rodape {
   position: relative !important; left: auto !important; right: auto !important; top: auto !important; bottom: auto !important;
   width: auto !important; height: auto !important; background: #3F3166; z-index: 2;
-  display: grid; grid-template-columns: 1fr auto; column-gap: 16px; row-gap: 26px;
-  padding: 40px 24px calc(26px + env(safe-area-inset-bottom, 0px));
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: 48px 20px calc(26px + env(safe-area-inset-bottom, 0px));
 }
 html.celular .rodape::before { display: none; }
 html.celular .rodape > * { position: static !important; left: auto !important; right: auto !important; top: auto !important; bottom: auto !important; width: auto !important; height: auto !important; }
-html.celular .rodape .contato { grid-column: 1; grid-row: 1; align-self: center; min-width: 0; }
-html.celular .rodape .contato small { font-size: 14px; }
-html.celular .rodape .contato a { font-size: 19px !important; line-height: 1.25 !important; white-space: normal !important; word-break: break-all; }
-html.celular .rodape .estrela { grid-column: 2; grid-row: 1; width: 64px !important; height: 64px !important; align-self: center; }
-html.celular .rodape .links { grid-row: 2; text-align: left !important; font-size: 18px !important; }
-html.celular .rodape .links a, html.celular .rodape .links span { height: auto !important; padding: 6px 0; }
-html.celular .rodape .links.sociais { grid-column: 1; }
-html.celular .rodape .links.paginas { grid-column: 2; text-align: right !important; }
-html.celular .rodape .copy { grid-column: 1 / -1; grid-row: 3; font-size: 13px !important; }
+html.celular .rodape .estrela { order: 0; align-self: center; width: 142px !important; height: 142px !important; margin-bottom: 36px; }
+html.celular .rodape .contato { order: 1; min-width: 0; max-width: 100%; }
+html.celular .rodape .contato small { font-size: 14px; line-height: 1.25; }
+html.celular .rodape .contato a { font-size: 21px !important; line-height: 1.2 !important; white-space: normal !important; overflow-wrap: anywhere; }
+html.celular .rodape .links.sociais { order: 2; display: flex; gap: 24px; margin-top: 30px; text-align: left !important; font-size: 18px !important; }
+html.celular .rodape .links.sociais a { height: auto !important; padding: 4px 0; }
+html.celular .rodape .links.paginas { display: none !important; }
+html.celular .rodape .copy { order: 3; margin-top: 30px; font-size: 13px !important; }

@@ -114,7 +114,7 @@
       if (p < 1) quadro = requestAnimationFrame(passo);
       else { if (!enchendo) tela.style.display = 'none'; if (fim) fim(); }
     };
-    quadro = requestAnimationFrame(passo);
+    passo(t0);   // o primeiro quadro já sai agora (fechando, a tela fica cheia antes de o menu sumir: sem piscar)
   }
 
   let aberto = false;
@@ -128,7 +128,8 @@
       if (!aberto) return;
       menu.setAttribute('aria-hidden', 'false');
       menu.classList.add('aberto');
-      if (tela) tela.style.display = 'none';
+      // os pixels só saem depois que o menu já foi desenhado por cima deles (dois quadros): sem piscar
+      requestAnimationFrame(() => requestAnimationFrame(() => { if (aberto && tela) tela.style.display = 'none'; }));
       setTimeout(() => fechar.focus({ preventScroll: true }), 300);
     };
     if (calmo) mostra(); else anima(true, mostra);
@@ -136,11 +137,11 @@
   function fecha(devolveFoco) {
     if (!aberto) return;
     aberto = false;
+    if (!calmo) anima(false, null);   // a tela fica cheia de pixels (já neste quadro) e eles vão sumindo
     menu.classList.remove('aberto');
     menu.setAttribute('aria-hidden', 'true');
     botao.setAttribute('aria-expanded', 'false');
     html.classList.remove('menu-aberto');
-    if (!calmo) anima(false, null);   // a tela começa cheia de pixels e eles vão sumindo
     if (devolveFoco) botao.focus({ preventScroll: true });
   }
   botao.addEventListener('click', abre);
