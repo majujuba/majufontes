@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1280">
+<!-- celular: troca a viewport e liga o layout de celular antes de desenhar (ver assets/celular.js) -->
+<script src="assets/celular.js"></script>
 <title>Dengo — maju. designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
@@ -12,6 +14,10 @@
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- celular: header, menu e rodapé comuns a todas as páginas -->
+<link rel="stylesheet" href="assets/celular.css">
+<!-- celular: a dinâmica comum das páginas de projeto (abertura, coluna de imagens, "saiba mais!") -->
+<link rel="stylesheet" href="assets/projeto-celular.css">
 <!-- transição de pixels que se dissolvem (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script><script src="assets/barras-celular.js"></script>
 <style>
@@ -133,6 +139,12 @@
   @media (prefers-reduced-motion: reduce) {
     .js .fade-in-element { opacity: 1; transform: none; transition: none; }
   }
+
+  /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do Dengo ══════════ */
+  html.celular { --foto-x: 72%; }   /* a barra aberta, com o chocolate */
+  /* estampas soltas: no celular ficam neste espaço depois das imagens, em 3 fileiras (posições pelo script das estampas) */
+  .campo-adesivos { display: none; }
+  html.celular .campo-adesivos { display: block; height: 100vw; margin: var(--vao) var(--m) 0; }
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -151,7 +163,8 @@
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Dengo</h1>
 
   <!-- apresentação -->
-  <section class="bloco apresentacao fade-in-element">
+  <!-- no celular este texto fica depois das imagens, fechado, e abre pelo botão "saiba mais!" -->
+  <section class="bloco apresentacao fade-in-element" id="sobre-projeto">
     <p class="texto">Neste projeto, a proposta consistiu em investigar a <b>diversidade cultural brasileira</b> e traduzi-la visualmente em uma identidade gráfica, aplicada em superfícies, para a marca Dengo. O ponto de partida foi compreender o que significa ser brasileiro do norte ao sul do país e identificar elementos capazes de unir essa <b>pluralidade em uma narrativa visual</b> coerente.</p>
     <p class="ficha disciplina"><strong>Disciplina</strong>Design de Superfícies</p>
     <p class="ficha ano"><strong>Ano</strong>2025-2</p>
@@ -167,7 +180,7 @@
   <section class="bloco citacao laranja fade-in-element">
     <img decoding="async" class="aspas" src="assets/dengo/aspas-laranja.png" alt="" style="left:81px; top:64px">
     <span class="grifo" style="left:81px; top:306px; width:598px"></span>
-    <p style="left:81px; top:148px; width:670px">foi realizado um mapeamento sobre as três principais regiões produtoras de cacau no Brasil: Espírito Santo, Bahia e Pará.</p>
+    <p style="left:81px; top:148px; width:670px">foi realizado um mapeamento sobre as três principais regiões produtoras de cacau no Brasil: <mark>Espírito Santo, Bahia e Pará</mark>.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
 
@@ -181,7 +194,7 @@
   <section class="bloco citacao rosa fade-in-element">
     <img decoding="async" class="aspas" src="assets/dengo/aspas-rosa.png" alt="" style="left:69px; top:59px">
     <span class="grifo" style="left:69px; top:293px; width:664px"></span>
-    <p style="left:69px; top:143px; width:661px">para cada estampa, envolveu a seleção de referências visuais, buscando reconhecer o que caracteriza cada regionalidade.</p>
+    <p style="left:69px; top:143px; width:661px">para cada estampa, envolveu a seleção de referências visuais, buscando reconhecer o que <mark>caracteriza cada regionalidade</mark>.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
   <div class="bloco fade-in-element" style="left:50px; top:3745px; width:801px; height:544px"><img decoding="async" src="assets/dengo/barras-azul.jpg" alt="Barras de chocolate Dengo sobre fundo azul" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
@@ -193,7 +206,7 @@
   <section class="bloco citacao amarela fade-in-element">
     <img decoding="async" class="aspas" src="assets/dengo/aspas-vermelha.png" alt="" style="left:72px; top:56px">
     <span class="grifo" style="left:72px; top:146px; width:282px"></span>
-    <p style="left:72px; top:140px; width:655px">a xilogravura foi a técnica ideal para transmitir toda a essência de diversa, com o foco em transmitir uma linguagem genuinamente brasileira.</p>
+    <p style="left:72px; top:140px; width:655px"><mark>a xilogravura</mark> foi a técnica ideal para transmitir toda a essência de diversa, com o foco em transmitir uma linguagem genuinamente brasileira.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
 
@@ -202,6 +215,7 @@
   <div class="bloco fade-in-element" style="left:639px; top:5202px; width:801px; height:544px"><img decoding="async" src="assets/dengo/pacotes-vermelho.jpg" alt="Pacotes Dengo sobre fundo vermelho" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
 
   <!-- estampas soltas -->
+  <div class="campo-adesivos" aria-hidden="true"></div>
   <!-- (cada uma é solta: dá para segurar e arrastar pela página) -->
   <img decoding="async" class="adesivo fade-in-element" src="assets/dengo/estampa-05.webp" alt="Estampa de cacau" draggable="false" data-cursor="link" style="left:184px; top:5985px; width:167.5px; height:173px">
   <img decoding="async" class="adesivo fade-in-element" src="assets/dengo/estampa-01.webp" alt="Estampa de carambolas" draggable="false" data-cursor="link" style="left:254px; top:5779px; width:186px; height:188px">
@@ -212,6 +226,9 @@
   <img decoding="async" class="adesivo fade-in-element" src="assets/dengo/estampa-08.webp" alt="Estampa de ondas coloridas" draggable="false" data-cursor="link" style="left:874px; top:6002px; width:186px; height:188px">
   <img decoding="async" class="adesivo fade-in-element" src="assets/dengo/estampa-04.webp" alt="Estampa de dança" draggable="false" data-cursor="link" style="left:985.5px; top:5800px; width:185.5px; height:187px">
   <img decoding="async" class="adesivo fade-in-element" src="assets/dengo/estampa-09.webp" alt="Estampa de estrelas" draggable="false" data-cursor="link" style="left:1108.5px; top:5970px; width:193.5px; height:202px">
+
+  <!-- celular: botão que abre/fecha o texto do projeto (no computador não aparece) -->
+  <div class="saiba"><button class="botao-pixel saiba-mais" type="button" aria-expanded="false" aria-controls="sobre-projeto"><span class="txt">saiba mais!</span><span class="c1"></span><span class="c2"></span></button></div>
 
   <!-- anterior / próximo (ordem da página work: Gorducha → Dengo → A Substância) -->
   <nav class="abs navega" aria-label="outros projetos">
@@ -310,6 +327,37 @@
     el.addEventListener('pointerup', solta);
     el.addEventListener('pointercancel', solta);
   });
+
+  /* celular: as estampas começam arrumadas em 3 fileiras de 3 no espaço depois das imagens (.campo-adesivos),
+     com a mesma alternância de altura do computador; dá para arrastar do mesmo jeito.
+     Voltando ao layout do computador, cada uma volta à posição de lá. */
+  const html = document.documentElement, campo = document.querySelector('.campo-adesivos');
+  const adesivos = [...document.querySelectorAll('.adesivo')];
+  const original = adesivos.map(el => el.getAttribute('style'));
+  const arrastou = new Set();
+  adesivos.forEach(el => el.addEventListener('pointerdown', () => arrastou.add(el)));
+  function arruma() {
+    if (!campo) return;
+    if (!html.classList.contains('celular')) {
+      adesivos.forEach((el, i) => el.setAttribute('style', original[i])); arrastou.clear(); return;
+    }
+    const L = campo.offsetLeft, T = campo.offsetTop, W = campo.offsetWidth, H = campo.offsetHeight;
+    const esc = W * .27 / 186;                                     // a estampa mais comum (186px) fica com 27% da largura
+    // da esquerda para a direita, de cima para baixo, como estão no computador
+    const ordem = adesivos.map((el, i) => ({ el, i, x: parseFloat(original[i].match(/left:\s*([\d.]+)/)[1]) }))
+      .sort((a, b) => a.x - b.x);
+    ordem.forEach(({ el, i }, k) => {
+      if (arrastou.has(el)) return;
+      const w = parseFloat(original[i].match(/width:\s*([\d.]+)/)[1]) * esc, h = parseFloat(original[i].match(/height:\s*([\d.]+)/)[1]) * esc;
+      const col = k % 3, lin = Math.floor(k / 3);
+      const cx = L + W * (col + .5) / 3, cy = T + H * (lin + .5) / 3 + (col % 2 ? H * .04 : -H * .04);
+      Object.assign(el.style, { left: (cx - w / 2) + 'px', top: (cy - h / 2) + 'px', width: w + 'px', height: h + 'px' });
+    });
+  }
+  arruma();
+  addEventListener('load', arruma);
+  addEventListener('celular-mudou', arruma);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(arruma);   // o título pode mudar de tamanho e empurrar a página
 })();
 </script>
 <!-- pausa as animações pesadas enquanto a página rola -->
@@ -318,5 +366,9 @@
 <script src="assets/barra-rolagem.js"></script>
 <!-- cursor com rastro de pixels -->
 <script src="assets/cursor-trail.js"></script>
+<!-- celular: proporção das imagens, título e botão "saiba mais!" (comum às páginas de projeto) -->
+<script src="assets/projeto-celular.js"></script>
+<!-- menu do celular (botão hambúrguer) -->
+<script src="assets/menu-celular.js"></script>
 </body>
 </html>

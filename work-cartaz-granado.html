@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1280">
+<!-- celular: troca a viewport e liga o layout de celular antes de desenhar (ver assets/celular.js) -->
+<script src="assets/celular.js"></script>
 <title>Cartaz Granado — maju. designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
@@ -12,6 +14,10 @@
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- celular: header, menu e rodapé comuns a todas as páginas -->
+<link rel="stylesheet" href="assets/celular.css">
+<!-- celular: a dinâmica comum das páginas de projeto (abertura, coluna de imagens, "saiba mais!") -->
+<link rel="stylesheet" href="assets/projeto-celular.css">
 <!-- transição de pixels que se dissolvem (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script><script src="assets/barras-celular.js"></script>
 <style>
@@ -130,6 +136,13 @@
   @media (prefers-reduced-motion: reduce) {
     .js .fade-in-element { opacity: 1; transform: none; transition: none; }
   }
+
+  /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do Cartaz Granado ══════════ */
+  html.celular { --foto-x: 47%; }
+  /* quadro de carimbar: mais alto que largo, para caber bem na tela e no dedo */
+  html.celular .page > .quadro { aspect-ratio: 4 / 5; }
+  html.celular .quadro .dica { padding: 0 10vw; font-size: 5.6vw; }
+  html.celular .quadro .limpar { right: 12px; bottom: 12px; height: 34px; padding: 0 14px; font-size: 18px; }
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -148,7 +161,8 @@
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Cartaz Granado</h1>
 
   <!-- apresentação -->
-  <section class="bloco apresentacao fade-in-element">
+  <!-- no celular este texto fica depois das imagens, fechado, e abre pelo botão "saiba mais!" -->
+  <section class="bloco apresentacao fade-in-element" id="sobre-projeto">
     <p class="texto">Cartaz nasceu com o conceito de composição de elementos livre, a escolha dos elementos para a marca Granado, foram os pequenos cajus e as folhas de cajueiros, que refletem uma conexão com a brasilidade nordestina, destacando o caju como símbolo da riqueza cultural do Brasil. Complementando essa identidade visual, foram escolhidas as <b>cores terrosas, que remetem à terra, ao sol e ao clima quente do Nordeste</b>, criando uma atmosfera de acolhimento, sofisticação e tradição.</p>
     <p class="ficha disciplina"><strong>Disciplina</strong>Linguagem Visual</p>
     <p class="ficha ano"><strong>Ano</strong>2024-2</p>
@@ -172,6 +186,9 @@
     <button class="limpar" type="button">limpar<span class="c1"></span><span class="c2"></span></button>
     <span class="c1"></span><span class="c2"></span>
   </section>
+
+  <!-- celular: botão que abre/fecha o texto do projeto (no computador não aparece) -->
+  <div class="saiba"><button class="botao-pixel saiba-mais" type="button" aria-expanded="false" aria-controls="sobre-projeto"><span class="txt">saiba mais!</span><span class="c1"></span><span class="c2"></span></button></div>
 
   <!-- anterior / próximo (ordem da página work: Fósforo → Cartaz Granado, o último; o próximo volta ao primeiro, TipoSP) -->
   <nav class="abs navega" aria-label="outros projetos">
@@ -252,11 +269,16 @@
   if ('IntersectionObserver' in window) new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { baixa(); o.disconnect(); } }, { rootMargin: '100% 0px' }).observe(q);
   else baixa();
   let camada = 1;
+  // no celular a dica fala em tocar, não em clicar
+  const dica = q.querySelector('.dica'), dicaPc = dica.textContent;
+  const trocaDica = () => { dica.textContent = document.documentElement.classList.contains('celular') ? 'toque para carimbar cajus e folhas' : dicaPc; };
+  trocaDica(); addEventListener('celular-mudou', trocaDica);
   q.addEventListener('pointerdown', e => {
     if (e.button !== 0 || e.target.closest('.limpar')) return;
     const r = q.getBoundingClientRect();
     const n = Math.random() < .78 ? sorteia(CAJUS) : sorteia(FOLHAS);
-    const esc = .5 + Math.random() * .2;                         // os desenhos estão em 2x
+    // os desenhos estão em 2x; no celular, menores ainda (o quadro tem um quarto da largura do computador)
+    const esc = (.5 + Math.random() * .2) * (document.documentElement.classList.contains('celular') ? .55 : 1);
     const img = new Image();
     img.className = 'carimbo'; img.alt = ''; img.src = url(n); img.decoding = 'async';
     img.style.width = (tam[n][0] * esc) + 'px';
@@ -278,5 +300,9 @@
 <script src="assets/barra-rolagem.js"></script>
 <!-- cursor com rastro de pixels -->
 <script src="assets/cursor-trail.js"></script>
+<!-- celular: proporção das imagens, título e botão "saiba mais!" (comum às páginas de projeto) -->
+<script src="assets/projeto-celular.js"></script>
+<!-- menu do celular (botão hambúrguer) -->
+<script src="assets/menu-celular.js"></script>
 </body>
 </html>

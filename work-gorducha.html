@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1280">
+<!-- celular: troca a viewport e liga o layout de celular antes de desenhar (ver assets/celular.js) -->
+<script src="assets/celular.js"></script>
 <title>Gorducha — maju. designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
@@ -12,6 +14,10 @@
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- celular: header, menu e rodapé comuns a todas as páginas -->
+<link rel="stylesheet" href="assets/celular.css">
+<!-- celular: a dinâmica comum das páginas de projeto (abertura, coluna de imagens, "saiba mais!") -->
+<link rel="stylesheet" href="assets/projeto-celular.css">
 <!-- transição de pixels que se dissolvem (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script><script src="assets/barras-celular.js"></script>
 <style>
@@ -145,6 +151,16 @@
   @media (prefers-reduced-motion: reduce) {
     .js .fade-in-element { opacity: 1; transform: none; transition: none; }
   }
+
+  /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é da Gorducha ══════════ */
+  html.celular { --fundo-pagina: var(--roxo); --foto-x: 48%; }
+  html.celular .page > .video-bloco { aspect-ratio: 16 / 9; }   /* o vídeo inteiro, sem as faixas vermelhas dos lados */
+  /* caixa de escrever: quadrada, com a área do texto e a barra de cores proporcionais */
+  html.celular .page > .escrever { aspect-ratio: 1 / 1; }
+  html.celular .escrever textarea { left: 5%; top: 5%; width: 90%; height: 62%; overflow-wrap: normal; }   /* a letra diminui em vez de partir a palavra */
+  html.celular .escrever .rotulo { bottom: 66px; font-size: 15px; }
+  html.celular .escrever .cores { bottom: 22px; gap: 10px; }
+  html.celular .escrever .cor { width: 34px; height: 34px; }
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -163,7 +179,8 @@
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Gorducha</h1>
 
   <!-- apresentação -->
-  <section class="bloco apresentacao fade-in-element">
+  <!-- no celular este texto fica depois das imagens, fechado, e abre pelo botão "saiba mais!" -->
+  <section class="bloco apresentacao fade-in-element" id="sobre-projeto">
     <p class="texto">Gorducha, uma tipografia nascida a partir de um exercício inspirado em <b>elementos naturais que busca resgatar a estética divertida e orgânica dos anos 70,</b> misturando-a com uma abordagem moderna de formas cheias e arredondadas.</p>
     <p class="ficha disciplina"><strong>Disciplina</strong>Tipografia</p>
     <p class="ficha equipe"><strong>Equipe</strong>Laura Alcantara</p>
@@ -183,7 +200,7 @@
   <section class="bloco citacao rosa fade-in-element">
     <img decoding="async" class="aspas" src="assets/gorducha/aspas-rosa.png" alt="" style="left:59px; top:87px">
     <span class="grifo" style="left:59px; top:180px; width:402px"></span>
-    <p style="left:59px; top:171px; width:467px">tipografia display, cuja a estrutura cativante torna-a perfeita para títulos divertidos, produtos e logotipos vibrantes de produtos alegres.</p>
+    <p style="left:59px; top:171px; width:467px"><mark>tipografia display</mark>, cuja a estrutura cativante torna-a perfeita para títulos divertidos, produtos e logotipos vibrantes de produtos alegres.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
   <img decoding="async" class="peca fade-in-element" src="assets/gorducha/sorvete.jpg" alt="Pote de sorvete da Gorducha" loading="lazy" style="left:645px; top:3486px; width:794px; height:607px">
@@ -194,7 +211,7 @@
   <section class="bloco citacao lilas fade-in-element">
     <img decoding="async" class="aspas" src="assets/gorducha/aspas-roxa.png" alt="" style="left:47px; top:82px">
     <span class="grifo" style="left:47px; top:278px; width:349px"></span>
-    <p style="left:47px; top:169px; width:456px">buscamos formas que transmitisse gostosura pura,<br>e cremosidade, foi a nossa palavra-chave para a criação da identidade visual.</p>
+    <p style="left:47px; top:169px; width:456px">buscamos formas que transmitisse <mark>gostosura pura</mark>,<br>e cremosidade, foi a nossa palavra-chave para a criação da identidade visual.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
 
@@ -214,6 +231,9 @@
     </div>
     <span class="c1"></span><span class="c2"></span>
   </section>
+
+  <!-- celular: botão que abre/fecha o texto do projeto (no computador não aparece) -->
+  <div class="saiba"><button class="botao-pixel saiba-mais" type="button" aria-expanded="false" aria-controls="sobre-projeto"><span class="txt">saiba mais!</span><span class="c1"></span><span class="c2"></span></button></div>
 
   <!-- anterior / próximo (ordem da página work: Vizão → Gorducha → Dengo) -->
   <nav class="abs navega" aria-label="outros projetos">
@@ -286,11 +306,12 @@
     caixa.querySelectorAll('.cor').forEach(x => x.classList.toggle('ativa', x === b));
     caixa.style.setProperty('--tinta', b.style.getPropertyValue('--c'));
     caixa.style.setProperty('--fundo', b.style.getPropertyValue('--p'));
-    ta.focus();
+    if (!document.documentElement.classList.contains('celular')) ta.focus();   // no celular, abriria o teclado a cada cor
   }));
   const ajusta = () => {
     let t = 200; ta.style.paddingTop = '0px'; ta.style.fontSize = t + 'px';
-    while (t > 48 && ta.scrollHeight > ta.clientHeight) { t -= 4; ta.style.fontSize = t + 'px'; }
+    const MIN = document.documentElement.classList.contains('celular') ? 24 : 48;   // a caixa do celular é bem menor
+    while (t > MIN && (ta.scrollHeight > ta.clientHeight || ta.scrollWidth > ta.clientWidth)) { t -= 4; ta.style.fontSize = t + 'px'; }
     // centraliza o texto na altura da caixa
     const alt = ta.clientHeight; ta.style.height = '0px'; const conteudo = ta.scrollHeight; ta.style.height = '';
     const sobra = alt - conteudo;
@@ -308,5 +329,9 @@
 <script src="assets/barra-rolagem.js"></script>
 <!-- cursor com rastro de pixels -->
 <script src="assets/cursor-trail.js"></script>
+<!-- celular: proporção das imagens, título e botão "saiba mais!" (comum às páginas de projeto) -->
+<script src="assets/projeto-celular.js"></script>
+<!-- menu do celular (botão hambúrguer) -->
+<script src="assets/menu-celular.js"></script>
 </body>
 </html>
