@@ -146,7 +146,7 @@
   html.celular .hero-foto img.centro { top: 0; height: 100%; width: auto; aspect-ratio: 1573 / 885; left: 50%;
     transform: translateX(-52%); clip-path: none; }
   html.celular .hero-fundo { left: 0; right: 0; top: calc(var(--hero) - 300px); height: 340px; }
-  html.celular .flor-topo { left: -39.3vw; top: -48.53vw; width: 187.92vw; height: 99.07vw; }
+  html.celular .flor-topo { left: -43vw; top: -45vw; width: 195.4vw; height: 103vw; }
   html.celular .ola { left: 7.47vw; top: 137.6vw; font-size: 11.2vw; line-height: 13.9vw; letter-spacing: -0.1vw; }
   html.celular .ola-espiral { left: 75.4vw; top: 143.6vw; width: 4.3vw; height: 3.5vw; }
   html.celular .ola-texto { left: 7.47vw; top: 156vw; width: 62vw; font-size: 4.13vw; line-height: 5.07vw; }
@@ -275,7 +275,7 @@
   // no celular a linha fica um pouco mais baixa que os pixels (como no Figma "Mobile")
   const ajustaLinha = () => { try {
     const g = f.contentDocument.getElementById('roxo');
-    if (g) g.setAttribute('transform', document.documentElement.classList.contains('celular') ? 'translate(0 43)' : '');
+    if (g) g.setAttribute('transform', document.documentElement.classList.contains('celular') ? '' : '');
   } catch (e) {} };
   f.addEventListener('load', ajustaLinha); ajustaLinha();
   addEventListener('celular-mudou', ajustaLinha);
