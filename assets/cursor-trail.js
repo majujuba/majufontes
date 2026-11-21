@@ -210,29 +210,29 @@
   addEventListener('pointermove', e => {
     mx = e.clientX; my = e.clientY;
     if (fine) { cur.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0)'; cur.classList.add('cts-show'); }
-    dirty = true;
+    dirty = true; acorda();
     trail(mx, my);
   }, { passive: true });
-  addEventListener('scroll', () => { dirty = true; }, { passive: true, capture: true });
+  addEventListener('scroll', () => { dirty = true; acorda(); }, { passive: true, capture: true });
   // arrastando algo que se segura, a bolinha fica até soltar o botão (mesmo se o ponteiro sair do objeto)
   addEventListener('pointerdown', e => {
     cur.classList.add('cts-down');
-    arrastando = !!(e.target.closest && e.target.closest(SEGURAR)); dirty = true;
+    arrastando = !!(e.target.closest && e.target.closest(SEGURAR)); dirty = true; acorda();
   }, true);
-  const solta = () => { cur.classList.remove('cts-down'); if (arrastando) { arrastando = false; dirty = true; } };
+  const solta = () => { cur.classList.remove('cts-down'); if (arrastando) { arrastando = false; dirty = true; acorda(); } };
   addEventListener('pointerup', solta, true);
   addEventListener('pointercancel', solta, true);
   root.addEventListener('mouseleave', () => { last = null; cur.classList.remove('cts-show'); });
   root.addEventListener('mouseenter', () => { if (fine) cur.classList.add('cts-show'); });
 
   /* ---------- desenho ---------- */
-  let vazio = true;
+  let vazio = true, rodando = false;
   function draw(now) {
     // desempenho: sem pixels no rastro, não apaga nem redesenha a tela inteira a cada quadro
     if (!cells.size) {
       if (!vazio) { ctx.clearRect(0, 0, W, H); vazio = true; }
       if (dirty && fine) { dirty = false; refreshCursor(); }
-      requestAnimationFrame(draw);
+      rodando = false;   // nada para desenhar: o loop dorme até o próximo movimento (acorda())
       return;
     }
     vazio = false;
@@ -254,5 +254,6 @@
     if (dirty && fine) { dirty = false; refreshCursor(); }
     requestAnimationFrame(draw);
   }
-  requestAnimationFrame(draw);
+  function acorda() { if (!rodando) { rodando = true; requestAnimationFrame(draw); } }
+  acorda();
 })();
