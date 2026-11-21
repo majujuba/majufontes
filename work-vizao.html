@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1280">
+<!-- celular: troca a viewport e liga o layout de celular antes de desenhar (ver assets/celular.js) -->
+<script src="assets/celular.js"></script>
 <title>Vizão — maju. designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
@@ -12,6 +14,8 @@
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- celular: header, menu e rodapé comuns a todas as páginas -->
+<link rel="stylesheet" href="assets/celular.css">
 <!-- transição de pixels que se dissolvem (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script><script src="assets/barras-celular.js"></script>
 <style>
@@ -179,12 +183,116 @@
   @media (prefers-reduced-motion: reduce) {
     .js .fade-in-element { opacity: 1; transform: none; transition: none; }
   }
+
+  /* trechos grifados das citações: no computador os grifos são as faixas desenhadas acima (.grifo), então a marcação não aparece */
+  .citacao mark { background: none; color: inherit; }
+  .saiba { display: none; }   /* o botão "saiba mais!" só existe no celular */
+
+  /* ══════════ VERSÃO CELULAR (só com html.celular — ver assets/celular.js; o desktop acima não muda) ══════════
+     a página vira uma coluna: abertura com a foto e o título, as imagens na mesma ordem do computador (cada uma com
+     a proporção de lá, então o recorte é o mesmo), o botão "saiba mais!" e, escondido até o toque, o texto do projeto */
+  html.celular { --m: 4.8vw; --vao: 2.7vw; --topo: 56px; }
+  html.celular .frame { height: auto; }
+  html.celular .page { position: relative; left: 0; margin: 0; width: 100%; height: auto; display: flex; flex-direction: column; }
+  html.celular .page > .bloco { position: relative; left: auto !important; top: auto !important; width: auto !important; height: auto !important;
+    margin: var(--vao) var(--m) 0; aspect-ratio: var(--ar, auto); }
+
+  /* abertura: a foto enche a tela abaixo da header e se dissolve no cinza; o título "Vizão" grande, por cima do degradê */
+  html.celular .hero { position: relative; left: 0; top: 0; width: 100%; margin-top: var(--topo);
+    height: calc(100vh - var(--topo) - 16vw); height: calc(100svh - var(--topo) - 16vw); min-height: 120vw; }
+  html.celular .hero img { top: 0; height: 100%; object-position: 51% 50%; }
+  html.celular .hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 46%; pointer-events: none;
+    /* chega ao cinza antes da borda de baixo da revista (senão ela aparece como uma linha embaixo do título) */
+    background: linear-gradient(180deg, rgba(216,216,216,0) 0%, rgba(216,216,216,.6) 40%, var(--cinza) 74%); }
+  html.celular .hero-fundo { display: none; }
+  html.celular .titulo { position: relative; left: auto; top: auto; z-index: 1; margin: -21vw var(--m) 7vw 5.6vw;
+    font-size: 27vw; line-height: 24vw; }
+
+  /* citações: o texto se ajusta à largura e o grifo se desenha por trás das palavras, da esquerda para a direita */
+  html.celular .page > .citacao { padding: 10vw 7vw 11vw; }
+  html.celular .citacao .aspas { position: static; width: 11vw; height: auto; margin-bottom: 5vw; }
+  html.celular .citacao .grifo { display: none; }
+  html.celular .citacao p { position: static; width: auto !important; font-size: 7.6vw; line-height: 8.4vw; }
+  html.celular .citacao mark { background: linear-gradient(var(--grifo), var(--grifo)) 0 55% / 0% 66% no-repeat; }
+  html.celular.js .citacao mark { transition: background-size 1.7s cubic-bezier(.65,0,.35,1) .5s; }
+  html.celular .citacao.visivel mark, html.celular:not(.js) .citacao mark { background-size: 100% 66%; }
+  html.celular .citacao mark + mark { transition-delay: 1.2s; }
+  @media (prefers-reduced-motion: reduce) { html.celular .citacao mark { background-size: 100% 66%; transition: none !important; } }
+
+  /* carrossel: setas no meio da altura, com área de toque maior (e o dedo também passa as fotos) */
+  html.celular .carrossel .seta { top: calc(50% - 22px); width: 42px; height: 44px; padding: 9px 8px; }
+  html.celular .carrossel .seta.avancar { left: auto; right: 1vw; }
+  html.celular .carrossel .seta.voltar { left: 1vw; }
+
+  /* vídeos: o mesmo recorte do computador, em proporção */
+  html.celular .bloco > video[src$="chapeu.mp4"] { left: -7.572% !important; top: -31.433% !important; width: 116.336% !important; height: 163.361% !important; }
+  html.celular .page > .pulseiras { aspect-ratio: 588 / 363; }
+  html.celular .pulseiras > video { left: 0 !important; top: -12.534% !important; width: 100% !important; height: 121.488% !important; }
+
+  /* revista virtual: as páginas duplas ocupam a largura; setas e contador numa linha embaixo */
+  html.celular .page > .livro { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 4vw 3vw 3vw; }
+  html.celular .revista { position: relative; left: auto; top: auto; width: 100%; height: auto; aspect-ratio: 816 / 550; }
+  html.celular .livro .seta-livro { position: relative; top: auto; left: auto; right: auto; width: 44px; height: 44px; padding: 5px 6px; margin-top: 3vw; }
+  html.celular .livro .seta-livro.prox { order: 2; }
+  html.celular .livro .contador { position: relative; left: auto; top: auto; order: 1; width: auto; height: 30px; padding: 0 14px; margin-top: 3vw; font-size: 16px; }
+
+  /* botão "saiba mais!" (referência dela): azul-claro, letra pixelada roxa, cantos de pixel */
+  html.celular .saiba { display: flex; order: 1; justify-content: center; margin: 11vw var(--m) 5vw; }
+  html.celular .saiba-mais { position: relative; width: 80vw; height: 17vw; max-width: 420px; max-height: 88px; padding: 0 0 .12em;
+    background: var(--azul-header); color: var(--roxo); --canto: var(--cinza); font: 600 8vw/1 var(--pixel); border: 0; cursor: pointer;
+    -webkit-tap-highlight-color: transparent; transition: transform .35s cubic-bezier(.22,1,.36,1), background-color .35s ease; }
+  html.celular .saiba-mais::before, html.celular .saiba-mais::after, html.celular .saiba-mais > .c1, html.celular .saiba-mais > .c2 {
+    width: 2.9vw; height: 2.9vw; margin: 0; }
+  html.celular .saiba-mais .txt { transition: opacity .25s ease; }
+  html.celular .saiba-mais.troca .txt { opacity: 0; }
+  html.celular .saiba-mais:hover { transform: none; }   /* no toque o "hover" ficaria preso depois de soltar */
+  html.celular .saiba-mais:active { transform: scale(.95); background: #A3B7D1; transition-duration: .12s; }
+  html.celular .saiba-mais:focus-visible { outline: 2px solid var(--roxo); outline-offset: 4px; }
+
+  /* texto do projeto: fechado (altura 0) até o toque no botão; abre deslizando e o conteúdo sobe aos poucos */
+  html.celular .page > .apresentacao { order: 2; display: grid; grid-template-columns: 1fr 1fr; column-gap: 5vw; margin-top: 0;
+    height: 0 !important; overflow: hidden; visibility: hidden; opacity: 1; transform: none;
+    transition: height .7s cubic-bezier(.65,0,.35,1), visibility 0s .7s; }
+  html.celular .page > .apresentacao.aberta { visibility: visible; transition: height .7s cubic-bezier(.65,0,.35,1); }
+  html.celular .apresentacao .texto, html.celular .apresentacao .ficha { position: static; width: auto; }
+  html.celular .apresentacao .texto { grid-column: 1 / 3; margin: 6vw 6vw 0; font-size: 4.5vw; line-height: 5.5vw; }
+  html.celular .apresentacao .ficha { font-size: 3.9vw; line-height: 4.6vw; }
+  html.celular .apresentacao .ficha strong { font-size: 3.9vw; line-height: 5vw; }
+  html.celular .ficha.disciplina { grid-column: 1; grid-row: 2; margin: 6vw 0 0 6vw; }
+  html.celular .ficha.ano        { grid-column: 2; grid-row: 2; margin: 6vw 6vw 0 0; }
+  html.celular .ficha.equipe     { grid-column: 1; grid-row: 3; margin: 4vw 0 7vw 6vw; }
+  html.celular .apresentacao > p { opacity: 0; transform: translateY(14px); transition: opacity .3s ease, transform .3s ease; }
+  html.celular .apresentacao.aberta > p { opacity: 1; transform: none;
+    transition: opacity .7s ease .25s, transform .9s cubic-bezier(.22,1,.36,1) .25s; }
+  html.celular .apresentacao.aberta > .ficha.disciplina, html.celular .apresentacao.aberta > .ficha.ano { transition-delay: .4s; }
+  html.celular .apresentacao.aberta > .ficha.equipe { transition-delay: .5s; }
+  @media (prefers-reduced-motion: reduce) {
+    html.celular .page > .apresentacao, html.celular .apresentacao > p { transition: none !important; }
+  }
+
+  /* anterior / próximo e rodapé no fim da coluna */
+  html.celular .navega { order: 3; position: relative; left: auto; right: auto; top: auto; height: 68px; margin-top: 11vw; }
+  html.celular .navega .botao-pixel { top: 17px; height: 34px; padding: 0 12px 1px; font-size: 16px; }
+  html.celular .navega .anterior { left: var(--m); }
+  html.celular .navega .proximo { right: var(--m); }
+  html.celular .rodape { order: 4; }
 </style>
 <script>
   document.documentElement.classList.add('js');
   window.__carregou = !window.__chegandoDissolve;
   window.quandoCarregar = fn => { if (window.__carregou) fn(); else addEventListener('carregou', fn, { once: true }); };
   addEventListener('transicao-fim', () => { window.__carregou = true; dispatchEvent(new Event('carregou')); });
+  // toque: arrastar o dedo para o lado (mais na horizontal que na vertical) chama fn(-1) para a esquerda ou fn(1) para a direita
+  window.aoDeslizar = (el, fn) => {
+    let x0 = null, y0 = 0;
+    el.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+    el.addEventListener('touchend', e => {
+      if (x0 === null) return;
+      const t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0;
+      x0 = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) fn(dx < 0 ? -1 : 1);
+    }, { passive: true });
+  };
 </script>
 </head>
 <body>
@@ -197,7 +305,8 @@
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Vizão</h1>
 
   <!-- apresentação -->
-  <section class="bloco apresentacao fade-in-element">
+  <!-- no celular este texto fica depois das imagens, fechado, e abre pelo botão "saiba mais!" (logo abaixo da revista) -->
+  <section class="bloco apresentacao fade-in-element" id="sobre-projeto">
     <p class="texto">A Revista VIZÃO é criada diante de um desafio ao transformar o tema "Saúde" em um projeto editorial acadêmico. A partir disso, o projeto se debruça sobre a <b>ansiedade climática</b> como recorte temático, entendendo que sobreviver ao fim do mundo, resgata quem sempre soube viver nele. Fundamentada no conceito de "Futuro Ancestral" de Ailton Krenak, em que passado, presente e futuro caminham juntos, construímos uma publicação organizada como tutorial de sobrevivência, guia espiritual e resgate ancestral, rompendo fronteiras coloniais para dar protagonismo aos povos originários.</p>
     <p class="ficha disciplina"><strong>Disciplina</strong>Projeto Editorial</p>
     <p class="ficha equipe"><strong>Equipe</strong>Laura Alcantara, Luigi Cortopassi, Leandro Zampirolo, Thiago Augusto e Naian Menginelli</p>
@@ -235,7 +344,7 @@
     <img decoding="async" class="aspas" src="assets/vizao/aspas-laranja.png" alt="" style="left:66px; top:91px">
     <span class="grifo" style="left:65px; top:183px; width:397px"></span>
     <span class="grifo" style="left:65px; top:233px; width:383px"></span>
-    <p style="left:66px; top:175px; width:492px">reconectar jovens desesperançosos com a vida e à natureza através da verdade daqueles que sempre estiveram aqui.</p>
+    <p style="left:66px; top:175px; width:492px"><mark>reconectar jovens desesperançosos</mark> com a vida e à natureza através da verdade daqueles que sempre estiveram aqui.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
   <div class="bloco fade-in-element" style="left:685px; top:3018px; width:756px; height:1109px"><img decoding="async" src="assets/vizao/ecobag.jpg" alt="Ecobag da Vizão sobre a grama" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
@@ -246,7 +355,7 @@
   <div class="bloco fade-in-element" style="left:967px; top:4137px; width:474px; height:363px"><video src="assets/vizao/asteriscos.mp4" muted loop playsinline preload="metadata" aria-label="Animação: asteriscos"></video><span class="c1"></span><span class="c2"></span></div>
   <div class="bloco fade-in-element" style="left:51px; top:4510px; width:456px; height:504px"><img decoding="async" src="assets/vizao/adesivos.jpg" alt="Adesivos na placa" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
   <div class="bloco fade-in-element" style="left:518px; top:4510px; width:923px; height:504px"><img decoding="async" src="assets/vizao/cartaz.jpg" alt="Cartaz da Vizão na rua" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
-  <div class="bloco fade-in-element" style="left:51px; top:5024px; width:1390px; height:363px; background:#E6E6E6"><video src="assets/vizao/braceletes.mp4" muted loop playsinline preload="metadata" aria-label="Animação: braceletes da Vila Vizão" style="inset:auto; left:400px; top:-45.5px; width:588px; height:441px; object-fit:fill"></video><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco pulseiras fade-in-element" style="left:51px; top:5024px; width:1390px; height:363px; background:#E6E6E6"><video src="assets/vizao/braceletes.mp4" muted loop playsinline preload="metadata" aria-label="Animação: braceletes da Vila Vizão" style="inset:auto; left:400px; top:-45.5px; width:588px; height:441px; object-fit:fill"></video><span class="c1"></span><span class="c2"></span></div>
 
   <!-- mapa + citação verde -->
   <div class="bloco fade-in-element" style="left:51px; top:5397px; width:761px; height:664px"><img decoding="async" src="assets/vizao/mapa.jpg" alt="Mapa e cartaz da Vila Vizão" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
@@ -256,7 +365,7 @@
     <span class="grifo" style="left:53px; top:362px; width:419px"></span>
     <span class="grifo" style="left:53px; top:412px; width:449px"></span>
     <span class="grifo" style="left:53px; top:462px; width:339px"></span>
-    <p style="left:53px; top:154px; width:514px">Vila Vizão, o encontro presencial da revista, nasce como um espaço de pertencimento que leva para além das páginas a reconexão com a natureza e com os saberes dos povos originários.</p>
+    <p style="left:53px; top:154px; width:514px"><mark>Vila Vizão,</mark> o encontro presencial da revista, nasce como um espaço de pertencimento que leva para além das <mark>páginas a reconexão com a natureza e com os saberes dos</mark> povos originários.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
 
@@ -276,6 +385,9 @@
     <p class="contador" aria-live="polite"><span class="txt">pág 1 – 116</span><span class="c1"></span><span class="c2"></span></p>
     <span class="c1"></span><span class="c2"></span>
   </div>
+
+  <!-- celular: botão que abre/fecha o texto do projeto (no computador não aparece) -->
+  <div class="saiba"><button class="botao-pixel saiba-mais" type="button" aria-expanded="false" aria-controls="sobre-projeto"><span class="txt">saiba mais!</span><span class="c1"></span><span class="c2"></span></button></div>
 
   <!-- anterior / próximo (ordem da página work: TipoSP → Vizão → Gorducha) -->
   <nav class="abs navega" aria-label="outros projetos">
@@ -373,6 +485,8 @@
     let usou = false;   // depois que a pessoa passa uma foto, a dica não aparece mais
     c.querySelector('.seta.avancar').addEventListener('click', () => { usou = true; vai(i + 1); });
     voltar.addEventListener('click', () => { usou = true; vai(i - 1, -1); });
+    // no celular o dedo também passa as fotos (para a esquerda = próxima; para a direita = anterior, menos na primeira)
+    aoDeslizar(c, lado => { usou = true; if (lado < 0) vai(i + 1); else if (i > 0) vai(i - 1, -1); });
 
     /* dica de que há mais fotos: quando o carrossel aparece na tela, a foto atual desliza um pouquinho
        para a esquerda e a próxima espia pela direita; depois as duas voltam ao lugar */
@@ -485,6 +599,7 @@
   prox.addEventListener('click', () => vira(1));
   esq.addEventListener('click', () => vira(-1));
   dir.addEventListener('click', () => vira(1));
+  aoDeslizar(rev, lado => vira(-lado));   // dedo para a esquerda vira para a frente, como numa revista
   addEventListener('keydown', e => {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
     if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
@@ -504,11 +619,80 @@
   ant.disabled = true;
 })();
 </script>
+<script>
+/* celular: cada imagem fica com a mesma proporção do computador (e o mesmo recorte);
+   o botão "saiba mais!" abre e fecha o texto do projeto sem sair da página */
+(() => {
+  document.querySelectorAll('.page > .bloco').forEach(b => {
+    const w = parseFloat(b.style.width), h = parseFloat(b.style.height);
+    if (w && h) b.style.setProperty('--ar', w + ' / ' + h);
+  });
+
+  const botao = document.querySelector('.saiba-mais'), sec = document.getElementById('sobre-projeto');
+  if (!botao || !sec) return;
+  const txt = botao.querySelector('.txt');
+  const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const DURA = calmo ? 0 : 720;   // um pouco mais que a transição da altura (.7 s)
+  const altura = v => sec.style.setProperty('height', v, 'important');
+  let aberta = false, fim = 0, troca = 0, rolando = 0;
+  const suave = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  function acompanha(de, dist) {
+    cancelAnimationFrame(rolando);
+    if (calmo) { scrollTo(0, de + dist); return; }
+    const t0 = performance.now(), MS = 900;
+    const para = () => { cancelAnimationFrame(rolando); removeEventListener('touchstart', para); removeEventListener('wheel', para); };
+    addEventListener('touchstart', para, { passive: true, once: true });   // se a pessoa rolar por conta própria, para de puxar
+    addEventListener('wheel', para, { passive: true, once: true });
+    (function passo(t) {
+      const p = Math.min(1, (t - t0) / MS);
+      scrollTo(0, de + dist * suave(p));
+      if (p < 1 && aberta) rolando = requestAnimationFrame(passo); else para();
+    })(t0);
+  }
+
+  function alterna() {
+    aberta = !aberta;
+    botao.setAttribute('aria-expanded', String(aberta));
+    // o texto do botão esmaece e volta já trocado
+    clearTimeout(troca);
+    botao.classList.add('troca');
+    troca = setTimeout(() => { txt.textContent = aberta ? 'fechar' : 'saiba mais!'; botao.classList.remove('troca'); }, calmo ? 0 : 220);
+
+    clearTimeout(fim);
+    altura(sec.getBoundingClientRect().height + 'px');   // parte da altura atual (mesmo no meio de outra animação)
+    sec.offsetHeight;
+    if (aberta) {
+      sec.classList.add('aberta', 'visivel');
+      const alvo = sec.scrollHeight;
+      altura(alvo + 'px');
+      fim = setTimeout(() => altura('auto'), DURA);
+      // rola junto com a abertura até o texto inteiro aparecer, sem deixar o botão sumir por cima
+      // (quadro a quadro: no começo a página ainda não cresceu, e um scrollBy suave pararia no fim antigo)
+      const b = botao.getBoundingClientRect(), s = sec.getBoundingClientRect();
+      const falta = Math.min(s.top + alvo + 24 - innerHeight, b.top - 56 - 16);
+      if (falta > 0) acompanha(scrollY, falta);
+    } else {
+      sec.classList.remove('aberta');
+      altura('0px');
+      fim = setTimeout(() => sec.style.removeProperty('height'), DURA);
+    }
+  }
+  botao.addEventListener('click', alterna);
+  // voltando ao layout do computador (janela alargada), o texto fica como lá: sempre à mostra
+  addEventListener('celular-mudou', () => {
+    if (document.documentElement.classList.contains('celular')) return;
+    clearTimeout(fim); sec.style.removeProperty('height');
+    if (aberta) { aberta = false; sec.classList.remove('aberta'); botao.setAttribute('aria-expanded', 'false'); txt.textContent = 'saiba mais!'; }
+  });
+})();
+</script>
 <!-- pausa as animações pesadas enquanto a página rola -->
 <script src="assets/desempenho.js"></script>
 <script src="assets/header-some.js"></script>
 <script src="assets/barra-rolagem.js"></script>
 <!-- cursor com rastro de pixels -->
 <script src="assets/cursor-trail.js"></script>
+<!-- menu do celular (botão hambúrguer) -->
+<script src="assets/menu-celular.js"></script>
 </body>
 </html>
