@@ -143,10 +143,8 @@
 
   /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do Lord Ruthven ══════════ */
   html.celular { --fundo-pagina: var(--roxo); --campo-h: 40vw; }
-  /* o bloco do meio é o grupo inteiro do Figma (fundo roxo, citação e cartas desenhados juntos): no celular só o recorte das cartas */
-  html.celular .page > .peca.meio { display: none; }
-  .cartas-celular { display: none; }
-  html.celular .page > .cartas-celular { display: block; }
+  /* os grupos do Figma (linha2, bloco do meio, casa-retrato, lápide-rosas) têm vazios e o fundo roxo desenhados: no celular ficam
+     escondidos (.so-computador) e no lugar entram os 19 posts originais em grade (.grade-celular, de assets/lord/posts/) */
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -174,10 +172,12 @@
   </section>
 
   <!-- cartazes, posts e cartas (cada grupo do Figma exportado como uma imagem) -->
-  <img decoding="async" class="peca fade-in-element" src="assets/lord/linha1.jpg" alt="Posts no celular e cartaz com presas de vampiro" loading="lazy" style="left:50px; top:1187px; width:1390px; height:537px">
-  <img decoding="async" class="peca fade-in-element" src="assets/lord/linha2.jpg" alt="Cartazes de Lord Ruthven em vermelho e verde" loading="lazy" style="left:50px; top:1733px; width:1390px; height:538px">
-  <img decoding="async" class="peca meio fade-in-element" src="assets/lord/bloco-meio.jpg" alt="Cartas de L.R." loading="lazy" style="left:50px; top:2278px; width:1390px; height:1149px">
-  <img decoding="async" class="peca fade-in-element" src="assets/lord/casa-retrato.jpg" alt="Cartazes da casa e do retrato de Lord Ruthven" loading="lazy" style="left:50px; top:2279px; width:924px; height:570px">
+  <img decoding="async" class="peca so-computador fade-in-element" src="assets/lord/linha1.jpg" alt="Posts no celular e cartaz com presas de vampiro" loading="lazy" style="left:50px; top:1187px; width:1390px; height:537px">
+  <!-- celular: só a cena da primeira linha (o cartaz da boca, ao lado dela, já está na grade de posts) -->
+  <img decoding="async" class="peca so-celular fade-in-element" src="assets/lord/linha1-cena.jpg" alt="Posts no celular e cartazes sobre a mesa" loading="lazy" style="width:1896px; height:1074px">
+  <img decoding="async" class="peca so-computador fade-in-element" src="assets/lord/linha2.jpg" alt="Cartazes de Lord Ruthven em vermelho e verde" loading="lazy" style="left:50px; top:1733px; width:1390px; height:538px">
+  <img decoding="async" class="peca so-computador fade-in-element" src="assets/lord/bloco-meio.jpg" alt="Cartas de L.R." loading="lazy" style="left:50px; top:2278px; width:1390px; height:1149px">
+  <img decoding="async" class="peca so-computador fade-in-element" src="assets/lord/casa-retrato.jpg" alt="Cartazes da casa e do retrato de Lord Ruthven" loading="lazy" style="left:50px; top:2279px; width:924px; height:570px">
   <section class="bloco citacao bege fade-in-element">
     <img decoding="async" class="aspas" src="assets/lord/aspas-preta.png" alt="" style="left:44px; top:73px">
     <span class="grifo" style="left:145px; top:364px; width:213px"></span>
@@ -185,9 +185,29 @@
     <p style="left:44px; top:157px; width:369px">como os vampiros passaram a ser retratados como algo <mark>desejável<br>e domesticado</mark> nos dias atuais?</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
-  <!-- celular: só as cartas, recortadas do bloco do meio (no computador elas aparecem dentro dele) -->
-  <img decoding="async" class="peca cartas-celular fade-in-element" src="assets/lord/cartas.jpg" alt="Cartas de L.R." loading="lazy" style="width:460px; height:570px">
-  <img decoding="async" class="peca fade-in-element" src="assets/lord/lapide-rosas.jpg" alt="Cartazes da lápide, das rosas e dos morcegos" loading="lazy" style="left:516px; top:2857px; width:924px; height:1151px">
+  <!-- celular: no lugar dos grupos do Figma (que empilhados deixavam vazios), os 19 posts originais em grade, na ordem de publicação -->
+  <div class="grade-celular fade-in-element" role="list" aria-label="posts do perfil de Lord Ruthven">
+    <img decoding="async" class="largo" src="assets/lord/posts/post-01.webp" alt="Post: Lord Ruthven: quem ou o que é?" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-02.webp" alt="Post: Antes de Drácula, houve Lord Ruthven" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-03.webp" alt="Post: O Vampiro, de John William Polidori" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-04.webp" alt="Post: Lustre e o texto sobre Lord Ruthven" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-05.webp" alt="Post: A cultura prefere monstros domesticados" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-06.webp" alt="Post: I am the mirror that humanity avoids looking into" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-07.webp" alt="Post: Cartas de L.R." loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-08.webp" alt="Post: Carta de L.R.: prezados discípulos" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-09.webp" alt="Post: Carta de L.R.: observo essas novas criaturas" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-10.webp" alt="Post: Carta de L.R.: o vampiro tornou-se metáfora" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-11.webp" alt="Post: I dont create darkness" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-12.webp" alt="Post: Man needs monsters" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-13.webp" alt="Post: Lua vermelha" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-14.webp" alt="Post: Rosto e sombra" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-15.webp" alt="Post: I reveal desires that were already hungry" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-16.webp" alt="Post: Lápide de Lord Ruthven" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-17.webp" alt="Post: Edward não é vampiro" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-18.webp" alt="Post: Presas" loading="lazy" role="listitem">
+    <img decoding="async" src="assets/lord/posts/post-19.webp" alt="Post: Vampiros não são românticos" loading="lazy" role="listitem">
+  </div>
+  <img decoding="async" class="peca so-computador fade-in-element" src="assets/lord/lapide-rosas.jpg" alt="Cartazes da lápide, das rosas e dos morcegos" loading="lazy" style="left:516px; top:2857px; width:924px; height:1151px">
   <img decoding="async" class="peca fade-in-element" src="assets/lord/celular.jpg" alt="Perfil de Lord Ruthven no celular" loading="lazy" style="left:50px; top:3435px; width:923px; height:573px">
 
   <!-- adesivos soltos (dá para segurar e arrastar pela página) -->

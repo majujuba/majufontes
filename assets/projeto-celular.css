@@ -17,11 +17,22 @@ html.celular .page { position: relative; left: 0; margin: 0; width: 100%; height
 html.celular .page > .bloco, html.celular .page > .peca { position: relative; left: auto !important; top: auto !important;
   width: auto !important; height: auto !important; margin: var(--vao) var(--m) 0; aspect-ratio: var(--ar, auto); }
 html.celular .page > .peca { object-fit: cover; }
+/* peças que só fazem sentido no computador (ex.: grupos do Figma com vazios desenhados) */
+html.celular .page > .so-computador { display: none; }
+/* e as que só existem no celular (recortes próprios para a tela estreita) */
+.page > .so-celular { display: none; }   /* .page > : vence o display:block de .peca no <style> da página */
+html.celular .page > .so-celular { display: block; }
+/* grade de 2 colunas que só aparece no celular (ex.: os posts do Lord Ruthven); .largo ocupa a linha inteira */
+.page > .grade-celular { display: none; }
+html.celular .page > .grade-celular { display: grid; grid-template-columns: 1fr 1fr; gap: var(--vao); margin: var(--vao) var(--m) 0; }
+html.celular .grade-celular > img { display: block; width: 100%; height: auto; aspect-ratio: var(--ar-grade, 4 / 5); object-fit: cover; }
+html.celular .grade-celular > .largo { grid-column: 1 / -1; }
 
 /* cantos de pixel no celular: RECORTADOS do próprio bloco (clip-path), em vez dos quadradinhos da cor do fundo pintados por cima.
    Com as medidas em vw, os quadradinhos caíam entre os pixels da tela e deixavam um fio da cor do bloco aparecendo na quina (pedido dela).
    Vale para os blocos, as imagens que vêm do Figma com os cantinhos desenhados (reduzidas, eles ficariam minúsculos) e os botões. */
-html.celular .page > .bloco, html.celular .page > .peca, html.celular .botao-pixel, html.celular .livro .contador, html.celular .quadro .limpar {
+html.celular .page > .bloco, html.celular .page > .peca, html.celular .grade-celular > img,
+html.celular .botao-pixel, html.celular .livro .contador, html.celular .quadro .limpar {
   --k: var(--corte, 12px);
   clip-path: polygon(0 var(--k), var(--k) var(--k), var(--k) 0, calc(100% - var(--k)) 0, calc(100% - var(--k)) var(--k), 100% var(--k),
     100% calc(100% - var(--k)), calc(100% - var(--k)) calc(100% - var(--k)), calc(100% - var(--k)) 100%, var(--k) 100%,
