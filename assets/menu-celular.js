@@ -56,17 +56,18 @@
   document.body.appendChild(menu);
   const fechar = menu.querySelector('.menu-fechar');
 
-  // flor VERMELHA animada, a da Home (pedido dela; antes era a azul, desenho-azul-menu.html), carregada na primeira abertura:
-  // ela se desenha ao abrir o menu. Os pixels ficam na cor dos links em fundo claro e cinza-claro em fundo escuro (o roxo sumiria)
+  // flor animada (carregada na primeira abertura):
+  // - menu de fundo claro: a flor VERMELHA da Home (pedido dela), já pronta — sem o desenho do traço —, com os pixels na cor dos links
+  // - menu de fundo escuro (roxo, na Home): a flor azul de antes (desenho-azul-menu.html), como estava
   function poeFlor() {
     const caixa = menu.querySelector('.menu-flor');
     if (caixa.firstChild) return;
     const f = document.createElement('iframe');
-    f.src = 'assets/desenho-vermelho-flor.html';
-    f.className = 'vermelha';   // encaixe no lugar da flor azul: ver assets/celular.css
+    f.src = claro ? 'assets/desenho-vermelho-flor.html?sem-desenho' : 'assets/desenho-azul-menu.html';
+    if (claro) f.className = 'vermelha';   // encaixe no lugar da flor azul: ver assets/celular.css
     f.title = ''; f.tabIndex = -1; f.setAttribute('scrolling', 'no');
-    f.addEventListener('load', () => {
-      try { f.contentDocument.documentElement.style.setProperty('--pixel', claro ? corLink : '#D8D8D8'); }
+    if (claro) f.addEventListener('load', () => {
+      try { f.contentDocument.documentElement.style.setProperty('--pixel', corLink); }
       catch (e) { /* abrindo o arquivo direto do computador o navegador não deixa mexer: fica a cor padrão */ }
     });
     caixa.appendChild(f);
