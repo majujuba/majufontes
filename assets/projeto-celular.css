@@ -16,10 +16,22 @@ html.celular .frame { height: auto; }
 html.celular .page { position: relative; left: 0; margin: 0; width: 100%; height: auto; display: flex; flex-direction: column; }
 html.celular .page > .bloco, html.celular .page > .peca { position: relative; left: auto !important; top: auto !important;
   width: auto !important; height: auto !important; margin: var(--vao) var(--m) 0; aspect-ratio: var(--ar, auto); }
-/* imagens que já vêm do Figma com os cantinhos desenhados: reduzidas, os cantinhos ficariam minúsculos — recorta os de 12px */
-html.celular .page > .peca { object-fit: cover;
-  clip-path: polygon(0 12px, 12px 12px, 12px 0, calc(100% - 12px) 0, calc(100% - 12px) 12px, 100% 12px, 100% calc(100% - 12px),
-    calc(100% - 12px) calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 12px calc(100% - 12px), 0 calc(100% - 12px)); }
+html.celular .page > .peca { object-fit: cover; }
+
+/* cantos de pixel no celular: RECORTADOS do próprio bloco (clip-path), em vez dos quadradinhos da cor do fundo pintados por cima.
+   Com as medidas em vw, os quadradinhos caíam entre os pixels da tela e deixavam um fio da cor do bloco aparecendo na quina (pedido dela).
+   Vale para os blocos, as imagens que vêm do Figma com os cantinhos desenhados (reduzidas, eles ficariam minúsculos) e os botões. */
+html.celular .page > .bloco, html.celular .page > .peca, html.celular .botao-pixel, html.celular .livro .contador, html.celular .quadro .limpar {
+  --k: var(--corte, 12px);
+  clip-path: polygon(0 var(--k), var(--k) var(--k), var(--k) 0, calc(100% - var(--k)) 0, calc(100% - var(--k)) var(--k), 100% var(--k),
+    100% calc(100% - var(--k)), calc(100% - var(--k)) calc(100% - var(--k)), calc(100% - var(--k)) 100%, var(--k) 100%,
+    var(--k) calc(100% - var(--k)), 0 calc(100% - var(--k))); }
+html.celular .page > .bloco::before, html.celular .page > .bloco::after, html.celular .page > .bloco > .c1, html.celular .page > .bloco > .c2,
+html.celular .botao-pixel::before, html.celular .botao-pixel::after, html.celular .botao-pixel > .c1, html.celular .botao-pixel > .c2,
+html.celular .livro .contador::before, html.celular .livro .contador::after, html.celular .livro .contador > .c1, html.celular .livro .contador > .c2,
+html.celular .quadro .limpar::before, html.celular .quadro .limpar::after, html.celular .quadro .limpar > .c1, html.celular .quadro .limpar > .c2 { display: none; }
+html.celular .botao-pixel, html.celular .quadro .limpar { --corte: 5px; }
+html.celular .livro .contador { --corte: 6px; }
 
 /* abertura: a foto enche a tela abaixo da header e se dissolve na cor da página; o título grande por cima do degradê */
 html.celular .hero { position: relative; left: 0; top: 0; width: 100%; margin-top: var(--topo);
@@ -56,8 +68,7 @@ html.celular .saiba { display: flex; order: 1; justify-content: center; margin: 
 html.celular .saiba-mais { position: relative; width: 80vw; height: 17vw; max-width: 420px; max-height: 88px; padding: 0 0 .12em;
   background: var(--azul-header); color: var(--roxo); --canto: var(--fundo-pagina, #D8D8D8); font: 600 8vw/1 var(--pixel); border: 0; cursor: pointer;
   -webkit-tap-highlight-color: transparent; transition: transform .35s cubic-bezier(.22,1,.36,1), background-color .35s ease; }
-html.celular .saiba-mais::before, html.celular .saiba-mais::after, html.celular .saiba-mais > .c1, html.celular .saiba-mais > .c2 {
-  width: 2.9vw; height: 2.9vw; margin: 0; }
+html.celular .saiba-mais { --corte: 2.9vw; }   /* cantos recortados (ver "cantos de pixel no celular" acima) */
 html.celular .saiba-mais .txt { transition: opacity .25s ease; }
 html.celular .saiba-mais.troca .txt { opacity: 0; }
 html.celular .saiba-mais:hover { transform: none; }   /* no toque o "hover" ficaria preso depois de soltar */
