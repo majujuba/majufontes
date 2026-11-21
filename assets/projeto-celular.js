@@ -29,6 +29,7 @@
   /* estampas / adesivos soltos (Dengo, Lord Ruthven): no celular vão para o espaço .campo-adesivos, depois das imagens.
      data-arranjo="grade": 3 por fileira, todas do mesmo tamanho aproximado, alternando a altura como no computador;
      sem ele: a mesma composição do computador, reduzida até caber no espaço.
+     Se cada adesivo tiver data-celular="x y largura" (em fração da largura do espaço), essa posição vale no celular.
      As que a pessoa já arrastou ficam onde ela deixou; voltando ao layout do computador, todas voltam ao lugar de lá. */
   const campo = document.querySelector('.campo-adesivos');
   const adesivos = [...document.querySelectorAll('.adesivo')];
@@ -42,7 +43,13 @@
     const arruma = () => {
       if (!celular()) { adesivos.forEach((el, i) => el.setAttribute('style', original[i])); arrastou.clear(); return; }
       const L = campo.offsetLeft, T = campo.offsetTop, W = campo.offsetWidth, H = campo.offsetHeight;
-      if (campo.dataset.arranjo === 'grade') {
+      if (dados.every(d => d.el.dataset.celular)) {
+        // posição própria do celular em cada adesivo: data-celular="x y largura", tudo em fração da largura do espaço
+        dados.forEach(d => {
+          const [fx, fy, fw] = d.el.dataset.celular.split(/\s+/).map(Number);
+          poe(d, L + fx * W, T + fy * W, fw * W / d.w);
+        });
+      } else if (campo.dataset.arranjo === 'grade') {
         const esc = W / 3 * .82 / Math.max(...dados.map(d => d.w));
         [...dados].sort((a, b) => a.x - b.x).forEach((d, k) => {
           const col = k % 3, lin = Math.floor(k / 3), linhas = Math.ceil(dados.length / 3);

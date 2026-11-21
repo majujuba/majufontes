@@ -142,7 +142,7 @@
   }
 
   /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do Lord Ruthven ══════════ */
-  html.celular { --fundo-pagina: var(--roxo); --campo-h: 40vw; }
+  html.celular { --fundo-pagina: var(--roxo); --campo-h: 72vw; }   /* adesivos maiores no celular (pedido dela): posições em data-celular */
   /* os grupos do Figma (linha2, bloco do meio, casa-retrato, lápide-rosas) têm vazios e o fundo roxo desenhados: no celular ficam
      escondidos (.so-computador) e no lugar entram o mockup dos cartazes e os 12 posts originais que aparecem no computador, em grade (.grade-celular, de assets/lord/posts/) */
 </style>
@@ -206,10 +206,10 @@
 
   <!-- adesivos soltos (dá para segurar e arrastar pela página) -->
   <div class="campo-adesivos" aria-hidden="true"></div>
-  <!-- (no celular, assets/projeto-celular.js arruma os adesivos nesse espaço, na mesma composição do computador) -->
-  <img decoding="async" class="adesivo fade-in-element" src="assets/lord/adesivo-dracula.webp" alt="Adesivo do Drácula" draggable="false" data-cursor="link" style="left:218px; top:4002.2px; width:385px; height:280px">
-  <img decoding="async" class="adesivo fade-in-element" src="assets/lord/adesivo-lr.webp" alt="Adesivo L.R." draggable="false" data-cursor="link" style="left:670.5px; top:4067.4px; width:177px; height:214.5px">
-  <img decoding="async" class="adesivo fade-in-element" src="assets/lord/adesivo-coracao.webp" alt="Adesivo de coração" draggable="false" data-cursor="link" style="left:923.8px; top:3976px; width:376.5px; height:333.5px">
+  <!-- (no celular, assets/projeto-celular.js arruma os adesivos nesse espaço, maiores, pelas posições em data-celular) -->
+  <img decoding="async" class="adesivo fade-in-element" data-celular="0 0 .58" src="assets/lord/adesivo-dracula.webp" alt="Adesivo do Drácula" draggable="false" data-cursor="link" style="left:218px; top:4002.2px; width:385px; height:280px">
+  <img decoding="async" class="adesivo fade-in-element" data-celular=".1 .46 .26" src="assets/lord/adesivo-lr.webp" alt="Adesivo L.R." draggable="false" data-cursor="link" style="left:670.5px; top:4067.4px; width:177px; height:214.5px">
+  <img decoding="async" class="adesivo fade-in-element" data-celular=".47 .32 .53" src="assets/lord/adesivo-coracao.webp" alt="Adesivo de coração" draggable="false" data-cursor="link" style="left:923.8px; top:3976px; width:376.5px; height:333.5px">
 
   <!-- celular: botão que abre/fecha o texto do projeto (no computador não aparece) -->
   <div class="saiba"><button class="botao-pixel saiba-mais" type="button" aria-expanded="false" aria-controls="sobre-projeto"><span class="txt">saiba mais!</span><span class="c1"></span><span class="c2"></span></button></div>
