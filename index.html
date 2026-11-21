@@ -181,7 +181,11 @@
   html.celular .linha { left: var(--lado); right: var(--lado); top: calc(var(--hero) + 30px + 100px + 22px); z-index: 3; }
 
   /* cards: continuam empilhando ao rolar (foto em cima, nome e área embaixo) */
-  html.celular .secao-work { position: relative; left: auto; right: auto; top: auto; height: auto; order: 1; padding: 176px 0 56px; }
+  html.celular .secao-work { position: relative; left: auto; right: auto; top: auto; height: auto; order: 1; padding: 160px 0 56px; }
+  /* faixa cinza invisível presa logo abaixo da header (16px): quando a pilha termina e os cards sobem com a página,
+     eles somem atrás dela — param a 16px da header, sem encostar nela */
+  html.celular .secao-work::before { content: ""; position: sticky; top: 56px; display: block; height: 16px; background: var(--cinza); z-index: 5; }
+  html.celular .pilha .fim-pilha { height: 28vh; }   /* pausa: a pilha completa fica parada um pouco antes de subir */
   html.celular .secao-work .fundo { left: 0; right: 0; top: 0; bottom: 0; height: auto; }
   html.celular .pilha { position: relative; left: auto; top: auto; width: auto; margin: 0 var(--lado);
     --topo-pilha: 72px; --degrau: 14px; --folga: 22px; }
