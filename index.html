@@ -185,7 +185,6 @@
   /* faixa cinza invisível presa logo abaixo da header (16px): quando a pilha termina e os cards sobem com a página,
      eles somem atrás dela — param a 16px da header, sem encostar nela */
   html.celular .secao-work::before { content: ""; position: sticky; top: 56px; display: block; height: 16px; background: var(--cinza); z-index: 5; }
-  html.celular .pilha .fim-pilha { height: 28vh; }   /* pausa: a pilha completa fica parada um pouco antes de subir */
   html.celular .secao-work .fundo { left: 0; right: 0; top: 0; bottom: 0; height: auto; }
   html.celular .pilha { position: relative; left: auto; top: auto; width: auto; margin: 0 var(--lado);
     --topo-pilha: 72px; --degrau: 14px; --folga: 22px; }
@@ -519,6 +518,31 @@
       soltando = setTimeout(() => { card.style.transition = ''; }, 400);   // a escala da pilha volta a seguir a rolagem sem atraso
     });
   });
+})();
+</script>
+<script>
+/* celular: a página termina com o card "veja mais" parado logo abaixo da header e o rodapé embaixo dele
+   (referência dela). O espaço depois da pilha é calculado pela altura da tela e do rodapé. */
+(() => {
+  const sec = document.querySelector('.secao-work'), rod = document.querySelector('.rodape');
+  const ultimo = document.querySelector('.pilha .card.mais');
+  if (!sec || !rod || !ultimo) return;
+  const fim = document.querySelector('.pilha .fim-pilha');
+  // o card "veja mais" fica preso até o fim da página: a pilha ganha, no fim, um espaço da altura do rodapé,
+  // e o rodapé sobe por cima desse espaço (margem negativa) — assim, na última rolagem, o card está logo abaixo
+  // da header e o rodapé ocupa o resto da tela
+  function ajusta() {
+    const cel = document.documentElement.classList.contains('celular');
+    sec.style.paddingBottom = cel ? '0px' : '';
+    // o espaço também precisa ser alto o bastante para o card chegar até onde para, em telas mais compridas
+    const topo = parseFloat(getComputedStyle(ultimo).top) || 72;
+    if (fim) fim.style.height = cel ? Math.max(rod.offsetHeight + 40, innerHeight - topo - ultimo.offsetHeight) + 'px' : '';
+    rod.style.marginTop = cel ? (-rod.offsetHeight) + 'px' : '';
+  }
+  ajusta();
+  addEventListener('resize', ajusta);
+  addEventListener('celular-mudou', ajusta);
+  if (document.fonts) document.fonts.ready.then(ajusta);
 })();
 </script>
 <script>
