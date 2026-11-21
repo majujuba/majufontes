@@ -131,37 +131,38 @@
     .js .fade-in-element { opacity: 1; transform: none; transition: none; }
   }
 
-  /* ══════════ VERSÃO CELULAR (só com html.celular — ver assets/celular.js; o desktop acima não muda) ══════════ */
-  html.celular { --hero: max(560px, 74svh); --faixa-h: 42.55vw; --lado: 24px; }
+  /* ══════════ VERSÃO CELULAR (só com html.celular — ver assets/celular.js; o desktop acima não muda) ══════════
+     Layout do Figma dela ("Mobile", 375 × 2125). Medidas em vw (proporcionais à largura; 1vw = 3,75px na tela de 375) */
+  html.celular { --hero: 196.5vw; --faixa-h: 42.55vw; }
   html.celular .frame { height: auto; }
   html.celular .page { position: relative; left: 0; margin: 0; width: 100%; height: auto;
-    display: flex; flex-direction: column; padding-top: calc(var(--hero) + var(--faixa-h) - 10px); }
-  /* topo: a foto ocupa a tela; flor azul no canto; "oii, sou maju" embaixo, antes da faixa */
+    display: flex; flex-direction: column; padding-top: calc(var(--hero) + var(--faixa-h) + 4px); }
+  /* topo: foto centralizada, flor azul em cima (casada pelos 126 pixels: escala 0,766), "oii, sou maju" acima da faixa */
   html.celular .hero-bg { left: 0; right: 0; height: var(--hero); }
   html.celular .hero-foto { left: 0; right: 0; top: 0; height: var(--hero); }
   html.celular .hero-foto img.esquerda, html.celular .hero-foto img.direita { display: none; }
   html.celular .hero-foto img.centro { top: 0; height: 100%; width: auto; aspect-ratio: 1573 / 885; left: 50%;
-    transform: translateX(-58%); clip-path: none; }
-  html.celular .hero-fundo { left: 0; right: 0; top: calc(var(--hero) - 260px); height: 300px; }
-  html.celular .flor-topo { left: -46vw; top: -26vw; width: 150vw; height: calc(150vw * 485 / 920); }
-  html.celular .ola { left: var(--lado); top: calc(var(--hero) - 210px); font-size: 46px; line-height: 52px; letter-spacing: -0.4px; }
-  html.celular .ola-espiral { left: calc(var(--lado) + 266px); top: calc(var(--hero) - 178px); width: 18px; height: 15px; }
-  html.celular .ola-texto { left: var(--lado); right: var(--lado); top: calc(var(--hero) - 140px); width: auto; font-size: 17px; line-height: 21px; }
+    transform: translateX(-52%); clip-path: none; }
+  html.celular .hero-fundo { left: 0; right: 0; top: calc(var(--hero) - 300px); height: 340px; }
+  html.celular .flor-topo { left: -39.3vw; top: -48.53vw; width: 187.92vw; height: 99.07vw; }
+  html.celular .ola { left: 7.47vw; top: 137.6vw; font-size: 11.2vw; line-height: 13.9vw; letter-spacing: -0.1vw; }
+  html.celular .ola-espiral { left: 75.4vw; top: 143.6vw; width: 4.3vw; height: 3.5vw; }
+  html.celular .ola-texto { left: 7.47vw; top: 156vw; width: 62vw; font-size: 4.13vw; line-height: 5.07vw; }
 
-  /* faixa roxa com as palavras: maior em relação à tela (as palavras continuam legíveis), pontas fora da tela */
-  html.celular .faixa { left: -75vw; top: calc(var(--hero) - 22px); width: 250vw; height: var(--faixa-h); }
+  /* faixa roxa com as palavras correndo */
+  html.celular .faixa { left: -75vw; top: calc(var(--hero) - 6vw); width: 250vw; height: var(--faixa-h); }
   html.celular .works-bg { left: 0; right: 0; top: calc(var(--hero) - 10px); bottom: 0; height: auto; }
 
-  /* textos empilhados */
+  /* textos empilhados, letra maior e mais espaço entre os blocos */
   html.celular .page > .bloco, html.celular .page > .linha, html.celular .page > .curriculo {
     position: relative; left: auto; top: auto; right: auto; }
-  html.celular .bloco { width: auto; margin: 0 var(--lado) 34px; }
-  html.celular .bloco h3 { font-size: 18px; }
-  html.celular .bloco p { margin-top: 8px; font-size: 17px; line-height: 23px; }
-  html.celular .linha { width: auto; margin: 6px var(--lado) 32px; }
-  html.celular .formacao { width: auto; margin-bottom: 26px; }
-  html.celular .formacao p { line-height: 1.3; }
-  html.celular .curriculo { align-self: flex-start; margin: 0 var(--lado) 48px; width: 230px; height: 48px; font-size: 26px; }
+  html.celular .bloco { width: auto; margin: 0 9vw 0 8vw; }
+  html.celular .bloco + .bloco { margin-top: 21vw; }
+  html.celular .bloco h3 { font-size: 4.53vw; letter-spacing: .3vw; }
+  html.celular .bloco p { margin-top: 3.5vw; font-size: 4.53vw; line-height: 5.6vw; }
+  html.celular .formacao { display: none; }   /* no layout dela a formação não aparece no celular */
+  html.celular .linha { width: auto; margin: 10.5vw 6.7vw 0; }
+  html.celular .curriculo { align-self: center; margin: 8.8vw 0 15vw; width: 78.1vw; height: 13.4vw; font-size: 7.5vw; }
 </style>
 <script>
   document.documentElement.classList.add('js');
