@@ -417,7 +417,8 @@
 
   document.querySelectorAll('.pilha .card').forEach((card, i) => {
     const W = card.offsetWidth, H = card.offsetHeight;
-    if (W === PRONTO.W && H === PRONTO.H && !document.documentElement.classList.contains('celular')) {
+    // abrindo direto do arquivo (file://) o navegador bloqueia máscara vinda de arquivo e o card sumiria: aí gera na hora
+    if (location.protocol !== 'file:' && W === PRONTO.W && H === PRONTO.H && !document.documentElement.classList.contains('celular')) {
       card.classList.add('rustica');
       const u = 'url("assets/cards/molde-' + i + '.webp")';
       card.style.webkitMaskImage = u; card.style.maskImage = u;
