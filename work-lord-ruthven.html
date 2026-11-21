@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1280">
+<!-- celular: troca a viewport e liga o layout de celular antes de desenhar (ver assets/celular.js) -->
+<script src="assets/celular.js"></script>
 <title>Lord Ruthven — maju. designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
@@ -12,6 +14,10 @@
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- celular: header, menu e rodapé comuns a todas as páginas -->
+<link rel="stylesheet" href="assets/celular.css">
+<!-- celular: a dinâmica comum das páginas de projeto (abertura, coluna de imagens, "saiba mais!") -->
+<link rel="stylesheet" href="assets/projeto-celular.css">
 <!-- transição de pixels que se dissolvem (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script><script src="assets/barras-celular.js"></script>
 <style>
@@ -134,6 +140,13 @@
   @media (prefers-reduced-motion: reduce) {
     .js .fade-in-element { opacity: 1; transform: none; transition: none; }
   }
+
+  /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do Lord Ruthven ══════════ */
+  html.celular { --fundo-pagina: var(--roxo); --campo-h: 40vw; }
+  /* o bloco do meio é o grupo inteiro do Figma (fundo roxo, citação e cartas desenhados juntos): no celular só o recorte das cartas */
+  html.celular .page > .peca.meio { display: none; }
+  .cartas-celular { display: none; }
+  html.celular .page > .cartas-celular { display: block; }
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -152,7 +165,8 @@
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Lord Ruthven</h1>
 
   <!-- apresentação -->
-  <section class="bloco apresentacao fade-in-element">
+  <!-- no celular este texto fica depois das imagens, fechado, e abre pelo botão "saiba mais!" -->
+  <section class="bloco apresentacao fade-in-element" id="sobre-projeto">
     <p class="texto">A Experimentação Visual surgiu a partir de um incômodo nas redes sociais: por que o vampiro, figura originalmente associada ao medo, passou a ser retratado como romântico e desejável? A partir desse questionamento, o projeto se debruça sobre a origem literária do mito como <b>recorte temático o primeiro vampiro da literatura moderna</b>, que revela um ponto de ruptura: o vampiro não nasceu para ser amado, mas para expor poder, ameaça e decadência moral.</p>
     <p class="ficha disciplina"><strong>Disciplina</strong>Projeto Digital</p>
     <p class="ficha ano"><strong>Ano</strong>2026-1</p>
@@ -162,22 +176,29 @@
   <!-- cartazes, posts e cartas (cada grupo do Figma exportado como uma imagem) -->
   <img decoding="async" class="peca fade-in-element" src="assets/lord/linha1.jpg" alt="Posts no celular e cartaz com presas de vampiro" loading="lazy" style="left:50px; top:1187px; width:1390px; height:537px">
   <img decoding="async" class="peca fade-in-element" src="assets/lord/linha2.jpg" alt="Cartazes de Lord Ruthven em vermelho e verde" loading="lazy" style="left:50px; top:1733px; width:1390px; height:538px">
-  <img decoding="async" class="peca fade-in-element" src="assets/lord/bloco-meio.jpg" alt="Cartas de L.R." loading="lazy" style="left:50px; top:2278px; width:1390px; height:1149px">
+  <img decoding="async" class="peca meio fade-in-element" src="assets/lord/bloco-meio.jpg" alt="Cartas de L.R." loading="lazy" style="left:50px; top:2278px; width:1390px; height:1149px">
   <img decoding="async" class="peca fade-in-element" src="assets/lord/casa-retrato.jpg" alt="Cartazes da casa e do retrato de Lord Ruthven" loading="lazy" style="left:50px; top:2279px; width:924px; height:570px">
-  <img decoding="async" class="peca fade-in-element" src="assets/lord/lapide-rosas.jpg" alt="Cartazes da lápide, das rosas e dos morcegos" loading="lazy" style="left:516px; top:2857px; width:924px; height:1151px">
-  <img decoding="async" class="peca fade-in-element" src="assets/lord/celular.jpg" alt="Perfil de Lord Ruthven no celular" loading="lazy" style="left:50px; top:3435px; width:923px; height:573px">
   <section class="bloco citacao bege fade-in-element">
     <img decoding="async" class="aspas" src="assets/lord/aspas-preta.png" alt="" style="left:44px; top:73px">
     <span class="grifo" style="left:145px; top:364px; width:213px"></span>
     <span class="grifo" style="left:44px; top:414px; width:326px"></span>
-    <p style="left:44px; top:157px; width:369px">como os vampiros passaram a ser retratados como algo desejável<br>e domesticado nos dias atuais?</p>
+    <p style="left:44px; top:157px; width:369px">como os vampiros passaram a ser retratados como algo <mark>desejável<br>e domesticado</mark> nos dias atuais?</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
+  <!-- celular: só as cartas, recortadas do bloco do meio (no computador elas aparecem dentro dele) -->
+  <img decoding="async" class="peca cartas-celular fade-in-element" src="assets/lord/cartas.jpg" alt="Cartas de L.R." loading="lazy" style="width:460px; height:570px">
+  <img decoding="async" class="peca fade-in-element" src="assets/lord/lapide-rosas.jpg" alt="Cartazes da lápide, das rosas e dos morcegos" loading="lazy" style="left:516px; top:2857px; width:924px; height:1151px">
+  <img decoding="async" class="peca fade-in-element" src="assets/lord/celular.jpg" alt="Perfil de Lord Ruthven no celular" loading="lazy" style="left:50px; top:3435px; width:923px; height:573px">
 
   <!-- adesivos soltos (dá para segurar e arrastar pela página) -->
+  <div class="campo-adesivos" aria-hidden="true"></div>
+  <!-- (no celular, assets/projeto-celular.js arruma os adesivos nesse espaço, na mesma composição do computador) -->
   <img decoding="async" class="adesivo fade-in-element" src="assets/lord/adesivo-dracula.webp" alt="Adesivo do Drácula" draggable="false" data-cursor="link" style="left:218px; top:4002.2px; width:385px; height:280px">
   <img decoding="async" class="adesivo fade-in-element" src="assets/lord/adesivo-lr.webp" alt="Adesivo L.R." draggable="false" data-cursor="link" style="left:670.5px; top:4067.4px; width:177px; height:214.5px">
   <img decoding="async" class="adesivo fade-in-element" src="assets/lord/adesivo-coracao.webp" alt="Adesivo de coração" draggable="false" data-cursor="link" style="left:923.8px; top:3976px; width:376.5px; height:333.5px">
+
+  <!-- celular: botão que abre/fecha o texto do projeto (no computador não aparece) -->
+  <div class="saiba"><button class="botao-pixel saiba-mais" type="button" aria-expanded="false" aria-controls="sobre-projeto"><span class="txt">saiba mais!</span><span class="c1"></span><span class="c2"></span></button></div>
 
   <!-- anterior / próximo (ordem da página work: NSG → Lord Ruthven → Recorte) -->
   <nav class="abs navega" aria-label="outros projetos">
@@ -284,5 +305,9 @@
 <script src="assets/barra-rolagem.js"></script>
 <!-- cursor com rastro de pixels -->
 <script src="assets/cursor-trail.js"></script>
+<!-- celular: proporção das imagens, título e botão "saiba mais!" (comum às páginas de projeto) -->
+<script src="assets/projeto-celular.js"></script>
+<!-- menu do celular (botão hambúrguer) -->
+<script src="assets/menu-celular.js"></script>
 </body>
 </html>

@@ -26,6 +26,43 @@
   addEventListener('celular-mudou', cabeTitulo);
   addEventListener('orientationchange', () => setTimeout(cabeTitulo, 300));
 
+  /* estampas / adesivos soltos (Dengo, Lord Ruthven): no celular vão para o espaço .campo-adesivos, depois das imagens.
+     data-arranjo="grade": 3 por fileira, todas do mesmo tamanho aproximado, alternando a altura como no computador;
+     sem ele: a mesma composição do computador, reduzida até caber no espaço.
+     As que a pessoa já arrastou ficam onde ela deixou; voltando ao layout do computador, todas voltam ao lugar de lá. */
+  const campo = document.querySelector('.campo-adesivos');
+  const adesivos = [...document.querySelectorAll('.adesivo')];
+  if (campo && adesivos.length) {
+    const original = adesivos.map(el => el.getAttribute('style') || '');
+    const num = (s, k) => parseFloat((s.match(new RegExp('(?:^|;)\\s*' + k + ':\\s*([\\d.]+)')) || [0, 0])[1]);
+    const dados = adesivos.map((el, i) => ({ el, i, x: num(original[i], 'left'), y: num(original[i], 'top'), w: num(original[i], 'width'), h: num(original[i], 'height') }));
+    const arrastou = new Set();
+    adesivos.forEach(el => el.addEventListener('pointerdown', () => arrastou.add(el)));
+    const poe = (d, x, y, esc) => { if (!arrastou.has(d.el)) Object.assign(d.el.style, { left: x + 'px', top: y + 'px', width: d.w * esc + 'px', height: d.h * esc + 'px' }); };
+    const arruma = () => {
+      if (!celular()) { adesivos.forEach((el, i) => el.setAttribute('style', original[i])); arrastou.clear(); return; }
+      const L = campo.offsetLeft, T = campo.offsetTop, W = campo.offsetWidth, H = campo.offsetHeight;
+      if (campo.dataset.arranjo === 'grade') {
+        const esc = W / 3 * .82 / Math.max(...dados.map(d => d.w));
+        [...dados].sort((a, b) => a.x - b.x).forEach((d, k) => {
+          const col = k % 3, lin = Math.floor(k / 3), linhas = Math.ceil(dados.length / 3);
+          const cx = L + W * (col + .5) / 3, cy = T + H * (lin + .5) / linhas + (col % 2 ? H * .04 : -H * .04);
+          poe(d, cx - d.w * esc / 2, cy - d.h * esc / 2, esc);
+        });
+      } else {
+        const x0 = Math.min(...dados.map(d => d.x)), x1 = Math.max(...dados.map(d => d.x + d.w));
+        const y0 = Math.min(...dados.map(d => d.y)), y1 = Math.max(...dados.map(d => d.y + d.h));
+        const esc = Math.min(W / (x1 - x0), H / (y1 - y0));
+        const dx = L + (W - (x1 - x0) * esc) / 2, dy = T + (H - (y1 - y0) * esc) / 2;
+        dados.forEach(d => poe(d, dx + (d.x - x0) * esc, dy + (d.y - y0) * esc, esc));
+      }
+    };
+    arruma();
+    addEventListener('load', arruma);
+    addEventListener('celular-mudou', arruma);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(arruma);   // o título pode mudar de tamanho e empurrar a página
+  }
+
   const botao = document.querySelector('.saiba-mais'), sec = document.getElementById('sobre-projeto');
   if (!botao || !sec) return;
   const txt = botao.querySelector('.txt');

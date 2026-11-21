@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1280">
+<!-- celular: troca a viewport e liga o layout de celular antes de desenhar (ver assets/celular.js) -->
+<script src="assets/celular.js"></script>
 <title>Fósforo Paraná — maju. designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
@@ -12,6 +14,10 @@
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- celular: header, menu e rodapé comuns a todas as páginas -->
+<link rel="stylesheet" href="assets/celular.css">
+<!-- celular: a dinâmica comum das páginas de projeto (abertura, coluna de imagens, "saiba mais!") -->
+<link rel="stylesheet" href="assets/projeto-celular.css">
 <!-- visualizador de modelos 3D (caixas de fósforo) -->
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <script>
@@ -136,6 +142,16 @@
   @media (prefers-reduced-motion: reduce) {
     .js .fade-in-element { opacity: 1; transform: none; transition: none; }
   }
+
+  /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do Fósforo ══════════ */
+  /* abertura: no vídeo a caixa fica no meio de um fundo laranja largo; cortado em pé, ela saía pelos lados.
+     No celular o vídeo aparece mais largo que a tela (a caixa inteira à vista) e o resto da altura é o mesmo fundo laranja (o pôster) */
+  html.celular .hero { background: url("assets/fosforo/hero-poster.jpg") 50% 16vw / 190% auto repeat-y; }
+  html.celular .hero video { left: -45%; top: 16vw; width: 190%; height: auto; aspect-ratio: 16 / 9; }
+  /* caixas em 3D: a mesma proporção do computador (arrastar com o dedo gira; rolar para cima e para baixo continua rolando a página) */
+  html.celular .page > .modelo { aspect-ratio: 691 / 621; }
+  html.celular .modelo .legenda { bottom: 14px; font-size: 17px; }
+  html.celular .modelo .legenda small { font-size: 13px; }
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -154,7 +170,8 @@
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Fósforo Paraná</h1>
 
   <!-- apresentação -->
-  <section class="bloco apresentacao fade-in-element">
+  <!-- no celular este texto fica depois das imagens, fechado, e abre pelo botão "saiba mais!" -->
+  <section class="bloco apresentacao fade-in-element" id="sobre-projeto">
     <p class="texto">Um redesign de embalagem para a marca Fósforo Paraná, compôs o objetivo de atualizar a embalagem da marca, tornando o produto mais atraente e claro no ponto de venda, sem perder sua tradição estabelecida no mercado e reconhecimento junto ao público.<br>O resultado é uma embalagem mais atrativa e contemporânea, alinhada tanto à memória quanto ao uso do cotidiano.</p>
     <p class="ficha disciplina"><strong>Disciplina</strong>Embalagens</p>
     <p class="ficha ano"><strong>Ano</strong>2025-2</p>
@@ -170,7 +187,7 @@
   <section class="bloco citacao amarela fade-in-element">
     <img decoding="async" class="aspas" src="assets/fosforo/aspas-vinho.png" alt="" style="left:80px; top:72px">
     <span class="grifo" style="left:118px; top:164px; width:497px"></span>
-    <p style="left:80px; top:156px; width:580px">o universo do churrasco<br>e da cultura do fogo,<br>reunindo referências<br>como calor, raiz, família,<br>encontro, tradição<br>e popularidade.</p>
+    <p style="left:80px; top:156px; width:580px">o <mark>universo do churrasco</mark><br>e da cultura do fogo,<br>reunindo referências<br>como calor, raiz, família,<br>encontro, tradição<br>e popularidade.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
   <div class="bloco fade-in-element" style="left:50px; top:2922px; width:1390px; height:179px"><video src="assets/fosforo/fogo-amarelo.mp4" poster="assets/fosforo/fogo-amarelo.jpg" muted loop playsinline preload="metadata" aria-label="Animação: faixa de fogo amarelo"></video><span class="c1"></span><span class="c2"></span></div>
@@ -187,6 +204,9 @@
     <p class="legenda">caixa secundária<small>arraste para girar</small></p>
     <span class="c1"></span><span class="c2"></span>
   </div>
+
+  <!-- celular: botão que abre/fecha o texto do projeto (no computador não aparece) -->
+  <div class="saiba"><button class="botao-pixel saiba-mais" type="button" aria-expanded="false" aria-controls="sobre-projeto"><span class="txt">saiba mais!</span><span class="c1"></span><span class="c2"></span></button></div>
 
   <!-- anterior / próximo (ordem da página work: Kit Kat → Fósforo → Cartaz Granado) -->
   <nav class="abs navega" aria-label="outros projetos">
@@ -268,5 +288,9 @@
 <script src="assets/barra-rolagem.js"></script>
 <!-- cursor com rastro de pixels -->
 <script src="assets/cursor-trail.js"></script>
+<!-- celular: proporção das imagens, título e botão "saiba mais!" (comum às páginas de projeto) -->
+<script src="assets/projeto-celular.js"></script>
+<!-- menu do celular (botão hambúrguer) -->
+<script src="assets/menu-celular.js"></script>
 </body>
 </html>

@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1280">
+<!-- celular: troca a viewport e liga o layout de celular antes de desenhar (ver assets/celular.js) -->
+<script src="assets/celular.js"></script>
 <title>A Substância — maju. designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
@@ -12,6 +14,10 @@
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- celular: header, menu e rodapé comuns a todas as páginas -->
+<link rel="stylesheet" href="assets/celular.css">
+<!-- celular: a dinâmica comum das páginas de projeto (abertura, coluna de imagens, "saiba mais!") -->
+<link rel="stylesheet" href="assets/projeto-celular.css">
 <!-- transição de pixels que se dissolvem (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script><script src="assets/barras-celular.js"></script>
 <style>
@@ -128,6 +134,10 @@
   @media (prefers-reduced-motion: reduce) {
     .js .fade-in-element { opacity: 1; transform: none; transition: none; }
   }
+
+  /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é d'A Substância ══════════ */
+  html.celular { --fundo-pagina: var(--roxo); }
+  html.celular .page > .video-vaga { aspect-ratio: 2100 / 1080; }   /* a abertura inteira, sem as faixas pretas */
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -146,7 +156,8 @@
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">A Substância</h1>
 
   <!-- apresentação -->
-  <section class="bloco apresentacao fade-in-element">
+  <!-- no celular este texto fica depois das imagens, fechado, e abre pelo botão "saiba mais!" -->
+  <section class="bloco apresentacao fade-in-element" id="sobre-projeto">
     <p class="texto">A atividade consistia em <b>criar a abertura de uma obra audiovisual</b>, e o filme escolhido foi <i>A Substância (2024)</i>. Um body horror que torna a obsessão pela juventude e pela perfeição tão sedutora quanto perturbadora. A abertura foi pensada para provocar, e não para explicar. Entrega fragmentos, ritmo e tensão, coisas que são presentes ao longo do enredo, deixando o público com mais perguntas do que respostas, e com vontade de assistir.</p>
     <p class="ficha disciplina"><strong>Disciplina</strong>Motion Design</p>
     <p class="ficha ano"><strong>Ano</strong>2026-2</p>
@@ -163,9 +174,12 @@
     <img decoding="async" class="aspas" src="assets/vizao/aspas-laranja.png" alt="" style="left:63px; top:132px">
     <span class="grifo" style="left:63px; top:641px; width:420px"></span>
     <span class="grifo" style="left:63px; top:693px; width:244px"></span>
-    <p style="left:63px; top:216px; width:432px">o ponto de partida foram as três cores principais do filme, que guiam toda a narrativa visual e dão corpo às suas personagens, represando a o sucesso, a tensão e o monstro.</p>
+    <p style="left:63px; top:216px; width:432px">o ponto de partida foram as três cores principais do filme, que guiam toda a narrativa visual e dão corpo às suas personagens, represando a o <mark>sucesso, a tensão e o monstro</mark>.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
+
+  <!-- celular: botão que abre/fecha o texto do projeto (no computador não aparece) -->
+  <div class="saiba"><button class="botao-pixel saiba-mais" type="button" aria-expanded="false" aria-controls="sobre-projeto"><span class="txt">saiba mais!</span><span class="c1"></span><span class="c2"></span></button></div>
 
   <!-- anterior / próximo (ordem da página work: Dengo → A Substância → NSG) -->
   <nav class="abs navega" aria-label="outros projetos">
@@ -234,5 +248,9 @@
 <script src="assets/barra-rolagem.js"></script>
 <!-- cursor com rastro de pixels -->
 <script src="assets/cursor-trail.js"></script>
+<!-- celular: proporção das imagens, título e botão "saiba mais!" (comum às páginas de projeto) -->
+<script src="assets/projeto-celular.js"></script>
+<!-- menu do celular (botão hambúrguer) -->
+<script src="assets/menu-celular.js"></script>
 </body>
 </html>

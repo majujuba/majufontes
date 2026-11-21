@@ -142,9 +142,6 @@
 
   /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do Dengo ══════════ */
   html.celular { --foto-x: 71%; }   /* no celular a foto é a das barras mais aberta (barras-azul.jpg, referência dela), com a barra aberta no meio */
-  /* estampas soltas: no celular ficam neste espaço depois das imagens, em 3 fileiras (posições pelo script das estampas) */
-  .campo-adesivos { display: none; }
-  html.celular .campo-adesivos { display: block; height: 100vw; margin: var(--vao) var(--m) 0; }
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -215,7 +212,8 @@
   <div class="bloco fade-in-element" style="left:639px; top:5202px; width:801px; height:544px"><img decoding="async" src="assets/dengo/pacotes-vermelho.jpg" alt="Pacotes Dengo sobre fundo vermelho" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
 
   <!-- estampas soltas -->
-  <div class="campo-adesivos" aria-hidden="true"></div>
+  <div class="campo-adesivos" data-arranjo="grade" aria-hidden="true"></div>
+  <!-- (no celular, assets/projeto-celular.js arruma as estampas nesse espaço) -->
   <!-- (cada uma é solta: dá para segurar e arrastar pela página) -->
   <img decoding="async" class="adesivo fade-in-element" src="assets/dengo/estampa-05.webp" alt="Estampa de cacau" draggable="false" data-cursor="link" style="left:184px; top:5985px; width:167.5px; height:173px">
   <img decoding="async" class="adesivo fade-in-element" src="assets/dengo/estampa-01.webp" alt="Estampa de carambolas" draggable="false" data-cursor="link" style="left:254px; top:5779px; width:186px; height:188px">
@@ -327,37 +325,6 @@
     el.addEventListener('pointerup', solta);
     el.addEventListener('pointercancel', solta);
   });
-
-  /* celular: as estampas começam arrumadas em 3 fileiras de 3 no espaço depois das imagens (.campo-adesivos),
-     com a mesma alternância de altura do computador; dá para arrastar do mesmo jeito.
-     Voltando ao layout do computador, cada uma volta à posição de lá. */
-  const html = document.documentElement, campo = document.querySelector('.campo-adesivos');
-  const adesivos = [...document.querySelectorAll('.adesivo')];
-  const original = adesivos.map(el => el.getAttribute('style'));
-  const arrastou = new Set();
-  adesivos.forEach(el => el.addEventListener('pointerdown', () => arrastou.add(el)));
-  function arruma() {
-    if (!campo) return;
-    if (!html.classList.contains('celular')) {
-      adesivos.forEach((el, i) => el.setAttribute('style', original[i])); arrastou.clear(); return;
-    }
-    const L = campo.offsetLeft, T = campo.offsetTop, W = campo.offsetWidth, H = campo.offsetHeight;
-    const esc = W * .27 / 186;                                     // a estampa mais comum (186px) fica com 27% da largura
-    // da esquerda para a direita, de cima para baixo, como estão no computador
-    const ordem = adesivos.map((el, i) => ({ el, i, x: parseFloat(original[i].match(/left:\s*([\d.]+)/)[1]) }))
-      .sort((a, b) => a.x - b.x);
-    ordem.forEach(({ el, i }, k) => {
-      if (arrastou.has(el)) return;
-      const w = parseFloat(original[i].match(/width:\s*([\d.]+)/)[1]) * esc, h = parseFloat(original[i].match(/height:\s*([\d.]+)/)[1]) * esc;
-      const col = k % 3, lin = Math.floor(k / 3);
-      const cx = L + W * (col + .5) / 3, cy = T + H * (lin + .5) / 3 + (col % 2 ? H * .04 : -H * .04);
-      Object.assign(el.style, { left: (cx - w / 2) + 'px', top: (cy - h / 2) + 'px', width: w + 'px', height: h + 'px' });
-    });
-  }
-  arruma();
-  addEventListener('load', arruma);
-  addEventListener('celular-mudou', arruma);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(arruma);   // o título pode mudar de tamanho e empurrar a página
 })();
 </script>
 <!-- pausa as animações pesadas enquanto a página rola -->

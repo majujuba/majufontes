@@ -25,7 +25,7 @@ html.celular .page > .peca { object-fit: cover;
 html.celular .hero { position: relative; left: 0; top: 0; width: 100%; margin-top: var(--topo);
   height: calc(100vh - var(--topo) - 16vw); height: calc(100svh - var(--topo) - 16vw); min-height: 120vw;
   overflow: visible; }   /* a foto já cabe certinho (cover); assim o degradê pode passar do pé dela (ver ::after) */
-html.celular .hero img { top: 0; height: 100%; object-position: var(--foto-x, 50%) var(--foto-y, 50%); }
+html.celular .hero img, html.celular .hero video { top: 0; height: 100%; object-position: var(--foto-x, 50%) var(--foto-y, 50%); }
 /* o degradê desce 4px além da foto: a borda de baixo dela (suavizada pelo navegador) aparecia como uma linha fina embaixo do título */
 html.celular .hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: calc(46% + 4px); pointer-events: none;
   /* chega à cor da página antes do pé da foto (senão a borda de baixo dela aparece como uma linha embaixo do título) */
@@ -34,6 +34,11 @@ html.celular .hero-fundo { display: none; }
 /* o tamanho começa em 27vw e diminui (assets/projeto-celular.js) se uma palavra não couber; títulos de duas palavras quebram a linha */
 html.celular .titulo { position: relative; left: auto; top: auto; z-index: 1; margin: -.78em var(--m) .26em 5.6vw;
   font-size: 27vw; line-height: .89; white-space: normal; }
+
+/* espaço para as estampas / adesivos soltos no fim das imagens (Dengo, Lord Ruthven) — quem os arruma é assets/projeto-celular.js;
+   cada página pode trocar a altura com --campo-h */
+.campo-adesivos { display: none; }
+html.celular .campo-adesivos { display: block; height: var(--campo-h, 100vw); margin: var(--vao) var(--m) 0; }
 
 /* citações: o texto se ajusta à largura e o grifo se desenha por trás das palavras, da esquerda para a direita */
 html.celular .page > .citacao { padding: 10vw 7vw 11vw; }
