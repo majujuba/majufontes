@@ -58,13 +58,14 @@
 
   // flor animada (carregada na primeira abertura):
   // - menu de fundo claro: a flor VERMELHA da Home (pedido dela), já pronta — sem o desenho do traço —, com os pixels na cor dos links
-  // - menu de fundo escuro (roxo, na Home): a flor azul de antes (desenho-azul-menu.html), como estava
+  //   e todos eles sempre à vista (nenhum chega a sumir ao piscar)
+  // - menu de fundo escuro (roxo, na Home): a flor azul de antes (desenho-azul-menu.html), do tamanho e no lugar da vermelha
   function poeFlor() {
     const caixa = menu.querySelector('.menu-flor');
     if (caixa.firstChild) return;
     const f = document.createElement('iframe');
-    f.src = claro ? 'assets/desenho-vermelho-flor.html?sem-desenho' : 'assets/desenho-azul-menu.html';
-    if (claro) f.className = 'vermelha';   // encaixe no lugar da flor azul: ver assets/celular.css
+    f.src = claro ? 'assets/desenho-vermelho-flor.html?sem-desenho&todos-pixels' : 'assets/desenho-azul-menu.html';
+    f.className = claro ? 'vermelha' : 'azul';   // posição e tamanho: ver assets/celular.css
     f.title = ''; f.tabIndex = -1; f.setAttribute('scrolling', 'no');
     if (claro) f.addEventListener('load', () => {
       try { f.contentDocument.documentElement.style.setProperty('--pixel', corLink); }

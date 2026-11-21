@@ -486,7 +486,8 @@
 </svg>
 <script>
 /* ================== AJUSTES ================== */
-const NIVEIS = [1, 0.5, 0];                  // opacidade dos pixels: 100%, 50% e 0%
+const NIVEIS = /[?&]todos-pixels/.test(location.search)   // "?todos-pixels" (menu do celular): nenhum pixel some, piscam entre 100%, 80% e 50%
+  ? [1, 0.8, 0.5] : [1, 0.5, 0];             // opacidade dos pixels: 100%, 50% e 0%
 const PAUSA_MIN = 1200, PAUSA_MAX = 4000;    // quanto tempo cada pixel fica parado (ms)
 const FADE_MIN = 600,  FADE_MAX = 1500;      // duração da troca (ms)
 const DESENHO_MS = 2000;                     // duração do traço se desenhando (ms)
