@@ -308,7 +308,7 @@
       <span class="abs chamada">veja mais <span class="quebra-celular"></span>projetos →</span>
       <span class="abs sub">mais de 10 ideias que<br>saíram do papel!</span>
       <img decoding="async" class="abs espiral" src="assets/espiral-clara.svg" alt="">
-      <div class="abs desenho-caixa"><iframe class="abs" src="assets/desenho-azul-flor.html" title="flor e pixels — azul" scrolling="no" tabindex="-1" aria-hidden="true"></iframe></div>
+      <div class="abs desenho-caixa"><iframe class="abs" loading="lazy" src="assets/desenho-azul-flor.html" title="flor e pixels — azul" scrolling="no" tabindex="-1" aria-hidden="true"></iframe></div>
     </a>
     <div class="fim-pilha"></div>
     </div>
@@ -410,8 +410,24 @@
     };
   }
 
+  /* no computador os cards têm sempre 1388 × 395: o recorte e a borda já estão prontos em assets/cards/
+     (gerados por este mesmo código, em 3x). Gerar na hora travava a home ~2 s; fora desse tamanho
+     (celular, janela estreita) continua gerando como antes */
+  const PRONTO = { W: 1388, H: 395 };
+
   document.querySelectorAll('.pilha .card').forEach((card, i) => {
     const W = card.offsetWidth, H = card.offsetHeight;
+    if (W === PRONTO.W && H === PRONTO.H && !document.documentElement.classList.contains('celular')) {
+      card.classList.add('rustica');
+      const u = 'url("assets/cards/molde-' + i + '.webp")';
+      card.style.webkitMaskImage = u; card.style.maskImage = u;
+      card.style.webkitMaskSize = '100% 100%'; card.style.maskSize = '100% 100%';
+      card.style.webkitMaskRepeat = 'no-repeat'; card.style.maskRepeat = 'no-repeat';
+      const img = new Image(); img.className = 'abs borda'; img.alt = ''; img.setAttribute('aria-hidden', 'true');
+      img.decoding = 'async'; img.src = 'assets/cards/borda-' + i + '.webp';
+      card.appendChild(img);
+      return;
+    }
     const forma = contorno(W, H, 97 + i * 7919);
     const dTraco = forma(ESPESSURA/2);                    // traço encostado na beirada, por dentro
     card.classList.add('rustica');
@@ -468,7 +484,9 @@
           const c = document.createElement('canvas');
           c.width = Math.round(W * ESC); c.height = Math.round(H * ESC);
           c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-          res(c.toDataURL('image/png'));
+          // toBlob codifica a imagem fora da linha principal (toDataURL travava a página ~0,2 s por card)
+          if (c.toBlob) c.toBlob(b => res(b ? URL.createObjectURL(b) : null), 'image/png');
+          else res(c.toDataURL('image/png'));
         } catch (e) { res(null); }                             // se não der, fica o filtro ao vivo
       };
       img.onerror = () => res(null);
