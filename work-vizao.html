@@ -187,7 +187,7 @@
   }
 
   /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do Vizão ══════════ */
-  html.celular { --foto-x: 51%; }
+  html.celular { --foto-x: 50%; }   /* foto vertical própria do celular (assets/vizao/hero-celular.webp, da vizao.png dela) */
 
   /* carrossel: setas no meio da altura, com área de toque maior (e o dedo também passa as fotos) */
   html.celular .carrossel .seta { top: calc(50% - 22px); width: 42px; height: 44px; padding: 9px 8px; }
@@ -229,7 +229,7 @@
 <div class="frame"><main class="page">
 
   <!-- topo -->
-  <div class="abs hero"><img decoding="async" src="assets/vizao/hero.jpg" alt="Revista Vizão aberta sobre um lençol, entre livros de Ailton Krenak"></div>
+  <div class="abs hero"><picture><source media="(max-width: 760px), (max-device-width: 600px), (max-device-height: 600px)" srcset="assets/vizao/hero-celular.webp"><img decoding="async" src="assets/vizao/hero.jpg" alt="Revista Vizão aberta sobre um lençol, entre livros de Ailton Krenak"></picture></div>
   <div class="abs hero-fundo"></div>
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Vizão</h1>
 

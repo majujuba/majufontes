@@ -141,7 +141,7 @@
   }
 
   /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do Dengo ══════════ */
-  html.celular { --foto-x: 72%; }   /* a barra aberta, com o chocolate */
+  html.celular { --foto-x: 71%; }   /* no celular a foto é a das barras mais aberta (barras-azul.jpg, referência dela), com a barra aberta no meio */
   /* estampas soltas: no celular ficam neste espaço depois das imagens, em 3 fileiras (posições pelo script das estampas) */
   .campo-adesivos { display: none; }
   html.celular .campo-adesivos { display: block; height: 100vw; margin: var(--vao) var(--m) 0; }
@@ -158,7 +158,7 @@
 <div class="frame"><main class="page">
 
   <!-- topo -->
-  <div class="abs hero"><img decoding="async" src="assets/dengo/hero.jpg" alt="Barras de chocolate Dengo com as estampas sobre um fundo azul"></div>
+  <div class="abs hero"><picture><source media="(max-width: 760px), (max-device-width: 600px), (max-device-height: 600px)" srcset="assets/dengo/barras-azul.jpg"><img decoding="async" src="assets/dengo/hero.jpg" alt="Barras de chocolate Dengo com as estampas sobre um fundo azul"></picture></div>
   <div class="abs hero-fundo"></div>
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Dengo</h1>
 

@@ -153,7 +153,7 @@
   }
 
   /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é da Gorducha ══════════ */
-  html.celular { --fundo-pagina: var(--roxo); --foto-x: 48%; }
+  html.celular { --fundo-pagina: var(--roxo); --foto-y: 62%; }   /* foto do celular: a do topo girada, com o cartão em pé (hero-celular.webp) */
   html.celular .page > .video-bloco { aspect-ratio: 16 / 9; }   /* o vídeo inteiro, sem as faixas vermelhas dos lados */
   /* caixa de escrever: quadrada, com a área do texto e a barra de cores proporcionais */
   html.celular .page > .escrever { aspect-ratio: 1 / 1; }
@@ -174,7 +174,7 @@
 <div class="frame"><main class="page">
 
   <!-- topo -->
-  <div class="abs hero"><img decoding="async" src="assets/gorducha/hero.jpg" alt="Cartão e sorvetes da sorveteria Gorducha"></div>
+  <div class="abs hero"><picture><source media="(max-width: 760px), (max-device-width: 600px), (max-device-height: 600px)" srcset="assets/gorducha/hero-celular.webp"><img decoding="async" src="assets/gorducha/hero.jpg" alt="Cartão e sorvetes da sorveteria Gorducha"></picture></div>
   <div class="abs hero-fundo"></div>
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Gorducha</h1>
 

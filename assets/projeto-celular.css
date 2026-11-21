@@ -5,7 +5,7 @@
    Carregar depois de assets/celular.css e antes do <style> da página (lá ficam os ajustes de cada projeto).
    Cada página pode trocar:
      --fundo-pagina   cor de fundo da página (degradê do topo e cantinhos do botão) — padrão cinza
-     --foto-x         posição horizontal do recorte da foto do topo — padrão 50%                                     */
+     --foto-x, --foto-y   posição do recorte da foto do topo — padrão 50% 50%                                     */
 
 /* trechos grifados das citações: no computador os grifos são as faixas desenhadas (.grifo), então a marcação não aparece */
 .citacao mark { background: none; color: inherit; }
@@ -25,7 +25,7 @@ html.celular .page > .peca { object-fit: cover;
 html.celular .hero { position: relative; left: 0; top: 0; width: 100%; margin-top: var(--topo);
   height: calc(100vh - var(--topo) - 16vw); height: calc(100svh - var(--topo) - 16vw); min-height: 120vw;
   overflow: visible; }   /* a foto já cabe certinho (cover); assim o degradê pode passar do pé dela (ver ::after) */
-html.celular .hero img { top: 0; height: 100%; object-position: var(--foto-x, 50%) 50%; }
+html.celular .hero img { top: 0; height: 100%; object-position: var(--foto-x, 50%) var(--foto-y, 50%); }
 /* o degradê desce 4px além da foto: a borda de baixo dela (suavizada pelo navegador) aparecia como uma linha fina embaixo do título */
 html.celular .hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: calc(46% + 4px); pointer-events: none;
   /* chega à cor da página antes do pé da foto (senão a borda de baixo dela aparece como uma linha embaixo do título) */
