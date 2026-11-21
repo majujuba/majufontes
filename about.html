@@ -140,7 +140,9 @@
   /* topo: foto centralizada, flor azul em cima (casada pelos 126 pixels: escala 0,766), "oii, sou maju" acima da faixa */
   html.celular .hero-bg { left: 0; right: 0; height: var(--hero); }
   html.celular .hero-foto { left: 0; right: 0; top: 0; height: var(--hero); }
-  html.celular .hero-foto img.esquerda, html.celular .hero-foto img.direita { display: none; }
+  html.celular .hero-foto img.esquerda, html.celular .hero-foto img.direita, html.celular .hero-foto img.centro { display: none; }
+  .hero-foto img.celular-foto { display: none; }
+  html.celular .hero-foto img.celular-foto { display: block; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; }
   html.celular .hero-foto img.centro { top: 0; height: 100%; width: auto; aspect-ratio: 1573 / 885; left: 50%;
     transform: translateX(-52%); clip-path: none; }
   html.celular .hero-fundo { left: 0; right: 0; top: calc(var(--hero) - 300px); height: 340px; }
@@ -184,6 +186,7 @@
     <img decoding="async" class="esquerda" src="assets/about-foto.gif" alt="">
     <img decoding="async" class="centro" src="assets/about-foto.gif" alt="">
     <img decoding="async" class="direita" src="assets/about-foto.gif" alt="">
+    <img decoding="async" class="celular-foto" src="assets/about-foto-celular.gif" alt="" loading="lazy">
   </div>
   <div class="abs hero-fundo decor"></div>
   <iframe class="abs flor-topo decor" id="flor-topo" src="assets/desenho-azul-topo.html?esperar" title="flor e pixels — azul" scrolling="no" tabindex="-1" aria-hidden="true"></iframe>
@@ -269,6 +272,13 @@
   const tenta = () => { if (pronta && window.__carregou) pronta.postMessage('comecar', '*'); };
   addEventListener('message', e => { if (e.data === 'flor-pronta' && e.source === f.contentWindow) { pronta = e.source; tenta(); } });
   quandoCarregar(tenta);
+  // no celular a linha fica um pouco mais baixa que os pixels (como no Figma "Mobile")
+  const ajustaLinha = () => { try {
+    const g = f.contentDocument.getElementById('roxo');
+    if (g) g.setAttribute('transform', document.documentElement.classList.contains('celular') ? 'translate(0 43)' : '');
+  } catch (e) {} };
+  f.addEventListener('load', ajustaLinha); ajustaLinha();
+  addEventListener('celular-mudou', ajustaLinha);
 })();
 </script>
 <!-- faixa roxa com as palavras em movimento -->
