@@ -566,9 +566,9 @@ const desloca = document.getElementById('desloca');
 
 /* desempenho: a animação para quando a flor sai da tela, e a ondulação (o filtro mais
    pesado) é atualizada a ~30 quadros por segundo, o bastante para um movimento lento */
-// no celular (toque) a ondulação é refeita ~10 vezes por segundo: o filtro é pesado no iPhone e o movimento é lento
+// no celular (toque) a ondulação fica parada (ver ONDA_INTERVALO) e os pixels esmaecem por transição CSS: o iPhone travava
 const TOQUE = matchMedia("(hover: none), (pointer: coarse)").matches;
-const ONDA_INTERVALO = TOQUE ? 100 : 33;
+const ONDA_INTERVALO = TOQUE ? Infinity : 33;   // celular: a linha fica com a ondulação desenhada, mas PARADA — refazer o filtro (mesmo 10x/s) travava o iPhone
 let visivel = true, rodando = false, ultimaOnda = -1e9;
 function liga(){ if(!rodando){ rodando = true; requestAnimationFrame(quadro); } }
 if('IntersectionObserver' in window){
@@ -582,7 +582,7 @@ addEventListener('message', e => { if(e.data === 'onda-pausa') pausada = true; e
 function quadro(t){
   const dt = ultimoT === null ? 0 : Math.min(100, t - ultimoT); ultimoT = t;
   if(!pausada) tempoOnda += dt;
-  const vezPix = t - ultimoPix >= (TOQUE ? 50 : 33); if(vezPix) ultimoPix = t;  if(!visivel){ rodando = false; ultimoT = null; return; }
+  const vezPix = t - ultimoPix >= (TOQUE ? 100 : 33); if(vezPix) ultimoPix = t;  if(!visivel){ rodando = false; ultimoT = null; return; }
   if(vezPix) for(const p of pixels){
     if(t >= p.proxima){
       p.de = p.para;
@@ -592,8 +592,12 @@ function quadro(t){
       p.proxima = t + p.dur + rnd(PAUSA_MIN,PAUSA_MAX)/vel;
     }
     if(t - p.inicio <= p.dur + 40){
-      const k = suave(Math.min(1,(t-p.inicio)/p.dur));
-      p.el.style.opacity = (p.de + (p.para-p.de)*k).toFixed(3);
+      if(TOQUE){   // celular: o próprio navegador faz o esmaecimento (transição CSS), sem o script mexer em cada pixel a cada quadro
+        if(p.css !== p.inicio){ p.css = p.inicio; p.el.style.transition = "opacity "+Math.max(0,Math.round(p.inicio+p.dur-t))+"ms cubic-bezier(.65,0,.35,1)"; p.el.style.opacity = p.para; }
+      } else {
+        const k = suave(Math.min(1,(t-p.inicio)/p.dur));
+        p.el.style.opacity = (p.de + (p.para-p.de)*k).toFixed(3);
+      }
     }
   }
   if(!pausada && t - ultimaOnda >= ONDA_INTERVALO){

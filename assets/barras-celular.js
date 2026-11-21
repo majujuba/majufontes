@@ -14,7 +14,9 @@
     if (r && vazia(corR)) corR = getComputedStyle(r).backgroundColor;
     if (!vazia(corH)) meta.content = corH;
     // o conteúdo das páginas tem fundo próprio: esta cor só aparece fora dele (barra de baixo, "puxar" a página)
-    if (!vazia(corR)) document.documentElement.style.backgroundColor = corR;
+    // o <body> também: o Safari do iPhone pinta o espaço abaixo do rodapé (atrás da barra de baixo) com a cor do body,
+    // que era o cinza do site — aparecia uma faixa clara no fim da página (pedido dela)
+    if (!vazia(corR)) document.documentElement.style.backgroundColor = document.body.style.backgroundColor = corR;
   }
   if (document.readyState === 'loading') addEventListener('DOMContentLoaded', aplica); else aplica();
 })();

@@ -160,16 +160,19 @@
      enquanto a página rola (window.__rolando, de assets/desempenho.js); têm relógio próprio,
      então continuam de onde pararam, sem salto. As palavras seguem andando normalmente. */
   let tempoCorda = 0, tempoOnda = performance.now(), ultimoT = null, ultimaCorda = -1e9;
+  // celular (toque): a forma da corda e a ondulação ficam paradas depois do primeiro quadro (o filtro refeito travava o iPhone);
+  // as palavras continuam andando
+  const TOQUE = matchMedia('(hover: none), (pointer: coarse)').matches;
   function quadro(t) {
     if (!visivel) { rodando = false; ultimoT = null; return; }
     if (t0 === null) t0 = t;
     const dt = ultimoT === null ? 0 : Math.min(100, t - ultimoT); ultimoT = t;
     const pausa = !!window.__rolando;
     if (!pausa) { tempoCorda += dt; tempoOnda += dt; }
-    if (!pausa && t - ultimaCorda >= 33) { ultimaCorda = t; curvaCorda(tempoCorda / 1000); }
+    if (!pausa && t - ultimaCorda >= 33 && (!TOQUE || ultimaCorda < 0)) { ultimaCorda = t; curvaCorda(tempoCorda / 1000); }
     posiciona(((t - t0) / 1000 * VELOCIDADE) % ciclo);
     // ondulação da faixa: mesma fórmula das flores, atualizada a ~30 quadros/s
-    if (!pausa && t - ultimaOnda >= 33) {
+    if (!pausa && t - ultimaOnda >= 33 && (!TOQUE || ultimaOnda < 0)) {
       ultimaOnda = t;
       const tt = tempoOnda * 0.001 * ONDA_VELOCIDADE;
       const k = ONDA_FREQ[0] / 0.009;
