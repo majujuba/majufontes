@@ -98,15 +98,15 @@ html.celular .rodape {
   position: relative !important; left: auto !important; right: auto !important; top: auto !important; bottom: auto !important;
   width: auto !important; height: auto !important; background: #3F3166; z-index: 2;
   display: flex; flex-direction: column; align-items: flex-start;
-  padding: 36px 20px calc(22px + env(safe-area-inset-bottom, 0px));
+  padding: 24px 20px calc(18px + env(safe-area-inset-bottom, 0px));
 }
 html.celular .rodape::before { display: none; }
 html.celular .rodape > * { position: static !important; left: auto !important; right: auto !important; top: auto !important; bottom: auto !important; width: auto !important; height: auto !important; }
-html.celular .rodape .estrela { order: 0; align-self: center; width: 128px !important; height: 128px !important; margin-bottom: 26px; }
+html.celular .rodape .estrela { order: 0; align-self: center; width: 92px !important; height: 92px !important; margin-bottom: 22px; }
 html.celular .rodape .contato { order: 1; min-width: 0; max-width: 100%; }
 html.celular .rodape .contato small { font-size: 14px; line-height: 1.25; }
 html.celular .rodape .contato a { font-size: 21px !important; line-height: 1.2 !important; white-space: normal !important; overflow-wrap: anywhere; }
-html.celular .rodape .links.sociais { order: 2; display: flex; gap: 24px; margin-top: 24px; text-align: left !important; font-size: 18px !important; }
+html.celular .rodape .links.sociais { order: 2; display: flex; gap: 22px; margin-top: 18px; text-align: left !important; font-size: 18px !important; }
 html.celular .rodape .links.sociais a { height: auto !important; padding: 4px 0; }
 html.celular .rodape .links.paginas { display: none !important; }
-html.celular .rodape .copy { order: 3; margin-top: 24px; font-size: 13px !important; }
+html.celular .rodape .copy { order: 3; margin-top: 18px; font-size: 13px !important; }
