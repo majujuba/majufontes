@@ -52,7 +52,7 @@
       '<li><a class="' + ativo('about.html') + '" href="about.html"><small>02</small>about</a></li>' +
       '<li><a class="' + ativo('contact.html') + '" href="contact.html"><small>03</small>contact</a></li>' +
     '</ul>' +
-    '<div class="menu-flor" aria-hidden="true"></div>';
+    '<div class="menu-flor-caixa" aria-hidden="true"><div class="menu-flor"></div></div>';
   document.body.appendChild(menu);
   const fechar = menu.querySelector('.menu-fechar');
 

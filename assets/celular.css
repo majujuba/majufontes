@@ -59,9 +59,10 @@ html.celular .menu-fechar span {
 html.celular .menu-celular.aberto .menu-fechar span:first-child { transform: rotate(45deg); }
 html.celular .menu-celular.aberto .menu-fechar span:last-child  { transform: rotate(-45deg); }
 
-/* links um pouco abaixo do meio da tela, como na referência */
-html.celular .menu-links { list-style: none; margin: 0; padding: 0 24px 14vh; flex: 1 1 auto; display: flex; flex-direction: column;
-  justify-content: flex-end; gap: 2px; position: relative; z-index: 2; max-height: 72vh; }
+/* links logo acima da flor, como na referência (o "contact" termina 76% da largura da tela acima do pé da tela):
+   assim a relação entre os links e a flor é a mesma em telas mais curtas ou mais compridas */
+html.celular .menu-links { list-style: none; margin: 0; padding: 0 24px 76vw; flex: 1 1 auto; display: flex; flex-direction: column;
+  justify-content: flex-end; gap: 2px; position: relative; z-index: 2; }
 html.celular .menu-links a {
   display: flex; align-items: baseline; gap: 14px; padding: 4px 0;
   font: 700 clamp(48px, 15vw, 72px)/1.05 "the-seasons", "The Seasons", serif; color: var(--menu-texto, #D8D8D8);
@@ -80,6 +81,9 @@ html.celular .menu-celular.aberto .menu-links li:nth-child(4) a { transition-del
 /* a flor azul animada no canto de baixo à direita, grande e de pé (como na referência) */
 /* medida na referência dela (tela de 432 × 940): os 253 pixels da flor casaram com o desenho na escala 0,784,
    girado 90° e espelhado, com o canto preso embaixo à direita; tudo proporcional à largura da tela */
+/* recorte: na referência a flor só aparece da altura do "contact" para baixo (84% da largura acima do pé da tela);
+   o resto do desenho (a ponta enrolada que subia até o "about") fica escondido */
+html.celular .menu-flor-caixa { position: absolute; left: 0; right: 0; bottom: 0; height: 84vw; overflow: hidden; z-index: 1; pointer-events: none; }
 html.celular .menu-flor { position: absolute; left: 129.05vw; top: calc(100% + 55.12vw); width: 166.97vw; height: 88.01vw; z-index: 1; pointer-events: none;
   transform-origin: 0 0; transform: rotate(90deg) scaleX(-1); opacity: 0; transition: opacity .5s ease .2s; }
 html.celular .menu-celular.aberto .menu-flor { opacity: 1; }
