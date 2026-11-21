@@ -199,8 +199,13 @@
   html.celular .quebra-celular { display: block; }   /* "projetos →" na segunda linha */
   html.celular .card.mais .sub { left: 28px; top: 126px; width: calc(100% - 56px); font-size: 18px; line-height: 22px; }
   html.celular .card.mais .espiral { left: 28px; right: auto; top: 312px; }
-  html.celular .card.mais .desenho-caixa { left: 0; right: 0; top: 186px; bottom: 0; width: auto; height: auto; border-radius: 0; }
-  html.celular .card.mais .desenho-caixa iframe { left: -36%; top: -14%; width: 175%; height: auto; aspect-ratio: 920 / 485; }
+  /* a caixa da flor ocupa o card inteiro (antes começava em y 186 e cortava a linha reta em cima);
+     a flor continua no mesmo lugar e só a borda do próprio card recorta */
+  html.celular .card.mais .desenho-caixa { left: 0; right: 0; top: 0; bottom: 0; width: auto; height: auto; border-radius: 0; z-index: 0; }
+  html.celular .card.mais .desenho-caixa iframe { left: -36%; top: 162.8px; width: 175%; height: auto; aspect-ratio: 920 / 485; }
+  html.celular .card.mais .chamada, html.celular .card.mais .sub, html.celular .card.mais .espiral { z-index: 1; }
+  /* o último card ("veja mais") para no topo da pilha, logo abaixo da faixa sob a header (como na referência dela) */
+  html.celular .pilha .card.mais { top: var(--topo-pilha); }
 
   html.celular .rodape { order: 2; }
 </style>
