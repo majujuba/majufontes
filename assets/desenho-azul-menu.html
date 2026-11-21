@@ -27,6 +27,12 @@
   html,body{background:transparent!important}
   svg{width:100%!important;height:100%!important;max-height:none!important;min-height:0!important}
 </style>
+<script>
+  /* cores pelo endereço (menu do celular): ?linha=#731212&pixel=#3f3166 — a linha é pintada por var(--linha) no filtro e os pixels por var(--pixel) */
+  (() => { const q = new URLSearchParams(location.search), r = document.documentElement;
+    if (q.get("linha")) r.style.setProperty("--linha", q.get("linha"));
+    if (q.get("pixel")) r.style.setProperty("--pixel", q.get("pixel")); })();
+</script>
 </head>
 <body>
 <svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Flor azul ondulando com pixels piscando">

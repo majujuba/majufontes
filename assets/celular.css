@@ -87,13 +87,9 @@ html.celular .menu-flor { position: absolute; left: 24.25vw; top: calc(100% - 12
   transform-origin: 0 0; transform: rotate(90deg) scaleY(-1); opacity: 0; transition: opacity .5s ease .2s; }
 html.celular .menu-celular.aberto .menu-flor { opacity: 1; }
 html.celular .menu-flor iframe { width: 100%; height: 100%; border: 0; background: transparent; }
-/* nos menus de fundo claro a flor é a VERMELHA (assets/desenho-vermelho-flor.html, a da Home), no lugar da azul (pedido dela):
-   é o mesmo desenho, então o traço dela foi encaixado sobre o da azul (comparando os dois contornos): a caixa acima continua
-   sendo a do desenho azul (1920 × 1080); o iframe da vermelha (viewBox 863 × 486, que ocupa a caixa toda) é reduzido para 75%,
-   girado 9,2° (a azul estava um pouco girada) e deslocado até o lugar da azul */
-html.celular .menu-flor iframe.vermelha { transform-origin: 49.93% 49.85%; transform: translate(5.59%, 10.33%) rotate(9.2deg) scale(.94); }   /* 25% maior que o encaixe exato (.7515), mesmo centro — pedido dela */
-/* a azul (menu de fundo roxo) acompanha: 25% maior, a partir do mesmo centro (1066, 650 da caixa) — mesmo tamanho e lugar da vermelha */
-html.celular .menu-flor iframe.azul { transform-origin: 55.52% 60.19%; transform: scale(1.25); }
+/* a flor 25% maior que na referência (a partir do centro do desenho, 1066 × 650 da caixa) e um pouco mais para baixo, sem encostar
+   no "contact" (pedidos dela). Com a caixa girada, "descer" na tela é andar no x do desenho: translate(8%, 0) ≈ 17,5vw para baixo */
+html.celular .menu-flor iframe { transform-origin: 55.52% 60.19%; transform: translate(8%, 0) scale(1.25); }
 
 @media (prefers-reduced-motion: reduce) {
   html.celular .menu-celular, html.celular .menu-celular.aberto { transition: none; }
