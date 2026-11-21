@@ -34,6 +34,9 @@
     const cv = document.createElement('canvas');
     cv.setAttribute('aria-hidden', 'true'); cv.setAttribute('data-transicao', '');
     cv.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;z-index:2147483000;pointer-events:none;display:block';
+    // no celular fica presa à página, na altura da rolagem atual: fixa na tela, o Safari do iPhone pintava as barras do navegador com ela
+    if (matchMedia('(hover: none), (pointer: coarse)').matches)
+      cv.style.cssText = 'position:absolute;left:' + scrollX + 'px;top:' + scrollY + 'px;width:100vw;height:100vh;z-index:2147483000;pointer-events:none;display:block';
     const dpr = Math.min(devicePixelRatio || 1, 2), W = innerWidth, H = innerHeight;
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
     const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);

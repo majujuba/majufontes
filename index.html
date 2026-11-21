@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="assets/barra-rolagem.css">
 <link rel="stylesheet" href="assets/celular.css">
 <!-- transição de pixels que se dissolvem, da Home para a about (precisa ficar no head) -->
-<script src="assets/transicao-dissolve.js"></script><style>
+<script src="assets/transicao-dissolve.js"></script><script src="assets/barras-celular.js"></script><style>
   :root {
     --roxo: #3F3166;
     --azul: #84A9D9;
@@ -154,6 +154,9 @@
      a estrela entra (cresce de 90% a 100%), fica, sai ampliando (110%) e a tela some */
   .carregando { position: fixed; inset: 0; z-index: 2147480000; background: #84A9D9;
     display: flex; align-items: center; justify-content: center; transition: opacity .7s ease; }
+  /* no celular a tela de carregamento fica presa à página (a rolagem está travada enquanto ela aparece): fixa na tela,
+     o Safari do iPhone pintava as barras do navegador com o azul dela */
+  @media (hover: none), (pointer: coarse) { .carregando { position: absolute; bottom: auto; height: 100vh; height: 100lvh; } }
   html:not(.js) .carregando { display: none; }
   .carregando img { width: 120px; height: auto; opacity: 0; transform: scale(.9);
     transition: opacity .6s ease, transform .6s cubic-bezier(.22,1,.36,1); }
