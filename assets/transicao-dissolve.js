@@ -10,7 +10,10 @@
     ['#B2C3D8', 22],         // azul-claro
     ['#D8D8D8', 18]          // cinza-claro
   ];
-  const COLUNAS = 48;        // quadrados por linha (≈ largura da tela / 48) — era 30
+  // quadrados por linha: 48 no computador (≈ 40 px cada); no celular 12, para os quadrados ficarem grandes (≈ 31 px numa tela de 375)
+  // (celular = lado menor da tela até 600 px, a mesma regra de assets/celular.js; vale também nas páginas que ainda usam o layout de 1280)
+  const CELULAR = Math.min(screen.width, screen.height) <= 600 || innerWidth <= 760;
+  const COLUNAS = CELULAR ? 12 : 48;
   const COBRIR_MS = 500;     // quadrados aparecendo até cobrir a tela (cada um esmaece ao entrar) — era 320
   const SEGURAR_MS = 100;    // pausa já na about, coberta
   const DISSOLVER_MS = 500;  // quadrados sumindo — igual ao tempo de surgir
