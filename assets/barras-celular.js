@@ -10,11 +10,16 @@
   document.head.appendChild(meta);
   const vazia = c => !c || c === 'transparent' || /^rgba\(.*,\s*0\)$/.test(c);
   let imposta = window.__corBarraInicial || null;   // cor de uma camada que cobre a tela
-  let corHeader = null;
-  const atualiza = () => { const c = imposta || corHeader; if (c) meta.content = c; };
+  let corHeader = null, corRodape = null, fundoImposto = null;   // fundoImposto: cor também da barra de baixo (tela de carregamento)
+  const atualiza = () => {
+    const c = imposta || corHeader; if (c) meta.content = c;
+    const f = fundoImposto || corRodape;
+    if (f && document.body) document.documentElement.style.backgroundColor = document.body.style.backgroundColor = f;
+    else if (f) document.documentElement.style.backgroundColor = f;
+  };
   window.corBarra = {
-    poe(cor) { imposta = cor; atualiza(); },
-    volta() { imposta = null; atualiza(); }
+    poe(cor, fundoTambem) { imposta = cor; fundoImposto = fundoTambem ? cor : null; atualiza(); },
+    volta() { imposta = null; fundoImposto = null; atualiza(); }
   };
   atualiza();
   function aplica() {
@@ -23,11 +28,11 @@
     let corR = r && getComputedStyle(r, '::before').backgroundColor;
     if (r && vazia(corR)) corR = getComputedStyle(r).backgroundColor;
     if (!vazia(corH)) corHeader = corH;
-    atualiza();
     // o conteúdo das páginas tem fundo próprio: esta cor só aparece fora dele (barra de baixo, "puxar" a página)
     // o <body> também: o Safari do iPhone pinta o espaço abaixo do rodapé (atrás da barra de baixo) com a cor do body,
     // que era o cinza do site — aparecia uma faixa clara no fim da página (pedido dela)
-    if (!vazia(corR)) document.documentElement.style.backgroundColor = document.body.style.backgroundColor = corR;
+    if (!vazia(corR)) corRodape = corR;
+    atualiza();
   }
   if (document.readyState === 'loading') addEventListener('DOMContentLoaded', aplica); else aplica();
 })();
