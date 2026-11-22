@@ -70,6 +70,22 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(arruma);   // o título pode mudar de tamanho e empurrar a página
   }
 
+  /* revista / livreto virtual (Vizão, Recorte): arrastar o dedo para o lado vira a folha — para a esquerda avança,
+     para a direita volta, como numa revista (usa as próprias setas, então respeita o começo e o fim) */
+  const livro = document.getElementById('revista-virtual'), folhas = livro && livro.querySelector('.revista');
+  if (folhas) {
+    let x0 = null, y0 = 0;
+    folhas.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+    folhas.addEventListener('touchend', e => {
+      if (x0 === null) return;
+      const t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0;
+      x0 = null;
+      if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      const seta = livro.querySelector(dx < 0 ? '.seta-livro.prox' : '.seta-livro.ant');
+      if (seta && !seta.disabled) seta.click();
+    }, { passive: true });
+  }
+
   const botao = document.querySelector('.saiba-mais'), sec = document.getElementById('sobre-projeto');
   if (!botao || !sec) return;
   const txt = botao.querySelector('.txt');

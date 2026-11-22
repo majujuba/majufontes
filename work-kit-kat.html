@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1280">
+<!-- celular: troca a viewport e liga o layout de celular antes de desenhar (ver assets/celular.js) -->
+<script src="assets/celular.js"></script>
 <title>Kit Kat — maju. designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
@@ -12,6 +14,10 @@
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- celular: header, menu e rodapé comuns a todas as páginas -->
+<link rel="stylesheet" href="assets/celular.css">
+<!-- celular: a dinâmica comum das páginas de projeto (abertura, coluna de imagens, "saiba mais!") -->
+<link rel="stylesheet" href="assets/projeto-celular.css">
 <!-- transição de pixels que se dissolvem (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script><script src="assets/barras-celular.js"></script>
 <style>
@@ -127,6 +133,11 @@
   @media (prefers-reduced-motion: reduce) {
     .js .fade-in-element { opacity: 1; transform: none; transition: none; }
   }
+
+  /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do Kit Kat ══════════ */
+  html.celular { --fundo-pagina: var(--roxo); }
+  /* "Iai, bora de Match?" no fim das imagens, centralizada, no fluxo da coluna */
+  html.celular .page > .assinatura { position: relative; left: auto; top: auto; width: 80vw; height: auto; aspect-ratio: 620 / 134; margin: 10vw auto 0; }
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -145,7 +156,8 @@
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Kit Kat</h1>
 
   <!-- apresentação -->
-  <section class="bloco apresentacao fade-in-element">
+  <!-- no celular este texto fica depois das imagens, fechado, e abre pelo botão "saiba mais!" -->
+  <section class="bloco apresentacao fade-in-element" id="sobre-projeto">
     <p class="texto"><i>KitKat Match Up</i> nasce de um desafio proposto em transformar o conceito de "pausa" em um novo produto de embalagem para a marca KitKat. A partir desse desafio, o projeto se debruça sobre o <b>momento do “break”</b> como recorte temático, entendendo que uma pausa é também um espaço de <b>conexão em coletivo.</b> Construímos uma linha de sabores organizada em três eixos complementares: Identidade, Sabor e Compartilhamento; cada um com seu próprio sistema visual.</p>
     <p class="ficha disciplina"><strong>Disciplina</strong>Embalagens</p>
     <p class="ficha equipe"><strong>Equipe</strong>Laura Alcantara, Naian Menginelli</p>
@@ -160,7 +172,7 @@
   <section class="bloco citacao lilas fade-in-element" style="left:51px; top:2190px; width:750px; height:440.2px">
     <img decoding="async" class="aspas" src="assets/kitkat/aspas-clara.png" alt="" style="left:97px; top:76px">
     <span class="grifo" style="left:458px; top:169px; width:199px"></span>
-    <p style="left:97px; top:160px; line-height:52px">uma linha como Value Up<br>perfeito para KitKat,<br>elevando a experiência<br>sem perder sua essência.</p>
+    <p style="left:97px; top:160px; line-height:52px">uma linha como <mark>Value Up</mark><br>perfeito para KitKat,<br>elevando a experiência<br>sem perder sua essência.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
   <img decoding="async" class="peca fade-in-element" src="assets/kitkat/fingers.jpg" alt="Fingers de KitKat nos sabores morango e pudim" loading="lazy" style="left:51px; top:2640px; width:750px; height:549px">
@@ -171,13 +183,16 @@
     <img decoding="async" class="aspas" src="assets/kitkat/aspas-clara.png" alt="" style="left:89px; top:86px">
     <span class="grifo" style="left:89px; top:378px; width:343px"></span>
     <span class="grifo" style="left:89px; top:429px; width:304px"></span>
-    <p style="left:89px; top:170px">os elementos<br>coloridos nas<br>embalagens são<br>para comunicar<br>sabor intenso e<br>cremosidade.</p>
+    <p style="left:89px; top:170px">os elementos<br>coloridos nas<br>embalagens são<br>para comunicar<br><mark>sabor intenso e<br>cremosidade</mark>.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
   <img decoding="async" class="peca fade-in-element" src="assets/kitkat/post.jpg" alt="Post do KitKat Match Up no Instagram" loading="lazy" style="left:604px; top:3690px; width:837px; height:546px">
   <img decoding="async" class="peca fade-in-element" src="assets/kitkat/pessoa.jpg" alt="Pessoa segurando o KitKat Match Up" loading="lazy" style="left:51px; top:4245px; width:541px; height:777px">
   <img decoding="async" class="peca fade-in-element" src="assets/kitkat/display.jpg" alt="Display diagonal do KitKat Match Up" loading="lazy" style="left:605px; top:4245px; width:836px; height:777px">
   <img decoding="async" class="abs assinatura fade-in-element" src="assets/kitkat/assinatura.webp" alt="Iai, bora de Match?" loading="lazy">
+
+  <!-- celular: botão que abre/fecha o texto do projeto (no computador não aparece) -->
+  <div class="saiba"><button class="botao-pixel saiba-mais" type="button" aria-expanded="false" aria-controls="sobre-projeto"><span class="txt">saiba mais!</span><span class="c1"></span><span class="c2"></span></button></div>
 
   <!-- anterior / próximo (ordem da página work: Recorte → Kit Kat → Fósforo) -->
   <nav class="abs navega" aria-label="outros projetos">
@@ -246,5 +261,9 @@
 <script src="assets/barra-rolagem.js"></script>
 <!-- cursor com rastro de pixels -->
 <script src="assets/cursor-trail.js"></script>
+<!-- celular: proporção das imagens, título e botão "saiba mais!" (comum às páginas de projeto) -->
+<script src="assets/projeto-celular.js"></script>
+<!-- menu do celular (botão hambúrguer) -->
+<script src="assets/menu-celular.js"></script>
 </body>
 </html>

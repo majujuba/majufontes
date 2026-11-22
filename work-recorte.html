@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1280">
+<!-- celular: troca a viewport e liga o layout de celular antes de desenhar (ver assets/celular.js) -->
+<script src="assets/celular.js"></script>
 <title>Recorte — maju. designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
@@ -12,6 +14,10 @@
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- celular: header, menu e rodapé comuns a todas as páginas -->
+<link rel="stylesheet" href="assets/celular.css">
+<!-- celular: a dinâmica comum das páginas de projeto (abertura, coluna de imagens, "saiba mais!") -->
+<link rel="stylesheet" href="assets/projeto-celular.css">
 <!-- transição de pixels que se dissolvem (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script><script src="assets/barras-celular.js"></script>
 <style>
@@ -156,6 +162,12 @@
   @media (prefers-reduced-motion: reduce) {
     .js .fade-in-element { opacity: 1; transform: none; transition: none; }
   }
+
+  /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do Recorte ══════════ */
+  html.celular { --revista-ar: 778 / 550; }   /* livreto virtual (regras em projeto-celular.css) */
+  /* miniaturas: o bloco com a mesma proporção do computador e a grade de páginas nas mesmas margens, em proporção */
+  html.celular .page > .miniaturas { aspect-ratio: 1389 / 1152; }
+  html.celular .miniaturas > img.grade { left: 1.87%; top: 3.91%; width: 96.18%; height: 92.14%; }
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -174,7 +186,8 @@
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Recorte</h1>
 
   <!-- apresentação -->
-  <section class="bloco apresentacao fade-in-element">
+  <!-- no celular este texto fica depois das imagens, fechado, e abre pelo botão "saiba mais!" -->
+  <section class="bloco apresentacao fade-in-element" id="sobre-projeto">
     <p class="texto">Neste projeto, a proposta consistiu em selecionar conteúdos da Revista Recorte e diagramá-los no modelo de livreto físico, para isso, foi-se executada uma pesquisa aprofundada de textos juntamente com o desenvolvimento de uma identidade visual com coesão entre o conteúdo textual e suas imagens, legibilidade e organização tipográfica. O livreto obteve como base o <b>olhar feminino sobre o design e a arte</b>. Todos os textos são apresentados sob essa ótica, e a identidade visual reforça e complementa o conteúdo, promovendo uma experiência visual e conceitual integrada.</p>
     <p class="ficha disciplina"><strong>Disciplina</strong>Fundamentos Gráficos</p>
     <p class="ficha ano"><strong>Ano</strong>2024-2</p>
@@ -193,7 +206,7 @@
   <section class="bloco citacao lilas fade-in-element">
     <img decoding="async" class="aspas" src="assets/recorte/aspas-roxa.png" alt="" style="left:69px; top:65px">
     <span class="grifo" style="left:117px; top:157px; width:330px"></span>
-    <p style="left:77px; top:149px; width:581px">o olhar feminino sobre o design e a arte, todos os textos foram escritos por mulheres que contam sobre, ou sua experiência na área das artes ou de outras mulheres.</p>
+    <p style="left:77px; top:149px; width:581px">o <mark>olhar feminino</mark> sobre o design e a arte, todos os textos foram escritos por mulheres que contam sobre, ou sua experiência na área das artes ou de outras mulheres.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
 
@@ -211,6 +224,9 @@
     <p class="contador" aria-live="polite"><span class="txt">pág 1 – 44</span><span class="c1"></span><span class="c2"></span></p>
     <span class="c1"></span><span class="c2"></span>
   </div>
+
+  <!-- celular: botão que abre/fecha o texto do projeto (no computador não aparece) -->
+  <div class="saiba"><button class="botao-pixel saiba-mais" type="button" aria-expanded="false" aria-controls="sobre-projeto"><span class="txt">saiba mais!</span><span class="c1"></span><span class="c2"></span></button></div>
 
   <!-- anterior / próximo (ordem da página work: Lord Ruthven → Recorte → Kit Kat) -->
   <nav class="abs navega" aria-label="outros projetos">
@@ -369,5 +385,9 @@
 <script src="assets/barra-rolagem.js"></script>
 <!-- cursor com rastro de pixels -->
 <script src="assets/cursor-trail.js"></script>
+<!-- celular: proporção das imagens, título e botão "saiba mais!" (comum às páginas de projeto) -->
+<script src="assets/projeto-celular.js"></script>
+<!-- menu do celular (botão hambúrguer) -->
+<script src="assets/menu-celular.js"></script>
 </body>
 </html>

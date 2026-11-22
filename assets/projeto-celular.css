@@ -63,11 +63,19 @@ html.celular .titulo { position: relative; left: auto; top: auto; z-index: 1; ma
 .campo-adesivos { display: none; }
 html.celular .campo-adesivos { display: block; height: var(--campo-h, 100vw); margin: var(--vao) var(--m) 0; }
 
+/* revista / livreto virtual (Vizão, Recorte): as páginas duplas ocupam a largura; setas e contador numa linha embaixo.
+   Arrastar o dedo sobre as páginas também vira a folha (assets/projeto-celular.js). Cada página dá a proporção em --revista-ar */
+html.celular .page > .livro { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 4vw 3vw 3vw; }
+html.celular .revista { position: relative; left: auto; top: auto; width: 100%; height: auto; aspect-ratio: var(--revista-ar, 816 / 550); }
+html.celular .livro .seta-livro { position: relative; top: auto; left: auto; right: auto; width: 44px; height: 44px; padding: 5px 6px; margin-top: 3vw; }
+html.celular .livro .seta-livro.prox { order: 2; }
+html.celular .livro .contador { position: relative; left: auto; top: auto; order: 1; width: auto; height: 30px; padding: 0 14px; margin-top: 3vw; font-size: 16px; }
+
 /* citações: o texto se ajusta à largura e o grifo se desenha por trás das palavras, da esquerda para a direita */
-html.celular .page > .citacao { padding: 10vw 7vw 11vw; }
+html.celular .page > .citacao { padding: 10vw 7vw 11vw; aspect-ratio: auto; }   /* a altura vem do texto (algumas têm medidas no style) */
 html.celular .citacao .aspas { position: static; width: 11vw; height: auto; margin-bottom: 5vw; }
 html.celular .citacao .grifo { display: none; }
-html.celular .citacao p { position: static; width: auto !important; font-size: 7.6vw; line-height: 8.4vw; }
+html.celular .citacao p { position: static; width: auto !important; font-size: 7.6vw; line-height: 8.4vw !important; white-space: normal; }
 html.celular .citacao mark { background: linear-gradient(var(--grifo), var(--grifo)) 0 55% / 0% 66% no-repeat; }
 html.celular.js .citacao mark { transition: background-size 1.7s cubic-bezier(.65,0,.35,1) .5s; }
 html.celular .citacao.visivel mark, html.celular:not(.js) .citacao mark { background-size: 100% 66%; }
@@ -98,7 +106,8 @@ html.celular .apresentacao .ficha strong { font-size: 3.9vw; line-height: 5vw; }
 html.celular .ficha.disciplina { grid-column: 1; grid-row: 2; margin: 6vw 0 0 6vw; }
 html.celular .ficha.ano        { grid-column: 2; grid-row: 2; margin: 6vw 6vw 0 0; }
 html.celular .ficha.equipe     { grid-column: 1; grid-row: 3; margin: 4vw 0 7vw 6vw; }
-html.celular .apresentacao:not(:has(.equipe)) .ficha { margin-bottom: 7vw; }   /* projetos sem equipe: a folga embaixo fica na linha de cima */
+html.celular .apresentacao:not(:has(.equipe)) .ficha { margin-bottom: 7vw; }
+html.celular .apresentacao:not(:has(.disciplina)) .ficha.ano { grid-column: 1; margin-left: 6vw; }   /* só o ano (NSG): fica à esquerda */   /* projetos sem equipe: a folga embaixo fica na linha de cima */
 html.celular .apresentacao > p { opacity: 0; transform: translateY(14px); transition: opacity .3s ease, transform .3s ease; }
 html.celular .apresentacao.aberta > p { opacity: 1; transform: none;
   transition: opacity .7s ease .25s, transform .9s cubic-bezier(.22,1,.36,1) .25s; }

@@ -202,12 +202,6 @@
   html.celular .page > .pulseiras { aspect-ratio: 588 / 363; }
   html.celular .pulseiras > video { left: 0 !important; top: -12.534% !important; width: 100% !important; height: 121.488% !important; }
 
-  /* revista virtual: as páginas duplas ocupam a largura; setas e contador numa linha embaixo */
-  html.celular .page > .livro { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 4vw 3vw 3vw; }
-  html.celular .revista { position: relative; left: auto; top: auto; width: 100%; height: auto; aspect-ratio: 816 / 550; }
-  html.celular .livro .seta-livro { position: relative; top: auto; left: auto; right: auto; width: 44px; height: 44px; padding: 5px 6px; margin-top: 3vw; }
-  html.celular .livro .seta-livro.prox { order: 2; }
-  html.celular .livro .contador { position: relative; left: auto; top: auto; order: 1; width: auto; height: 30px; padding: 0 14px; margin-top: 3vw; font-size: 16px; }
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -531,7 +525,6 @@
   prox.addEventListener('click', () => vira(1));
   esq.addEventListener('click', () => vira(-1));
   dir.addEventListener('click', () => vira(1));
-  aoDeslizar(rev, lado => vira(-lado));   // dedo para a esquerda vira para a frente, como numa revista
   addEventListener('keydown', e => {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
     if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;

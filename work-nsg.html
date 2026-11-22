@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1280">
+<!-- celular: troca a viewport e liga o layout de celular antes de desenhar (ver assets/celular.js) -->
+<script src="assets/celular.js"></script>
 <title>Noise Gaming — maju. designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
@@ -12,6 +14,10 @@
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- celular: header, menu e rodapé comuns a todas as páginas -->
+<link rel="stylesheet" href="assets/celular.css">
+<!-- celular: a dinâmica comum das páginas de projeto (abertura, coluna de imagens, "saiba mais!") -->
+<link rel="stylesheet" href="assets/projeto-celular.css">
 <!-- transição de pixels que se dissolvem (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script><script src="assets/barras-celular.js"></script>
 <style>
@@ -108,6 +114,9 @@
   @media (prefers-reduced-motion: reduce) {
     .js .fade-in-element { opacity: 1; transform: none; transition: none; }
   }
+
+  /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é da Noise Gaming ══════════ */
+  html.celular { --fundo-pagina: var(--roxo); }
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -126,7 +135,8 @@
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Noise Gaming</h1>
 
   <!-- apresentação -->
-  <section class="bloco apresentacao fade-in-element">
+  <!-- no celular este texto fica depois das imagens, fechado, e abre pelo botão "saiba mais!" -->
+  <section class="bloco apresentacao fade-in-element" id="sobre-projeto">
     <p class="texto">A convite do time de e-sports Noise Gaming, tive a honra de liderar o rebranding da organização, com o objetivo de transmitir três pilares fundamentais: elegância, essência e valentia. Para atender às expectativas do público-alvo, a nova identidade visual foi cuidadosamente desenvolvida para alinhar-se às tendências modernas e minimalistas que definem o futuro dos e-sports.</p>
     <p class="ficha ano"><strong>Ano</strong>2025-1</p>
     <span class="c1"></span><span class="c2"></span>
@@ -143,6 +153,9 @@
   <div class="bloco fade-in-element" style="left:51px; top:3293px; width:456px; height:432px"><img decoding="async" src="assets/nsg/logo-verde.jpg" alt="Logo NSG bege sobre verde" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
   <div class="bloco fade-in-element" style="left:517px; top:3293px; width:456px; height:432px"><img decoding="async" src="assets/nsg/logo-bege.jpg" alt="Logo NSG verde sobre bege" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
   <div class="bloco fade-in-element" style="left:983px; top:3293px; width:456px; height:432px"><img decoding="async" src="assets/nsg/logo-preto.jpg" alt="Logo NSG bege sobre preto" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+
+  <!-- celular: botão que abre/fecha o texto do projeto (no computador não aparece) -->
+  <div class="saiba"><button class="botao-pixel saiba-mais" type="button" aria-expanded="false" aria-controls="sobre-projeto"><span class="txt">saiba mais!</span><span class="c1"></span><span class="c2"></span></button></div>
 
   <!-- anterior / próximo (ordem da página work: A Substância → NSG → Lord Ruthven) -->
   <nav class="abs navega" aria-label="outros projetos">
@@ -211,5 +224,9 @@
 <script src="assets/barra-rolagem.js"></script>
 <!-- cursor com rastro de pixels -->
 <script src="assets/cursor-trail.js"></script>
+<!-- celular: proporção das imagens, título e botão "saiba mais!" (comum às páginas de projeto) -->
+<script src="assets/projeto-celular.js"></script>
+<!-- menu do celular (botão hambúrguer) -->
+<script src="assets/menu-celular.js"></script>
 </body>
 </html>
