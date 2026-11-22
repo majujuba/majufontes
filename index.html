@@ -172,7 +172,7 @@
      (o que sobrar mostra o fundo da página, que já é a cor do rodapé — assets/barras-celular.js) */
   html.celular { overscroll-behavior-y: none; }
   html.celular body { overscroll-behavior-y: none; }
-  html.celular .frame { height: auto; overflow: visible; background: transparent;   /* o corte lateral é feito no <html> (assets/celular.css): sem "overflow" aqui o sticky da pilha funciona em todo Safari */ }
+  html.celular .frame { height: auto; overflow: visible; overflow-x: clip; background: transparent;   /* clip corta as laterais (o Safari do iPhone deixa arrastar para o lado se só o html cortar) sem atrapalhar o sticky */   /* o corte lateral é feito no <html> (assets/celular.css): sem "overflow" aqui o sticky da pilha funciona em todo Safari */ }
   html.celular .page { position: relative; left: 0; margin: 0; width: 100%; height: auto; overflow: visible;
     display: flex; flex-direction: column; padding-top: var(--hero); }
   /* topo: ocupa a tela; flor roxa em cima, "maju." no meio, flor vermelha embaixo indo para o cinza */
