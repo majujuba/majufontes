@@ -6,7 +6,9 @@
 .menu-botao, .menu-celular { display: none; }
 
 html.celular { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-html.celular body { overflow-x: hidden; }
+/* o corte lateral fica no <html> (vai para a janela), não no <body>: com o body cortando, o Safari às vezes trata o body
+   como a área que rola, e os cards "sticky" da home deixam de empilhar e as laterais embaixo ficam soltas (pedido dela) */
+html.celular { overflow-x: hidden; overflow-x: clip; }
 /* a barra de rolagem desenhada é para mouse; no celular fica a do próprio aparelho */
 html.celular .barra-trilho { display: none !important; }
 

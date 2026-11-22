@@ -168,7 +168,7 @@
 
   /* ══════════ VERSÃO CELULAR (só com html.celular — ver assets/celular.js; o desktop acima não muda) ══════════ */
   html.celular { --hero: max(600px, 100svh); --lado: 18px; }
-  html.celular .frame { height: auto; overflow: clip; }
+  html.celular .frame { height: auto; overflow: visible;   /* o corte lateral é feito no <html> (assets/celular.css): sem "overflow" aqui o sticky da pilha funciona em todo Safari */ }
   html.celular .page { position: relative; left: 0; margin: 0; width: 100%; height: auto; overflow: visible;
     display: flex; flex-direction: column; padding-top: var(--hero); }
   /* topo: ocupa a tela; flor roxa em cima, "maju." no meio, flor vermelha embaixo indo para o cinza */
