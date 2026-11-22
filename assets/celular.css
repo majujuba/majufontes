@@ -37,6 +37,7 @@ html.celular .menu-pixels { display: none; position: fixed; left: 0; top: 0; z-i
 html.celular .menu-celular {
   display: flex; flex-direction: column; position: fixed; inset: 0; z-index: 2147470000;
   background: var(--menu-fundo, #3F3166); color: var(--menu-texto, #D8D8D8); overflow: hidden; overscroll-behavior: contain;
+  box-shadow: 0 400px 0 0 var(--menu-fundo, #3F3166);   /* cobre também a área atrás das barras flutuantes do Safari, sem mexer no layout */
   padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
   --menu-destaque: #84A9D9;
   visibility: hidden; opacity: 0; transition: none;

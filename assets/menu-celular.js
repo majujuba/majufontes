@@ -82,7 +82,8 @@
       document.body.appendChild(tela);
       ctx = tela.getContext('2d');
     }
-    const dpr = Math.min(2, devicePixelRatio || 1), W = innerWidth, H = innerHeight;
+    // altura da tela física inteira (com folga): atrás das barras flutuantes do Safari não sobra faixa sem pixels
+    const dpr = Math.min(2, devicePixelRatio || 1), W = innerWidth, H = Math.max(innerHeight, screen.height || 0) + 80;
     tela.width = Math.ceil(W * dpr); tela.height = Math.ceil(H * dpr);
     tela.style.width = W + 'px'; tela.style.height = H + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -101,7 +102,7 @@
     const cor = corFundo, t0 = performance.now();
     const passo = agora => {
       const p = Math.min(1, (agora - t0) / DURA);
-      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      ctx.clearRect(0, 0, tela.width, tela.height);
       ctx.fillStyle = cor;
       for (const c of cels) {
         const visivel = enchendo ? c.t <= p : c.t > p;

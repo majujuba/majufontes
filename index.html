@@ -156,7 +156,8 @@
     display: flex; align-items: center; justify-content: center; transition: opacity .7s ease; }
   /* no celular a tela de carregamento fica presa à página (a rolagem está travada enquanto ela aparece): fixa na tela,
      o Safari do iPhone pintava as barras do navegador com o azul dela */
-  @media (hover: none), (pointer: coarse) { .carregando { position: absolute; bottom: auto; height: 100vh; height: 100lvh; } }
+  /* + uma "sombra" lisa da mesma cor para baixo: cobre a área atrás das barras flutuantes do Safari sem tirar a estrela do centro */
+  @media (hover: none), (pointer: coarse) { .carregando { position: absolute; bottom: auto; height: 100vh; height: 100lvh; box-shadow: 0 400px 0 0 #84A9D9; } }
   html:not(.js) .carregando { display: none; }
   .carregando img { width: 120px; height: auto; opacity: 0; transform: scale(.9);
     transition: opacity .6s ease, transform .6s cubic-bezier(.22,1,.36,1); }
