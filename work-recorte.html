@@ -165,6 +165,7 @@
 
   /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do Recorte ══════════ */
   html.celular { --revista-ar: 778 / 550; }   /* livreto virtual (regras em projeto-celular.css) */
+  html.celular { --foto-x: 47%; }   /* abertura do celular: recorte capa.png dela (hero-celular.webp), com a revista no meio */
   /* miniaturas: o bloco com a mesma proporção do computador e a grade de páginas nas mesmas margens, em proporção */
   html.celular .page > .miniaturas { aspect-ratio: 1389 / 1152; }
   html.celular .miniaturas > img.grade { left: 1.87%; top: 3.91%; width: 96.18%; height: 92.14%; }
@@ -181,7 +182,7 @@
 <div class="frame"><main class="page">
 
   <!-- topo -->
-  <div class="abs hero"><img decoding="async" src="assets/recorte/hero.jpg" alt="Livretos Recorte abertos sobre um fundo roxo"></div>
+  <div class="abs hero"><picture><source media="(max-width: 760px), (max-device-width: 600px), (max-device-height: 600px)" srcset="assets/recorte/hero-celular.webp"><img decoding="async" src="assets/recorte/hero.jpg" alt="Livretos Recorte abertos sobre um fundo roxo"></picture></div>
   <div class="abs hero-fundo"></div>
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Recorte</h1>
 

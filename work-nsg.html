@@ -116,7 +116,7 @@
   }
 
   /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é da Noise Gaming ══════════ */
-  html.celular { --fundo-pagina: var(--roxo); }
+  html.celular { --fundo-pagina: var(--roxo); }   /* abertura do celular: Artboard 2.2 dela (hero-celular.webp), vertical, com o logo no meio */
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -130,7 +130,7 @@
 <div class="frame"><main class="page">
 
   <!-- topo -->
-  <div class="abs hero"><img decoding="async" src="assets/nsg/hero.jpg" alt="Camisa da Noise Gaming com o logo NSG"></div>
+  <div class="abs hero"><picture><source media="(max-width: 760px), (max-device-width: 600px), (max-device-height: 600px)" srcset="assets/nsg/hero-celular.webp"><img decoding="async" src="assets/nsg/hero.jpg" alt="Camisa da Noise Gaming com o logo NSG"></picture></div>
   <div class="abs hero-fundo"></div>
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Noise Gaming</h1>
 
