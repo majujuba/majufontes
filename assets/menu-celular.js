@@ -58,13 +58,13 @@
 
   // flor animada (carregada na primeira abertura): o mesmo desenho nos dois fundos (desenho-azul-menu.html, com todos os pixels),
   // só mudam as cores, passadas pelo endereço (funciona também abrindo o arquivo direto do computador):
-  // - fundo claro: traço vinho (como a flor vermelha da Home, pedido dela) e pixels na cor dos links
+  // - fundo claro: traço vinho (como a flor vermelha da Home, pedido dela) e pixels roxos (os da about, em todas as páginas claras)
   // - fundo escuro (roxo, na Home): traço azul e pixels cinza-claro, como sempre foi
   function poeFlor() {
     const caixa = menu.querySelector('.menu-flor');
     if (caixa.firstChild) return;
     const f = document.createElement('iframe');
-    f.src = 'assets/desenho-azul-menu.html' + (claro ? '?linha=' + encodeURIComponent('#731212') + '&pixel=' + encodeURIComponent(corLink) : '');
+    f.src = 'assets/desenho-azul-menu.html' + (claro ? '?linha=' + encodeURIComponent('#731212') + '&pixel=' + encodeURIComponent('#3F3166') : '');
     f.title = ''; f.tabIndex = -1; f.setAttribute('scrolling', 'no');
     caixa.appendChild(f);
   }
