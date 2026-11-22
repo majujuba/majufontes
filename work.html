@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1280">
+<!-- celular: troca a viewport e liga o layout de celular antes de desenhar (ver assets/celular.js) -->
+<script src="assets/celular.js"></script>
 <title>work — maju. designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
@@ -12,6 +14,8 @@
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- celular: header, menu e rodapé comuns a todas as páginas -->
+<link rel="stylesheet" href="assets/celular.css">
 <!-- transição de pixels que se dissolvem (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script><script src="assets/barras-celular.js"></script>
 <style>
@@ -121,6 +125,41 @@
   @media (prefers-reduced-motion: reduce) {
     .js .fade-in-element { opacity: 1; transform: none; transition: none; }
   }
+  /* fotos/vídeos dos projetos: só aparecem no celular (no computador os retângulos continuam roxos, como no Figma) */
+  .projeto .capa-celular { display: none; }
+
+  /* ══════════ VERSÃO CELULAR (só com html.celular — ver assets/celular.js; o desktop acima não muda) ══════════
+     Figma "Mobile" da work (176:570), largura 375 → medidas em vw (1px do Figma = 0,2667vw):
+     topo com o degradê, a flor e "projetos / works"; depois os projetos em coluna — imagem 332 × 317 com os cantos
+     de pixel, nome (Cambria 40) à esquerda e área (Pixelify 24) à direita — separados pela linha da work */
+  html.celular .frame { height: auto; }
+  html.celular .page { position: relative; left: 0; margin: 0; width: 100%; height: auto; display: flex; flex-direction: column;
+    padding-top: 152.27vw; }   /* primeiro projeto em y 571 */
+  html.celular .hero-bg { left: 0; right: 0; top: 0; height: 130.67vw;
+    background: linear-gradient(180deg, #7EA2D2 0, #7EA2D2 9.9vw, var(--cinza) 130.67vw); }
+  /* flor do topo: a linha do Figma (−105, −217, 1050 × 522) — o iframe tem a linha em 2,2% / 4,9%, com 95,5% × 90,2% dele */
+  html.celular .flor-topo { left: -34.35vw; top: -65.44vw; width: 293.15vw; height: 154.37vw; }
+  html.celular .flor-fim { display: none; }   /* no Figma do celular ela fica fora da tela */
+  html.celular .titulo { left: 8.27vw; top: 85.33vw; font-size: 21.33vw; line-height: 22.67vw; z-index: 1; }
+
+  html.celular .projeto { position: relative; left: auto; top: auto !important; width: auto; height: auto; margin: 0 5.6vw;
+    display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 3vw; }
+  html.celular .projeto .imagem { position: relative; left: auto; top: auto; width: 100%; height: auto; aspect-ratio: 332 / 317;
+    grid-column: 1 / -1; overflow: hidden;
+    clip-path: polygon(0 12px, 12px 12px, 12px 0, calc(100% - 12px) 0, calc(100% - 12px) 12px, 100% 12px, 100% calc(100% - 12px),
+      calc(100% - 12px) calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 12px calc(100% - 12px), 0 calc(100% - 12px)); }
+  html.celular .projeto .imagem::before, html.celular .projeto .imagem::after,
+  html.celular .projeto .imagem > .c1, html.celular .projeto .imagem > .c2 { display: none; }   /* cantos recortados acima */
+  html.celular .projeto .capa-celular { display: block; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  html.celular .projeto:hover .imagem { transform: none; }
+  html.celular .projeto h2 { position: static; width: auto !important; max-width: 56vw; margin-top: 4vw;
+    font-size: 10.67vw !important; line-height: 12.8vw !important; letter-spacing: -0.1vw !important; }   /* !important: alguns nomes têm medidas no style */
+  html.celular .projeto h2.duas, html.celular .projeto[href="work-a-substancia.html"] h2 { line-height: 8.53vw !important; }   /* nomes em duas linhas */
+  html.celular .projeto .area { position: static; margin-top: 4vw; max-width: 38vw; text-align: right; white-space: normal;
+    font-size: 6.4vw; line-height: 5.6vw; }
+  html.celular .projeto p, html.celular .projeto .espiral { display: none; }
+  html.celular .divisa { position: relative; left: auto; top: auto !important; width: auto; height: 2px; margin: 10.13vw 12.53vw 10.13vw 14.13vw; }
+  html.celular .rodape { margin-top: 16vw; }
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -142,7 +181,7 @@
 
   <!-- projetos (posições do Figma; o topo de cada um = 620 + posição na seção) -->
   <a class="abs projeto esq fade-in-element" style="top:757px" href="work-tiposp.html">
-    <span class="imagem"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><video class="capa-celular" src="assets/works-celular/01-tiposp.mp4" poster="assets/works-celular/01-tiposp.jpg" muted loop playsinline preload="none" aria-hidden="true"></video><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:1092px; top:32px; letter-spacing:-0.68px">TipoSP</h2>
     <span class="area" style="left:1096px; top:119px">Web Design</span>
     <p style="left:1096px; top:189px; width:319px">Um sistema com tradução da tipografia da cidade, desde o seu nascimento até o presente.</p>
@@ -151,7 +190,7 @@
   <img decoding="async" class="abs divisa" style="top:1131px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto dir fade-in-element" style="top:1190px" href="work-vizao.html">
-    <span class="imagem"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><img class="capa-celular" src="assets/works-celular/02-vizao.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:93px; top:32px">Vizão</h2>
     <span class="area" style="left:93px; top:115px">Editorial</span>
     <p style="left:93px; top:181px; width:282px">“Povos Originários estão revolucionando a ciência com seus conhecimentos ancestrais”</p>
@@ -160,7 +199,7 @@
   <img decoding="async" class="abs divisa" style="top:1564px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto esq fade-in-element" style="top:1623px" href="work-gorducha.html">
-    <span class="imagem"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><img class="capa-celular" src="assets/works-celular/03-gorducha.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:1092px; top:32px; letter-spacing:-2.04px">Gorducha</h2>
     <span class="area" style="left:1095px; top:119px">Tipografia</span>
     <p style="left:1095px; top:189px; width:295px">Um sistema tipográfico display inspirado em elementos orgânicos que busca resgatar a estética divertida dos anos 70.</p>
@@ -169,7 +208,7 @@
   <img decoding="async" class="abs divisa" style="top:1997px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto dir fade-in-element" style="top:2056px" href="work-dengo.html">
-    <span class="imagem"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><img class="capa-celular" src="assets/works-celular/04-dengo.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:93px; top:32px; letter-spacing:-1.36px">Dengo</h2>
     <span class="area" style="left:93px; top:115px">Estampas</span>
     <p style="left:93px; top:181px; width:238px">Investiga a diversidade cultural brasileira e traduz visualmente em uma identidade gráfica.</p>
@@ -178,7 +217,7 @@
   <img decoding="async" class="abs divisa" style="top:2430px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto esq fade-in-element" style="top:2489px" href="work-a-substancia.html">
-    <span class="imagem"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><video class="capa-celular" src="assets/works-celular/05-substancia.mp4" poster="assets/works-celular/05-substancia.jpg" muted loop playsinline preload="none" aria-hidden="true"></video><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:1099px; top:6.5px; width:324px; font-size:66px; line-height:58px; letter-spacing:-2.64px">A Substância</h2>
     <span class="area" style="left:1092px; top:145px">Motion Design</span>
     <p style="left:1095px; top:202px; width:278px">Abertura de um audiovisual criada para o filme <em>A Substância (2024)</em>.</p>
@@ -187,7 +226,7 @@
   <img decoding="async" class="abs divisa" style="top:2863px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto dir fade-in-element" style="top:2922px" href="work-nsg.html">
-    <span class="imagem"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><img class="capa-celular" src="assets/works-celular/06-nsg.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:93px; top:32px; letter-spacing:-1.36px">NSG</h2>
     <span class="area" style="left:93px; top:115px">Identidade Visual</span>
     <p style="left:93px; top:181px; width:254px; letter-spacing:-0.16px">Rebranding para o time de e-sports <em>Noise Gaming,</em> focado em video games de futebol.</p>
@@ -196,7 +235,7 @@
   <img decoding="async" class="abs divisa" style="top:3296px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto esq fade-in-element" style="top:3355px" href="work-lord-ruthven.html">
-    <span class="imagem"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><img class="capa-celular" src="assets/works-celular/07-lord.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 class="duas" style="left:1092px; top:18px; width:338px; letter-spacing:-1.36px">Lord Ruthven</h2>
     <span class="area" style="left:1093px; top:157px">Experimentação</span>
     <p style="left:1093px; top:211px; width:295px">Transformar um incômodo em experimento digital para as<br>redes sociais.</p>
@@ -205,7 +244,7 @@
   <img decoding="async" class="abs divisa" style="top:3729px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto dir fade-in-element" style="top:3788px" href="work-recorte.html">
-    <span class="imagem"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><img class="capa-celular" src="assets/works-celular/08-recorte.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:93px; top:32px; letter-spacing:-1.36px">Recorte</h2>
     <span class="area" style="left:93px; top:115px">Livreto - Editorial</span>
     <p style="left:93px; top:181px; width:263px; letter-spacing:-0.2px">Selecionar conteúdos da Revista Recorte e diagramá-los no modelo de livreto físico.</p>
@@ -214,7 +253,7 @@
   <img decoding="async" class="abs divisa" style="top:4162px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto esq fade-in-element" style="top:4221px" href="work-kit-kat.html">
-    <span class="imagem"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><img class="capa-celular" src="assets/works-celular/09-kitkat.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:1092px; top:32px; letter-spacing:-2.72px">Kit Kat</h2>
     <span class="area" style="left:1092px; top:119px">Embalagem</span>
     <p style="left:1095px; top:189px; width:295px">Projeto se inicia sobre o momento do “break” como recorte temático, construímos uma linha de sabores pro público-alvo jovem.</p>
@@ -223,7 +262,7 @@
   <img decoding="async" class="abs divisa" style="top:4595px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto dir fade-in-element" style="top:4654px" href="work-fosforo.html">
-    <span class="imagem"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><video class="capa-celular" src="assets/works-celular/10-fosforo.mp4" poster="assets/works-celular/10-fosforo.jpg" muted loop playsinline preload="none" aria-hidden="true"></video><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:93px; top:32px; letter-spacing:-1.36px">Fósforo</h2>
     <span class="area" style="left:93px; top:115px">Embalagem</span>
     <p style="left:93px; top:181px; width:249px; letter-spacing:-0.2px">Redesign de embalagem para a marca <em>Fósforo Paraná</em>, com o objetivo de atualizar a embalagem da marca.</p>
@@ -232,7 +271,7 @@
   <img decoding="async" class="abs divisa" style="top:5028px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto esq fade-in-element" style="top:5087px" href="work-cartaz-granado.html">
-    <span class="imagem"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><img class="capa-celular" src="assets/works-celular/11-granado.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 class="duas" style="left:1095px; top:18px; width:338px; letter-spacing:-1.36px">Cartaz Granado</h2>
     <span class="area" style="left:1097px; top:157px">Ritmo Visual</span>
     <p style="left:1097px; top:211px; width:295px">Composição de elementos livre, com a escolha dos elementos para a marca Granado.</p>
@@ -304,10 +343,25 @@
   } else fim.vista = true;
 })();
 </script>
+<script>
+/* celular: os vídeos das capas (TipoSP, A Substância, Fósforo) só tocam enquanto estão na tela.
+   No computador eles ficam escondidos e nem carregam (preload="none") */
+(() => {
+  const videos = [...document.querySelectorAll('video.capa-celular')];
+  if (!videos.length || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting && document.documentElement.classList.contains('celular')) e.target.play().catch(() => {});
+    else e.target.pause();
+  }), { rootMargin: '200px 0px' });
+  videos.forEach(v => io.observe(v));
+})();
+</script>
 <!-- cursor com rastro de pixels -->
 <!-- pausa as animações pesadas enquanto a página rola -->
 <script src="assets/desempenho.js"></script>
 <script src="assets/barra-rolagem.js"></script>
 <script src="assets/cursor-trail.js"></script>
+<!-- menu do celular (botão hambúrguer) -->
+<script src="assets/menu-celular.js"></script>
 </body>
 </html>
