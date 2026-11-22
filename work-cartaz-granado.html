@@ -43,8 +43,8 @@
   .abs { position: absolute; }
 
   /* ── topo: cajus do cartaz que se dissolvem no cinza ── */
-  .hero { left: calc(745px - 50vw); width: max(100vw, 1490px); top: 42px; height: 666px; overflow: hidden; }
-  .hero img { position: absolute; left: 0; top: 0; width: 100%; height: max(678px, calc(100vw * 678 / 1490));
+  .hero { left: calc(745px - var(--larg, 100vw) / 2); width: max(var(--larg, 100vw), 1490px); top: 42px; height: 666px; overflow: hidden; }
+  .hero img { position: absolute; left: 0; top: 0; width: 100%; height: max(678px, calc(var(--larg, 100vw) * 678 / 1490));
     object-fit: cover; object-position: 50% 0; display: block; }
   .hero-fundo { left: -3000px; right: -3000px; top: 440px; height: 322px;
     background: linear-gradient(180deg, rgba(198,198,198,0) 0%, var(--cinza) 83%); pointer-events: none; }
@@ -229,7 +229,7 @@
     pedido = false;
     if (!window.__carregou) return;
     pendentes = pendentes.filter(e => {
-      if (e.getBoundingClientRect().top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
+      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
       return true;
     });
     if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
@@ -275,15 +275,15 @@
   trocaDica(); addEventListener('celular-mudou', trocaDica);
   q.addEventListener('pointerdown', e => {
     if (e.button !== 0 || e.target.closest('.limpar')) return;
-    const r = q.getBoundingClientRect();
+    const r = retangulo(q), k = window.escalaPagina || 1;   // caixa em px da janela; k: escala da página no computador
     const n = Math.random() < .78 ? sorteia(CAJUS) : sorteia(FOLHAS);
     // os desenhos estão em 2x; no celular, menores ainda (o quadro tem um quarto da largura do computador)
     const esc = (.5 + Math.random() * .2) * (document.documentElement.classList.contains('celular') ? .55 : 1);
     const img = new Image();
     img.className = 'carimbo'; img.alt = ''; img.src = url(n); img.decoding = 'async';
     img.style.width = (tam[n][0] * esc) + 'px';
-    img.style.left = (e.clientX - r.left) + 'px';
-    img.style.top = (e.clientY - r.top) + 'px';
+    img.style.left = (e.clientX - r.left) / k + "px";
+    img.style.top = (e.clientY - r.top) / k + "px";
     img.style.setProperty('--giro', (Math.random() * 70 - 35).toFixed(1) + 'deg');
     img.style.zIndex = camada++;
     q.appendChild(img);

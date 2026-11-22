@@ -43,8 +43,8 @@
   .abs { position: absolute; }
 
   /* ── topo: cartazes de Lord Ruthven que se dissolvem no roxo ── */
-  .hero { left: calc(745px - 50vw); width: max(100vw, 1490px); top: 42px; height: 666px; overflow: hidden; }
-  .hero img { position: absolute; left: 0; top: 0; width: 100%; height: max(666px, calc(100vw * 666 / 1490)); object-fit: cover; object-position: 50% 0; display: block; }
+  .hero { left: calc(745px - var(--larg, 100vw) / 2); width: max(var(--larg, 100vw), 1490px); top: 42px; height: 666px; overflow: hidden; }
+  .hero img { position: absolute; left: 0; top: 0; width: 100%; height: max(666px, calc(var(--larg, 100vw) * 666 / 1490)); object-fit: cover; object-position: 50% 0; display: block; }
   .hero-fundo { left: -3000px; right: -3000px; top: 440px; height: 322px;
     /* chega ao roxo total em y 708, onde a foto termina (83% da altura) — sem a linha de corte do vídeo */
     background: linear-gradient(180deg, rgba(63,49,102,0) 0%, var(--roxo) 83%); pointer-events: none; }
@@ -253,7 +253,7 @@
     pedido = false;
     if (!window.__carregou) return;
     pendentes = pendentes.filter(e => {
-      if (e.getBoundingClientRect().top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
+      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
       return true;
     });
     if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
@@ -297,8 +297,9 @@
       if (!ini) return;
       const W = pagina.offsetWidth, H = pagina.offsetHeight;
       // a página pode rolar enquanto a pessoa arrasta (rodinha do mouse): a estampa acompanha
-      let l = ini.l + e.clientX - ini.x;
-      let t = ini.t + e.clientY - ini.y + (scrollY - ini.rolagem);
+      const k = window.escalaPagina || 1;   // o mouse anda em px da janela; a página pode estar reduzida (assets/celular.js)
+      let l = ini.l + (e.clientX - ini.x) / k;
+      let t = ini.t + (e.clientY - ini.y + scrollY - ini.rolagem) / k;
       l = Math.max(-el.offsetWidth / 2, Math.min(W - el.offsetWidth / 2, l));
       t = Math.max(42, Math.min(H - el.offsetHeight, t));
       el.style.left = l + 'px'; el.style.top = t + 'px';

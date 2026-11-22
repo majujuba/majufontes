@@ -304,7 +304,7 @@
     pedido = false;
     if (!window.__carregou) return;
     pendentes = pendentes.filter(e => {
-      if (e.getBoundingClientRect().top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
+      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
       return true;
     });
     if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
@@ -326,7 +326,7 @@
   const chega = () => caixa.classList.add('chegou');
   const vigia = () => {
     if (!window.__carregou) return;
-    const r = ingressos[0].getBoundingClientRect();
+    const r = retangulo(ingressos[0]);
     if (r.top < innerHeight - 80) { chega(); removeEventListener('scroll', vigia); }
   };
   addEventListener('scroll', vigia, { passive: true });
@@ -348,7 +348,7 @@
     if (img.complete && img.naturalWidth) faz(); else img.addEventListener('load', faz, { once: true });
   });
   const acerta = (a, x, y) => {
-    const r = a.getBoundingClientRect();
+    const r = retangulo(a);
     if (x < r.left || x > r.right || y < r.top || y > r.bottom) return false;
     const m = mapas.get(a);
     if (!m) return true;
@@ -357,7 +357,7 @@
     return m.d[(py * m.w + px) * 4 + 3] > 40;
   };
   // abaixo do topo do formulário a parte de baixo dos ingressos fica escondida: ali não vale
-  const qual = (x, y) => (caixa.classList.contains('chegou') && y < caixa.getBoundingClientRect().bottom)
+  const qual = (x, y) => (caixa.classList.contains('chegou') && y < retangulo(caixa).bottom)
     ? ingressos.find(a => acerta(a, x, y)) : null;
 
   // a área de cima dos ingressos (onde eles podem estar) "ouve" o mouse; o resto da página continua normal
@@ -372,7 +372,7 @@
   };
   const inclina = (a, x, y) => {
     if (!tiltOk) return;
-    const img = a.querySelector('img'), r = img.getBoundingClientRect();
+    const img = a.querySelector('img'), r = retangulo(img);
     const nx = Math.max(-1, Math.min(1, (x - (r.left + r.width / 2)) / (r.width / 2)));
     const ny = Math.max(-1, Math.min(1, (y - (r.top + r.height / 2)) / (r.height / 2)));
     img.style.transition = 'transform 0.1s ease-out, translate .5s ease';

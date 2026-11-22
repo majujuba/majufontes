@@ -253,7 +253,7 @@
     pedido = false;
     if (!window.__carregou) return;
     pendentes = pendentes.filter(e => {
-      if (e.getBoundingClientRect().top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
+      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
       return true;
     });
     if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }

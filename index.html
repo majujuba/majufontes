@@ -357,7 +357,7 @@
     if (!window.__carregou) return;                 // espera a tela de carregamento sair
     // só a posição vertical importa; o que já ficou acima da tela também aparece
     pendentes = pendentes.filter(e => {
-      if (e.getBoundingClientRect().top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
+      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
       return true;
     });
     if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
@@ -517,11 +517,11 @@
     // caixa do card SEM a inclinação (a caixa inclinada desloca o centro):
     // posição no layout (já com o "sticky") + a escala da pilha, que encolhe a partir do topo
     function caixa() {
-      const rp = pai.getBoundingClientRect();
+      const rp = retangulo(pai), k = window.escalaPagina || 1;   // rp em px da janela; o resto em px da página (× k)
       const s = parseFloat(card.style.getPropertyValue('--escala')) || 1;
       const w = card.offsetWidth * s, h = card.offsetHeight * s;
       const cx = card.offsetLeft + card.offsetWidth / 2, cy = card.offsetTop + h / 2;   // em relação ao contêiner
-      return { rp, cx, cy, w, h };
+      return { rp, cx, cy, w, h, k };
     }
     // a perspectiva vem do contêiner; centraliza o ponto de vista no card ativo
     function centraPerspectiva(b) { pai.style.perspectiveOrigin = b.cx + 'px ' + b.cy + 'px'; }
@@ -533,8 +533,8 @@
     card.addEventListener('mousemove', e => {
       const b = caixa();
       // posição do cursor em relação ao centro do card: -1 (borda esquerda/topo) a 1 (direita/base)
-      const nx = Math.max(-1, Math.min(1, (e.clientX - (b.rp.left + b.cx)) / (b.w / 2)));
-      const ny = Math.max(-1, Math.min(1, (e.clientY - (b.rp.top + b.cy)) / (b.h / 2)));
+      const nx = Math.max(-1, Math.min(1, (e.clientX - (b.rp.left + b.cx * b.k)) / (b.w * b.k / 2)));
+      const ny = Math.max(-1, Math.min(1, (e.clientY - (b.rp.top + b.cy * b.k)) / (b.h * b.k / 2)));
       centraPerspectiva(b);
       // o lado sob o cursor vem para frente: base → rotateX positivo; direita → rotateY negativo
       card.style.setProperty('--rx', (ny * ANGULO).toFixed(2) + 'deg');
@@ -588,9 +588,10 @@
     const cs = getComputedStyle(pilha);
     const topo = parseFloat(cs.getPropertyValue('--topo-pilha'));
     const degrau = parseFloat(cs.getPropertyValue('--degrau'));
-    const passo = cards[0].offsetHeight + parseFloat(cs.getPropertyValue('--folga'));
-    const base = pilha.getBoundingClientRect().top + scrollY;
-    const prende = i => base + i * passo - (topo + i * degrau);   // rolagem em que o card i prende
+    const k = window.escalaPagina || 1;   // medidas da página × k = px da janela (assets/celular.js)
+    const passo = (cards[0].offsetHeight + parseFloat(cs.getPropertyValue("--folga"))) * k;
+    const base = retangulo(pilha).top + scrollY;
+    const prende = i => base + i * passo - (topo + i * degrau) * k;   // rolagem em que o card i prende
     const fim = prende(n - 1);
     cards.forEach((c, i) => {
       const a = Math.max(0, Math.min(1, (scrollY - prende(i)) / (fim - prende(i) || 1)));

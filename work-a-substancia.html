@@ -43,7 +43,7 @@
   .abs { position: absolute; }
 
   /* ── topo: olhos (GIF no Figma, aqui vídeo em loop) que se dissolvem no roxo ── */
-  .hero { left: calc(745px - 50vw); width: max(100vw, 1490px); top: 41px; height: 666px; overflow: hidden; }
+  .hero { left: calc(745px - var(--larg, 100vw) / 2); width: max(var(--larg, 100vw), 1490px); top: 41px; height: 666px; overflow: hidden; }
   .hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
   .hero-fundo { left: -3000px; right: -3000px; top: 440px; height: 322px;
     /* chega ao roxo total em y 707, onde os olhos terminam (83% da altura) — sem a linha de corte do vídeo */
@@ -220,7 +220,7 @@
     pedido = false;
     if (!window.__carregou) return;
     pendentes = pendentes.filter(e => {
-      if (e.getBoundingClientRect().top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
+      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
       return true;
     });
     if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }

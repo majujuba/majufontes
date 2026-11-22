@@ -74,7 +74,7 @@
   }
   function sampleMedia(el, x, y) {          // imagem / vídeo / canvas
     try {
-      const r = el.getBoundingClientRect();
+      const r = window.retangulo ? retangulo(el) : el.getBoundingClientRect();
       const w = el.naturalWidth || el.videoWidth || el.width, h = el.naturalHeight || el.videoHeight || el.height;
       if (!w || !h || !r.width || !r.height) return null;
       pctx.clearRect(0, 0, 1, 1);

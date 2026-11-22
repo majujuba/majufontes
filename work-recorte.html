@@ -43,8 +43,8 @@
   .abs { position: absolute; }
 
   /* ── topo: livretos abertos sobre o roxo, que se dissolvem no cinza ── */
-  .hero { left: calc(745px - 50vw); width: max(100vw, 1490px); top: 42px; height: 666px; overflow: hidden; }
-  .hero img { position: absolute; left: 0; top: 0; width: 100%; height: max(678px, calc(100vw * 678 / 1490));
+  .hero { left: calc(745px - var(--larg, 100vw) / 2); width: max(var(--larg, 100vw), 1490px); top: 42px; height: 666px; overflow: hidden; }
+  .hero img { position: absolute; left: 0; top: 0; width: 100%; height: max(678px, calc(var(--larg, 100vw) * 678 / 1490));
     object-fit: cover; object-position: 50% 0; display: block; }
   .hero-fundo { left: -3000px; right: -3000px; top: 430px; height: 322px;
     /* chega ao cinza total em y 708, onde a foto termina (86% da altura) — sem a linha de corte da foto */
@@ -269,7 +269,7 @@
     pedido = false;
     if (!window.__carregou) return;
     pendentes = pendentes.filter(e => {
-      if (e.getBoundingClientRect().top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
+      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
       return true;
     });
     if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
@@ -367,7 +367,7 @@
     if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
     const alvo = e.target;
     if (alvo && (alvo.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(alvo.tagName))) return;
-    const b = raiz.getBoundingClientRect();
+    const b = retangulo(raiz);
     if (b.bottom < 42 || b.top > innerHeight) return;
     e.preventDefault();
     vira(e.key === 'ArrowRight' ? 1 : -1);
