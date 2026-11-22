@@ -237,6 +237,8 @@
   <!-- topo -->
   <div class="abs topo-bg"></div>
   <div class="abs fade-in-element" style="--atraso:.3s; left:0; top:0; width:0; height:0"><iframe class="abs flor flor-topo" src="assets/desenho-azul-contato.html" title="flor e pixels — azul" scrolling="no" tabindex="-1" aria-hidden="true"></iframe></div>
+  <script>/* celular: a flor com os pixels da flor da work (nesta parte da flor, a do contact quase não tem pixels) */
+    if (document.documentElement.classList.contains('celular')) document.querySelector('.flor-topo').src = 'assets/desenho-azul-contato-celular.html';</script>
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">contato<em>contact</em></h1>
 
   <!-- que tal nos conectarmos? -->
