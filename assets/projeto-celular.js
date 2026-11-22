@@ -31,7 +31,9 @@
      sem ele: a mesma composição do computador, reduzida até caber no espaço.
      Se cada adesivo tiver data-celular="x y largura" (em fração da largura do espaço), essa posição vale no celular.
      As que a pessoa já arrastou ficam onde ela deixou; voltando ao layout do computador, todas voltam ao lugar de lá. */
-  const campo = document.querySelector('.campo-adesivos');
+  // o espaço pode ser também um bloco da própria página com data-campo-adesivos="x y largura" (a posição dele no computador,
+  // ex.: o quadro de adesivos do TipoSP): aí cada adesivo fica no mesmo lugar relativo ao bloco, só reduzido
+  const campo = document.querySelector('.campo-adesivos') || document.querySelector('[data-campo-adesivos]');
   const adesivos = [...document.querySelectorAll('.adesivo')];
   if (campo && adesivos.length) {
     const original = adesivos.map(el => el.getAttribute('style') || '');
@@ -43,7 +45,10 @@
     const arruma = () => {
       if (!celular()) { adesivos.forEach((el, i) => el.setAttribute('style', original[i])); arrastou.clear(); return; }
       const L = campo.offsetLeft, T = campo.offsetTop, W = campo.offsetWidth, H = campo.offsetHeight;
-      if (dados.every(d => d.el.dataset.celular)) {
+      if (campo.dataset.campoAdesivos) {
+        const [cx, cy, cw] = campo.dataset.campoAdesivos.split(/\s+/).map(Number), esc = W / cw;
+        dados.forEach(d => poe(d, L + (d.x - cx) * esc, T + (d.y - cy) * esc, esc));
+      } else if (dados.every(d => d.el.dataset.celular)) {
         // posição própria do celular em cada adesivo: data-celular="x y largura", tudo em fração da largura do espaço
         dados.forEach(d => {
           const [fx, fy, fw] = d.el.dataset.celular.split(/\s+/).map(Number);

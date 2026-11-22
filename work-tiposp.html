@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1280">
+<!-- celular: troca a viewport e liga o layout de celular antes de desenhar (ver assets/celular.js) -->
+<script src="assets/celular.js"></script>
 <title>TipoSP — maju. designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
@@ -12,6 +14,10 @@
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- celular: header, menu e rodapé comuns a todas as páginas -->
+<link rel="stylesheet" href="assets/celular.css">
+<!-- celular: a dinâmica comum das páginas de projeto (abertura, coluna de imagens, "saiba mais!") -->
+<link rel="stylesheet" href="assets/projeto-celular.css">
 <!-- transição de pixels que se dissolvem (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script><script src="assets/barras-celular.js"></script>
 <style>
@@ -160,6 +166,12 @@
 
   /* botões anterior / próximo cinza com texto roxo */
   .navega .botao-pixel { background: var(--cinza); color: var(--roxo); }
+  /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do TipoSP ══════════ */
+  html.celular { --fundo-pagina: var(--roxo); }
+  /* quadro dos adesivos: os adesivos ficam no mesmo lugar dentro dele, reduzidos (assets/projeto-celular.js, data-campo-adesivos) */
+  html.celular .quadro-adesivos .dica { top: auto; bottom: 3.5%; font-size: 4.6vw; line-height: 1.2; }
+  /* espaço reservado do site interativo: texto no meio, em tamanho de celular */
+  html.celular .site-interativo p { top: 50%; transform: translateY(-50%); font-size: 5vw; line-height: 1.4; }
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -178,7 +190,8 @@
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">TipoSP</h1>
 
   <!-- apresentação -->
-  <section class="bloco apresentacao fade-in-element">
+  <!-- no celular este texto fica depois das imagens, fechado, e abre pelo botão "saiba mais!" -->
+  <section class="bloco apresentacao fade-in-element" id="sobre-projeto">
     <p class="texto">TipoSP nasce de um desafio proposto em transformar um recorte da cidade de São Paulo em design digital. A partir desse desafio, o projeto se debruça sobre as <b>tipografias paulistanas</b> como recorte temático, entendendo que a própria cidade é, em sua essência, um sistema visual diverso e vivo. Por meio de pesquisa de campo, construímos uma curadoria tipográfica organizada em três eixos complementares, Identidade, Sinalização e Histórico, cada um com seu próprio sistema.</p>
     <p class="ficha disciplina"><strong>Disciplina</strong>Projeto Digital</p>
     <p class="ficha equipe"><strong>Equipe</strong>Laura Alcantara, Naian Menginelli</p>
@@ -190,7 +203,7 @@
   <div class="bloco fade-in-element" style="left:51px; top:1199px; width:938px; height:413px"><video src="assets/tiposp/posters.mp4" poster="assets/tiposp/posters.jpg" muted loop playsinline preload="metadata" aria-label="Animação: cartazes do TipoSP colados no muro"></video><span class="c1"></span><span class="c2"></span></div>
   <img decoding="async" class="peca fade-in-element" src="assets/tiposp/circulo.jpg" alt="Adesivo redondo com a marca tSP" loading="lazy" style="left:999px; top:1199px; width:440px; height:413px">
 
-  <section class="bloco quadro-adesivos fade-in-element" style="left:51px; top:1622px; width:485px; height:443px">
+  <section class="bloco quadro-adesivos fade-in-element" data-campo-adesivos="51 1622 485" style="left:51px; top:1622px; width:485px; height:443px">
     <p class="dica">teste os adesivos!</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
@@ -212,7 +225,7 @@
     <span class="grifo" style="left:69px; top:247px; width:318px"></span>
     <span class="grifo" style="left:69px; top:297px; width:287px"></span>
     <span class="grifo" style="left:69px; top:347px; width:160px"></span>
-    <p style="left:69px; top:139px">o resultado é um<br>sistema que traduz<br>a trajetória da<br>tipografia da<br>cidade, desde seus<br>primeiros vestígios<br>até a atualidade.</p>
+    <p style="left:69px; top:139px">o resultado é um<br>sistema que traduz<br><mark>a trajetória da<br>tipografia da<br>cidade</mark>, desde seus<br>primeiros vestígios<br>até a atualidade.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
   <div class="bloco fade-in-element" style="left:626px; top:3351px; width:814px; height:534px"><video src="assets/tiposp/cores.mp4" poster="assets/tiposp/cores-capa.jpg" muted loop playsinline preload="metadata" aria-label="Animação: as três cores do TipoSP, laranja, azul e roxo"></video><span class="c1"></span><span class="c2"></span></div>
@@ -227,6 +240,9 @@
     <p>site interativo com um monitor</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
+
+  <!-- celular: botão que abre/fecha o texto do projeto (no computador não aparece) -->
+  <div class="saiba"><button class="botao-pixel saiba-mais" type="button" aria-expanded="false" aria-controls="sobre-projeto"><span class="txt">saiba mais!</span><span class="c1"></span><span class="c2"></span></button></div>
 
   <!-- anterior / próximo (ordem da página work: Cartaz Granado → TipoSP → Vizão) -->
   <nav class="abs navega" aria-label="outros projetos">
@@ -391,5 +407,9 @@
 <script src="assets/barra-rolagem.js"></script>
 <!-- cursor com rastro de pixels -->
 <script src="assets/cursor-trail.js"></script>
+<!-- celular: proporção das imagens, título e botão "saiba mais!" (comum às páginas de projeto) -->
+<script src="assets/projeto-celular.js"></script>
+<!-- menu do celular (botão hambúrguer) -->
+<script src="assets/menu-celular.js"></script>
 </body>
 </html>
