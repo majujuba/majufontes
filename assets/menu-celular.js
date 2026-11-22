@@ -121,6 +121,7 @@
     poeFlor();
     botao.setAttribute('aria-expanded', 'true');
     html.classList.add('menu-aberto');
+    if (window.corBarra) corBarra.poe(corFundo);   // barra de cima do Safari na cor do menu
     const mostra = () => {
       if (!aberto) return;
       menu.setAttribute('aria-hidden', 'false');
@@ -139,6 +140,7 @@
     menu.setAttribute('aria-hidden', 'true');
     botao.setAttribute('aria-expanded', 'false');
     html.classList.remove('menu-aberto');
+    if (window.corBarra) corBarra.volta();
     if (devolveFoco) botao.focus({ preventScroll: true });
   }
   botao.addEventListener('click', abre);

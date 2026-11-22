@@ -228,6 +228,7 @@
   const tela = document.getElementById('carregando'), root = document.documentElement;
   const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
   root.classList.add('js-carregando');
+  if (window.corBarra) corBarra.poe('#84A9D9');   // barra de cima do Safari no azul da tela de carregamento (e do topo da Home)
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   scrollTo(0, 0);
   const t0 = performance.now();
@@ -337,7 +338,8 @@
 /* header surge descendo de cima da janela (o movimento está no CSS: .header / .header.desceu) */
 (() => {
   const h = document.querySelector('.header');
-  if (h) quandoCarregar(() => requestAnimationFrame(() => requestAnimationFrame(() => h.classList.add('desceu'))));
+  // quando a header desce, a barra de cima do Safari passa do azul do topo para a cor dela (roxo)
+  if (h) quandoCarregar(() => requestAnimationFrame(() => requestAnimationFrame(() => { h.classList.add('desceu'); if (window.corBarra) corBarra.volta(); })));
 })();
 </script>
 <script>

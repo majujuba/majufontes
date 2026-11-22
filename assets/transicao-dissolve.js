@@ -78,6 +78,7 @@
     if (alvo.pathname === location.pathname) return;   // já está nessa página
     if (/(^|\/)(index\.html)?$/.test(alvo.pathname)) return;   // indo para a home: sem transição (a pedido dela)
     e.preventDefault(); saindo = true;
+    if (window.corBarra) corBarra.poe(CORES[0][0]);   // barra de cima do Safari na cor dos pixels (roxo, o mais comum)
     const { cv, ctx, W, H, s, cel, semente } = criaTela();
     document.documentElement.appendChild(cv);
     // cada quadrado entra num momento aleatório e esmaece até ficar opaco (sem "estalar")
@@ -107,6 +108,7 @@
   // voltando pelo botão "voltar", a Home pode vir da memória ainda coberta
   addEventListener('pageshow', e => { if (e.persisted) {
     saindo = false;
+    if (window.corBarra) corBarra.volta();
     document.querySelectorAll('canvas[data-transicao]').forEach(c => c.remove());
     document.querySelectorAll('iframe').forEach(f => { f.style.visibility = ''; });
   } });
@@ -118,6 +120,7 @@
   if (marca && Date.now() - marca < 6000) {
     ss.del(CHAVE);
     window.__chegandoDissolve = true;
+    window.__corBarraInicial = CORES[0][0];   // assets/barras-celular.js (logo depois) já começa com a barra roxa
     let salvas = null;
     try { salvas = JSON.parse(ss.get(CHAVE_CORES)); } catch (e) {}
     ss.del(CHAVE_CORES);
@@ -135,7 +138,7 @@
         if (a > 0) pinta(ctx, c, s, a);
       }
       if (p < 1) requestAnimationFrame(quadro);
-      else { cv.remove(); dispatchEvent(new Event('transicao-fim')); }
+      else { cv.remove(); if (window.corBarra) corBarra.volta(); dispatchEvent(new Event('transicao-fim')); }
     })(performance.now());
   }
 })();
