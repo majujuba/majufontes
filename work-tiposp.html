@@ -171,16 +171,10 @@
   /* quadro dos adesivos: os adesivos ficam no mesmo lugar dentro dele, reduzidos (assets/projeto-celular.js, data-campo-adesivos) */
   html.celular .quadro-adesivos .dica { top: auto; bottom: 3.5%; font-size: 4.6vw; line-height: 1.2; }
   /* espaço reservado do site interativo: texto no meio, em tamanho de celular */
-  /* vídeos largos (Instagram e identidade): no celular cada um vira dois blocos, cada parte ocupando a largura toda
-     (recorte por proporção + object-position; o segundo bloco é .so-celular, com o mesmo vídeo) */
-  html.celular .page > .insta { aspect-ratio: 1064 / 886; }
-  html.celular .insta > video { object-position: 5% 50%; }
-  html.celular .page > .insta-celular { aspect-ratio: 670 / 886; }
-  html.celular .insta-celular > video { object-position: 100% 50%; }
-  html.celular .page > .sistema { aspect-ratio: 1163 / 708; }
-  html.celular .sistema > video { object-position: 0 50%; }
-  html.celular .page > .sistema-textura { aspect-ratio: 444 / 708; }
-  html.celular .sistema-textura > video { object-position: 91% 50%; }
+  /* vídeo do Instagram: no celular só a grade de posts, enquadrada (o celular com o perfil fica só no computador)
+     — recorte por proporção + object-position */
+  html.celular .page > .insta { aspect-ratio: 950 / 886; }
+  html.celular .insta > video { object-position: 3.5% 50%; }
   html.celular .site-interativo p { top: 50%; transform: translateY(-50%); font-size: 5vw; line-height: 1.4; }
 </style>
 <script>
@@ -218,8 +212,6 @@
     <span class="c1"></span><span class="c2"></span>
   </section>
   <div class="bloco insta fade-in-element" style="left:546px; top:1622px; width:894px; height:443px"><video src="assets/tiposp/instagram.mp4" poster="assets/tiposp/instagram.jpg" muted loop playsinline preload="metadata" aria-label="Animação: posts do Instagram do TipoSP"></video><span class="c1"></span><span class="c2"></span></div>
-  <!-- celular: a outra metade do vídeo do Instagram (o celular com o perfil), em bloco próprio -->
-  <div class="bloco so-celular insta-celular fade-in-element"><video src="assets/tiposp/instagram.mp4" poster="assets/tiposp/instagram.jpg" muted loop playsinline preload="none" aria-label="Animação: perfil do TipoSP no celular"></video><span class="c1"></span><span class="c2"></span></div>
   <!-- adesivos soltos (ordem do Figma: sinalização embaixo, tSP em cima) -->
   <!-- cada adesivo fica numa "capa" (.adesivo) que levanta, balança e é apertada de volta; a imagem dentro
        guarda a inclinação do Figma (--giro). LETRAS vem do PNG original (no Figma a imagem estava cortada) -->
@@ -229,8 +221,6 @@
   <div class="adesivo fade-in-element" style="left:87.5px; top:1866.5px; width:170px; height:129px"><img decoding="async" src="assets/tiposp/adesivo-tsp.webp" alt="Adesivo tSP" draggable="false"></div>
 
   <div class="bloco sistema fade-in-element" style="left:51px; top:2075px; width:1389px; height:554px"><video src="assets/tiposp/sistema.mp4" poster="assets/tiposp/sistema.jpg" muted loop playsinline preload="metadata" aria-label="Animação: tipografia, elementos e cores do sistema"></video><span class="c1"></span><span class="c2"></span></div>
-  <!-- celular: a outra metade do vídeo da identidade (a textura das letras), em bloco próprio -->
-  <div class="bloco so-celular sistema-textura fade-in-element"><video src="assets/tiposp/sistema.mp4" poster="assets/tiposp/sistema.jpg" muted loop playsinline preload="none" aria-label="Animação: textura com as letras do TipoSP"></video><span class="c1"></span><span class="c2"></span></div>
   <img decoding="async" class="peca fade-in-element" src="assets/tiposp/logos.jpg" alt="Posts do TipoSP sobre totens, letras e zonas da cidade" loading="lazy" style="left:51px; top:2639px; width:914px; height:702px">
   <div class="bloco fade-in-element" style="left:975px; top:2639px; width:465px; height:702px"><video src="assets/tiposp/sao-paulo.mp4" poster="assets/tiposp/sao-paulo.jpg" muted loop playsinline preload="metadata" aria-label="Animação: cartaz laranja SÃO PAULO colado no muro"></video><span class="c1"></span><span class="c2"></span></div>
 
