@@ -77,7 +77,9 @@
      (até 6°), girando em torno do centro; ao sair, volta devagar */
   .ingresso img { display: block; width: 100%; height: 100%; pointer-events: none; -webkit-user-drag: none;
     --rx: 0deg; --ry: 0deg; transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry));
-    transition: transform .4s ease; }
+    transition: transform .4s ease, translate .35s ease; }
+  /* no computador, com o mouse em cima, o ingresso também levanta um pouco (pedido dela) */
+  html:not(.celular) .ingresso.ativo img { translate: 0 -18px; }
   .ingresso.email    { left: 571px; top: 804.5px; width: 481px; height: 726px; z-index: 3; }
   .ingresso.behance  { left: 767px; top: 768px;   width: 452.5px; height: 721px; z-index: 2; }
   .ingresso.linkedin { left: 936px; top: 775px;   width: 502px; height: 745px; z-index: 1; }
@@ -365,7 +367,7 @@
   const tiltOk = matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches;
   const solta = a => {
     const img = a.querySelector('img');
-    img.style.transition = 'transform 0.4s ease';
+    img.style.transition = 'transform 0.4s ease, translate .35s ease';
     img.style.setProperty('--rx', '0deg'); img.style.setProperty('--ry', '0deg');
   };
   const inclina = (a, x, y) => {
@@ -373,7 +375,7 @@
     const img = a.querySelector('img'), r = img.getBoundingClientRect();
     const nx = Math.max(-1, Math.min(1, (x - (r.left + r.width / 2)) / (r.width / 2)));
     const ny = Math.max(-1, Math.min(1, (y - (r.top + r.height / 2)) / (r.height / 2)));
-    img.style.transition = 'transform 0.1s ease-out';
+    img.style.transition = 'transform 0.1s ease-out, translate .35s ease';
     // embaixo → rotateX positivo; à direita → rotateY negativo (o lado sob o cursor vem para a frente)
     img.style.setProperty('--rx', (ny * ANGULO).toFixed(2) + 'deg');
     img.style.setProperty('--ry', (-nx * ANGULO).toFixed(2) + 'deg');
