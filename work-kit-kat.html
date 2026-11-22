@@ -136,6 +136,7 @@
 
   /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do Kit Kat ══════════ */
   html.celular { --fundo-pagina: var(--roxo); --foto-x: 72%; }   /* abertura do celular: img6 dela (hero-celular.webp), com o pacote inteiro */
+  html.celular .hero img { top: -10%; -webkit-mask-image: linear-gradient(180deg, #000 75%, transparent 100%); mask-image: linear-gradient(180deg, #000 75%, transparent 100%); }   /* foto 10% mais para cima (pedido dela), o pé some aos poucos */
   /* "Iai, bora de Match?" no fim das imagens, centralizada, no fluxo da coluna */
   html.celular .page > .assinatura { position: relative; left: auto; top: auto; width: 80vw; height: auto; aspect-ratio: 620 / 134; margin: 10vw auto 0; }
 </style>

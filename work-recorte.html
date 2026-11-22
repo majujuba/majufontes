@@ -166,6 +166,7 @@
   /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do Recorte ══════════ */
   html.celular { --revista-ar: 778 / 550; }   /* livreto virtual (regras em projeto-celular.css) */
   html.celular { --foto-x: 47%; }   /* abertura do celular: recorte capa.png dela (hero-celular.webp), com a revista no meio */
+  html.celular .hero img { top: -10%; -webkit-mask-image: linear-gradient(180deg, #000 75%, transparent 100%); mask-image: linear-gradient(180deg, #000 75%, transparent 100%); }   /* foto 10% mais para cima (pedido dela), o pé some aos poucos */
   /* miniaturas: o bloco com a mesma proporção do computador e a grade de páginas nas mesmas margens, em proporção */
   html.celular .page > .miniaturas { aspect-ratio: 1389 / 1152; }
   html.celular .miniaturas > img.grade { left: 1.87%; top: 3.91%; width: 96.18%; height: 92.14%; }
