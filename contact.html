@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1280">
+<!-- celular: troca a viewport e liga o layout de celular antes de desenhar (ver assets/celular.js) -->
+<script src="assets/celular.js"></script>
 <title>contact — maju. designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
@@ -12,6 +14,8 @@
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
+<!-- celular: header, menu e rodapé comuns a todas as páginas -->
+<link rel="stylesheet" href="assets/celular.css">
 <!-- transição de pixels que se dissolvem (precisa ficar no head) -->
 <script src="assets/transicao-dissolve.js"></script><script src="assets/barras-celular.js"></script>
 <style>
@@ -172,6 +176,51 @@
   @media (prefers-reduced-motion: reduce) {
     .js .fade-in-element { opacity: 1; transform: none; transition: none; }
   }
+  /* ══════════ VERSÃO CELULAR (só com html.celular — ver assets/celular.js; o desktop acima não muda) ══════════
+     pensada para a tela em pé: topo com a flor e "contato / contact" (como a work), a chamada, os três ingressos
+     em leque ocupando a largura (tocar abre o link; continuam chegando como um baralho), o formulário em coluna
+     e a flor de baixo antes do rodapé. Medidas em vw (tela de 375 = 100vw) */
+  html.celular .frame { height: auto; }
+  html.celular .page { position: relative; left: 0; margin: 0; width: 100%; height: auto; display: flex; flex-direction: column;
+    padding-top: 116vw; }
+  html.celular .topo-bg { left: 0; right: 0; height: 150vw; background: linear-gradient(180deg, #55427D 12vw, #5E0B0B 150vw); }
+  html.celular .flor-topo { left: -6vw; top: 6vw; width: 150vw; height: 78.1vw; }   /* espelhada como no computador (scaleX(-1)) */
+  html.celular .titulo { left: 6.4vw; top: 64vw; font-size: 21.87vw; line-height: 21.33vw; z-index: 1; }
+
+  /* chamada "que tal nos conectarmos?" */
+  html.celular .chamada { position: relative; left: auto; top: auto; width: auto; margin: 0 7vw; z-index: 1; }
+  html.celular .chamada h2 { font-size: 9.6vw; line-height: 10.4vw; }
+  html.celular .chamada p { width: auto; margin-top: 4.5vw; font-size: 4.8vw; line-height: 6.2vw; }
+  html.celular .chamada.criar { margin-top: 16vw; }
+
+  /* ingressos: o mesmo leque do computador (caixa 867 × 762 a partir do e-mail / Behance), na largura da tela.
+     Inteiros (no computador a parte de baixo fica atrás do formulário); o toque vale só onde o ingresso aparece */
+  html.celular .ingressos { position: relative; left: auto; top: auto; width: auto; height: auto; margin: 9vw 5vw 0 3vw;
+    aspect-ratio: 867 / 762; clip-path: none; }
+  html.celular .ingresso.email    { left: 0;       top: 4.79%; width: 55.48%; height: 95.28%; }
+  html.celular .ingresso.behance  { left: 22.61%;  top: 0;     width: 52.19%; height: 94.62%; }
+  html.celular .ingresso.linkedin { left: 42.10%;  top: 0.92%; width: 57.90%; height: 97.77%; }
+
+  /* formulário em coluna: campos na largura toda, letra de 18px (com menos de 16px o iPhone dá zoom ao tocar no campo) */
+  html.celular .form-sec { display: none; }
+  html.celular .form-contato { position: relative; left: auto; top: auto; width: auto; height: auto; margin: 7vw 7vw 0; }
+  html.celular .campo { display: block; position: relative; top: auto; width: auto; margin-bottom: 3.5vw;   /* <label>: sem o absolute, viraria elemento de linha */
+    clip-path: polygon(0 7px, 7px 7px, 7px 0, calc(100% - 7px) 0, calc(100% - 7px) 7px, 100% 7px, 100% calc(100% - 7px),
+      calc(100% - 7px) calc(100% - 7px), calc(100% - 7px) 100%, 7px 100%, 7px calc(100% - 7px), 0 calc(100% - 7px)); }
+  html.celular .campo.msg { height: 180px; }
+  html.celular .campo input, html.celular .campo textarea { padding: 12px 16px; font-size: 18px; line-height: 24px; }
+  html.celular .campo::before, html.celular .campo::after, html.celular .campo > .c1, html.celular .campo > .c2,
+  html.celular .enviar::before, html.celular .enviar::after, html.celular .enviar > .c1, html.celular .enviar > .c2 { display: none; }
+  html.celular .enviar { position: relative; left: auto; top: auto; width: 70%; height: 54px; margin: 3vw auto 0; font-size: 26px;
+    clip-path: polygon(0 7px, 7px 7px, 7px 0, calc(100% - 7px) 0, calc(100% - 7px) 7px, 100% 7px, 100% calc(100% - 7px),
+      calc(100% - 7px) calc(100% - 7px), calc(100% - 7px) 100%, 7px 100%, 7px calc(100% - 7px), 0 calc(100% - 7px)); }
+  html.celular .botao-pixel:hover, html.celular.js .botao-pixel.fade-in-element.visivel:hover { transform: none; }   /* sem "hover" preso no toque */
+  html.celular .aviso-envio { position: static; margin-top: 4vw; font-size: 16px; }
+
+  /* flor de baixo: a mesma caixa recortada do computador (813 × 251), na largura da tela, antes do rodapé */
+  html.celular .flor-baixo-caixa { position: relative; left: auto; top: auto; width: 100%; height: auto; aspect-ratio: 813 / 251; margin-top: 12vw; order: 1; }
+  html.celular .rodape { order: 2; }
+  html.celular .flor-baixo { left: -29.35%; top: -10.96%; width: 132.08%; height: 222.83%; }
 </style>
 <script>
   document.documentElement.classList.add('js');
@@ -407,5 +456,7 @@
 <script src="assets/barra-rolagem.js"></script>
 <!-- cursor com rastro de pixels -->
 <script src="assets/cursor-trail.js"></script>
+<!-- menu do celular (botão hambúrguer) -->
+<script src="assets/menu-celular.js"></script>
 </body>
 </html>
