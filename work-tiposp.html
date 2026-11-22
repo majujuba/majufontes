@@ -168,13 +168,18 @@
   .navega .botao-pixel { background: var(--cinza); color: var(--roxo); }
   /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é do TipoSP ══════════ */
   html.celular { --fundo-pagina: var(--roxo); }
+  /* abertura: o círculo tSP um pouco menor que a tela cheia (referência dela) — o vídeo ocupa 76% da altura e esmaece embaixo */
+  html.celular .hero video { height: 76%; -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent 100%); mask-image: linear-gradient(180deg, #000 70%, transparent 100%); }
+  /* cartazes: sem as faixas escuras das laterais e de cima/baixo do vídeo (só a parede de cartazes) */
+  html.celular .page > .cartazes { aspect-ratio: 1680 / 784; }
+  html.celular .cartazes > video { left: -5.83% !important; top: -5.36% !important; width: 111.67% !important; height: 105.36% !important; object-fit: fill; }
   /* quadro dos adesivos: os adesivos ficam no mesmo lugar dentro dele, reduzidos (assets/projeto-celular.js, data-campo-adesivos) */
   html.celular .quadro-adesivos .dica { top: auto; bottom: 3.5%; font-size: 4.6vw; line-height: 1.2; }
   /* espaço reservado do site interativo: texto no meio, em tamanho de celular */
   /* vídeo do Instagram: no celular só a grade de posts, enquadrada (o celular com o perfil fica só no computador)
      — recorte por proporção + object-position */
-  html.celular .page > .insta { aspect-ratio: 950 / 886; }
-  html.celular .insta > video { object-position: 3.5% 50%; }
+  html.celular .page > .insta { aspect-ratio: 960 / 814; }
+  html.celular .insta > video { left: -4.17% !important; top: -3.69% !important; width: 186.25% !important; height: 108.85% !important; object-fit: fill; }   /* só a grade: x 40–1000, y 30–844 do vídeo */
   html.celular .site-interativo p { top: 50%; transform: translateY(-50%); font-size: 5vw; line-height: 1.4; }
 </style>
 <script>
@@ -204,7 +209,7 @@
   </section>
 
   <!-- cartazes, adesivos e redes (os GIFs do Figma viraram vídeos em loop) -->
-  <div class="bloco fade-in-element" style="left:51px; top:1199px; width:938px; height:413px"><video src="assets/tiposp/posters.mp4" poster="assets/tiposp/posters.jpg" muted loop playsinline preload="metadata" aria-label="Animação: cartazes do TipoSP colados no muro"></video><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco cartazes fade-in-element" style="left:51px; top:1199px; width:938px; height:413px"><video src="assets/tiposp/posters.mp4" poster="assets/tiposp/posters.jpg" muted loop playsinline preload="metadata" aria-label="Animação: cartazes do TipoSP colados no muro"></video><span class="c1"></span><span class="c2"></span></div>
   <img decoding="async" class="peca fade-in-element" src="assets/tiposp/circulo.jpg" alt="Adesivo redondo com a marca tSP" loading="lazy" style="left:999px; top:1199px; width:440px; height:413px">
 
   <section class="bloco quadro-adesivos fade-in-element" data-campo-adesivos="51 1622 485" style="left:51px; top:1622px; width:485px; height:443px">
