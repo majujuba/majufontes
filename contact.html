@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
@@ -294,27 +294,6 @@
 </header>
 </div>
 
-<script>
-/* fade in: cada .fade-in-element aparece (uma vez) quando entra na tela */
-(() => {
-  const MARGEM = 16;
-  let pendentes = [...document.querySelectorAll('.fade-in-element')];
-  let pedido = false;
-  function confere() {
-    pedido = false;
-    if (!window.__carregou) return;
-    pendentes = pendentes.filter(e => {
-      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
-      return true;
-    });
-    if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
-  }
-  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(confere); } }
-  addEventListener('scroll', agenda, { passive: true });
-  addEventListener('resize', agenda);
-  quandoCarregar(agenda);
-})();
-</script>
 <script>
 /* ingressos: surgem da direita para a esquerda quando aparecem na tela; o clique e o "passar o mouse"
    valem só onde o ingresso é visível (lê a transparência de cada imagem), e o de cima na pilha ganha */

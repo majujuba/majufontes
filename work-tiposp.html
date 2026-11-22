@@ -227,7 +227,7 @@
   <div class="adesivo fade-in-element" style="left:87.5px; top:1866.5px; width:170px; height:129px"><img decoding="async" src="assets/tiposp/adesivo-tsp.webp" alt="Adesivo tSP" draggable="false"></div>
 
   <div class="bloco sistema fade-in-element" style="left:51px; top:2075px; width:1389px; height:554px"><video src="assets/tiposp/sistema.mp4" poster="assets/tiposp/sistema.jpg" muted loop playsinline preload="metadata" aria-label="Animação: tipografia, elementos e cores do sistema"></video><span class="c1"></span><span class="c2"></span></div>
-  <img decoding="async" class="peca fade-in-element" src="assets/tiposp/logos.jpg" alt="Posts do TipoSP sobre totens, letras e zonas da cidade" loading="lazy" style="left:51px; top:2639px; width:914px; height:702px">
+  <img decoding="async" class="peca fade-in-element" src="assets/tiposp/logos.webp" alt="Posts do TipoSP sobre totens, letras e zonas da cidade" loading="lazy" style="left:51px; top:2639px; width:914px; height:702px">
   <div class="bloco fade-in-element" style="left:975px; top:2639px; width:465px; height:702px"><video src="assets/tiposp/sao-paulo.mp4" poster="assets/tiposp/sao-paulo.jpg" muted loop playsinline preload="metadata" aria-label="Animação: cartaz laranja SÃO PAULO colado no muro"></video><span class="c1"></span><span class="c2"></span></div>
 
   <section class="bloco citacao cinza fade-in-element" style="left:51px; top:3351px; width:565px; height:534px">
@@ -240,10 +240,10 @@
   </section>
   <div class="bloco fade-in-element" style="left:626px; top:3351px; width:814px; height:534px"><video src="assets/tiposp/cores.mp4" poster="assets/tiposp/cores-capa.jpg" muted loop playsinline preload="metadata" aria-label="Animação: as três cores do TipoSP, laranja, azul e roxo"></video><span class="c1"></span><span class="c2"></span></div>
 
-  <img decoding="async" class="peca fade-in-element" src="assets/tiposp/garrafas.jpg" alt="Garrafas do TipoSP" loading="lazy" style="left:51px; top:3895px; width:902px; height:413px">
+  <img decoding="async" class="peca fade-in-element" src="assets/tiposp/garrafas.webp" alt="Garrafas do TipoSP" loading="lazy" style="left:51px; top:3895px; width:902px; height:413px">
   <div class="bloco fade-in-element" style="left:965px; top:3895px; width:474px; height:413px"><video src="assets/tiposp/ecobag.mp4" poster="assets/tiposp/ecobag.jpg" muted loop playsinline preload="metadata" aria-label="Animação: ecobag do TipoSP"></video><span class="c1"></span><span class="c2"></span></div>
   <img decoding="async" class="peca fade-in-element" src="assets/tiposp/paraiso.jpg" alt="Totens da estação Paraíso com a marca tSP" loading="lazy" style="left:51px; top:4318px; width:502px; height:448px">
-  <div class="bloco fade-in-element" style="left:563px; top:4318px; width:876px; height:448px"><video src="assets/tiposp/canecas.mp4" poster="assets/tiposp/canecas.jpg" muted loop playsinline preload="metadata" aria-label="Animação: canecas do TipoSP"></video><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:563px; top:4318px; width:876px; height:448px"><video src="assets/tiposp/canecas.mp4" poster="assets/tiposp/canecas.webp" muted loop playsinline preload="metadata" aria-label="Animação: canecas do TipoSP"></video><span class="c1"></span><span class="c2"></span></div>
 
   <!-- espaço do site interativo (a definir) -->
   <section class="bloco site-interativo fade-in-element" style="left:51px; top:4776px; width:1388px; height:700px">
@@ -283,38 +283,6 @@
 </header>
 </div>
 
-<script>
-/* fade in: cada .fade-in-element aparece (uma vez) quando entra na tela */
-(() => {
-  const MARGEM = 16;
-  let pendentes = [...document.querySelectorAll('.fade-in-element')];
-  let pedido = false;
-  function confere() {
-    pedido = false;
-    if (!window.__carregou) return;
-    pendentes = pendentes.filter(e => {
-      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
-      return true;
-    });
-    if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
-  }
-  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(confere); } }
-  addEventListener('scroll', agenda, { passive: true });
-  addEventListener('resize', agenda);
-  quandoCarregar(agenda);
-})();
-</script>
-<script>
-/* vídeos (os GIFs do Figma, e os olhos do topo): só tocam enquanto estão na tela — economiza processamento */
-(() => {
-  const videos = [...document.querySelectorAll('video:not(.abertura)')];   // a abertura (com som) só toca no play
-  if (!('IntersectionObserver' in window)) { videos.forEach(v => v.play().catch(() => {})); return; }
-  const io = new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) e.target.play().catch(() => {}); else e.target.pause();
-  }), { rootMargin: '200px 0px' });
-  videos.forEach(v => io.observe(v));
-})();
-</script>
 <script>
 /* adesivos soltos com simulação de adesivo: a pessoa segura um, arrasta para qualquer lugar da página e solta.
    - segurar: o adesivo DESCOLA — sobe, cresce um pouco e inclina em 3D, com o lado por onde foi pego

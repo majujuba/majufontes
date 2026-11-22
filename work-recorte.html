@@ -183,7 +183,7 @@
 <div class="frame"><main class="page">
 
   <!-- topo -->
-  <div class="abs hero"><picture><source media="(max-width: 760px), (max-device-width: 600px), (max-device-height: 600px)" srcset="assets/recorte/hero-celular.webp"><img decoding="async" src="assets/recorte/hero.jpg" alt="Livretos Recorte abertos sobre um fundo roxo"></picture></div>
+  <div class="abs hero"><picture><source media="(max-width: 760px), (max-device-width: 600px), (max-device-height: 600px)" srcset="assets/recorte/hero-celular.webp"><img decoding="async" src="assets/recorte/hero.webp" alt="Livretos Recorte abertos sobre um fundo roxo"></picture></div>
   <div class="abs hero-fundo"></div>
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Recorte</h1>
 
@@ -200,11 +200,11 @@
   <div class="bloco fade-in-element" style="left:51px; top:1230px; width:1388px; height:914px"><video src="assets/recorte/recorte.mp4" poster="assets/recorte/recorte.jpg" muted loop playsinline preload="metadata" aria-label="Animação: páginas do livreto Recorte"></video><span class="c1"></span><span class="c2"></span></div>
 
   <!-- capa, páginas em espiral -->
-  <div class="bloco fade-in-element" style="left:51px; top:2154px; width:651px; height:413px"><img decoding="async" src="assets/recorte/capa.jpg" alt="Capa do livreto Recorte" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
-  <div class="bloco fade-in-element" style="left:713px; top:2154px; width:726px; height:413px"><img decoding="async" src="assets/recorte/espiral.jpg" alt="Livreto aberto na matéria Em busca dos textos não oficiais" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:51px; top:2154px; width:651px; height:413px"><img decoding="async" src="assets/recorte/capa.webp" alt="Capa do livreto Recorte" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:713px; top:2154px; width:726px; height:413px"><img decoding="async" src="assets/recorte/espiral.webp" alt="Livreto aberto na matéria Em busca dos textos não oficiais" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
 
   <!-- livro aberto + citação -->
-  <div class="bloco fade-in-element" style="left:51px; top:2577px; width:652px; height:554px"><img decoding="async" src="assets/recorte/livro-aberto.jpg" alt="Livreto Recorte aberto" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco fade-in-element" style="left:51px; top:2577px; width:652px; height:554px"><img decoding="async" src="assets/recorte/livro-aberto.webp" alt="Livreto Recorte aberto" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
   <section class="bloco citacao lilas fade-in-element">
     <img decoding="async" class="aspas" src="assets/recorte/aspas-roxa.png" alt="" style="left:69px; top:65px">
     <span class="grifo" style="left:117px; top:157px; width:330px"></span>
@@ -213,9 +213,9 @@
   </section>
 
   <!-- todas as páginas, em miniatura -->
-  <div class="bloco miniaturas fade-in-element"><img decoding="async" class="grade" src="assets/recorte/paginas.jpg" alt="As páginas do livreto Recorte, em miniatura" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco miniaturas fade-in-element"><img decoding="async" class="grade" src="assets/recorte/paginas.webp" alt="As páginas do livreto Recorte, em miniatura" loading="lazy"><span class="c1"></span><span class="c2"></span></div>
 
-  <!-- livreto virtual: as 44 páginas (assets/recorte/livro/pag-NNN.jpg), folheadas como um livro -->
+  <!-- livreto virtual: as 44 páginas (assets/recorte/livro/pag-NNN.webp), folheadas como um livro -->
   <div class="bloco livro fade-in-element" id="revista-virtual" aria-roledescription="livreto" aria-label="livreto Recorte, para folhear">
     <div class="revista">
       <div class="lado esq" role="img"></div>
@@ -260,45 +260,13 @@
 </div>
 
 <script>
-/* fade in: cada .fade-in-element aparece (uma vez) quando entra na tela */
-(() => {
-  const MARGEM = 16;
-  let pendentes = [...document.querySelectorAll('.fade-in-element')];
-  let pedido = false;
-  function confere() {
-    pedido = false;
-    if (!window.__carregou) return;
-    pendentes = pendentes.filter(e => {
-      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
-      return true;
-    });
-    if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
-  }
-  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(confere); } }
-  addEventListener('scroll', agenda, { passive: true });
-  addEventListener('resize', agenda);
-  quandoCarregar(agenda);
-})();
-</script>
-<script>
-/* vídeos (os GIFs do Figma): só tocam enquanto estão na tela — economiza processamento */
-(() => {
-  const videos = [...document.querySelectorAll('video')];
-  if (!('IntersectionObserver' in window)) { videos.forEach(v => v.play().catch(() => {})); return; }
-  const io = new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) e.target.play().catch(() => {}); else e.target.pause();
-  }), { rootMargin: '200px 0px' });
-  videos.forEach(v => io.observe(v));
-})();
-</script>
-<script>
 /* livreto virtual: abre na capa (sozinha, à direita), depois páginas duplas 2–3, 4–5… até a 44 (sozinha, à esquerda).
    As setas (na tela e no teclado ← →) ou um clique na página da direita/esquerda viram a folha. */
 (() => {
   const raiz = document.getElementById('revista-virtual');
   if (!raiz) return;
   const TOTAL = 44, ULTIMA = Math.floor(TOTAL / 2);    // 23 aberturas: 0 (capa) … 22
-  const url = n => 'assets/recorte/livro/pag-' + String(n).padStart(3, '0') + '.jpg';
+  const url = n => 'assets/recorte/livro/pag-' + String(n).padStart(3, '0') + '.webp';
   const pags = s => [s === 0 ? null : 2 * s, 2 * s + 1 <= TOTAL ? 2 * s + 1 : null];
   const rev = raiz.querySelector('.revista'), esq = rev.querySelector('.esq'), dir = rev.querySelector('.dir');
   const ant = raiz.querySelector('.seta-livro.ant'), prox = raiz.querySelector('.seta-livro.prox'), txt = raiz.querySelector('.contador .txt');

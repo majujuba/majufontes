@@ -168,17 +168,17 @@
 
   <!-- fotos, embalagens e posts -->
   <img decoding="async" class="peca fade-in-element" src="assets/kitkat/metro.jpg" alt="Painel do KitKat Match Up no metrô Sé" loading="lazy" style="left:51px; top:1199px; width:1390px; height:542px">
-  <img decoding="async" class="peca fade-in-element" src="assets/kitkat/familia.jpg" alt="Família de embalagens KitKat Match Up" loading="lazy" style="left:51px; top:1751px; width:750px; height:429px">
-  <img decoding="async" class="peca fade-in-element" src="assets/kitkat/sabores.jpg" alt="Os sabores do KitKat Match Up" loading="lazy" style="left:811px; top:1751px; width:630px; height:879px">
+  <img decoding="async" class="peca fade-in-element" src="assets/kitkat/familia.webp" alt="Família de embalagens KitKat Match Up" loading="lazy" style="left:51px; top:1751px; width:750px; height:429px">
+  <img decoding="async" class="peca fade-in-element" src="assets/kitkat/sabores.webp" alt="Os sabores do KitKat Match Up" loading="lazy" style="left:811px; top:1751px; width:630px; height:879px">
   <section class="bloco citacao lilas fade-in-element" style="left:51px; top:2190px; width:750px; height:440.2px">
     <img decoding="async" class="aspas" src="assets/kitkat/aspas-clara.png" alt="" style="left:97px; top:76px">
     <span class="grifo" style="left:458px; top:169px; width:199px"></span>
     <p style="left:97px; top:160px; line-height:52px">uma linha como <mark>Value Up</mark><br>perfeito para KitKat,<br>elevando a experiência<br>sem perder sua essência.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
-  <img decoding="async" class="peca fade-in-element" src="assets/kitkat/fingers.jpg" alt="Fingers de KitKat nos sabores morango e pudim" loading="lazy" style="left:51px; top:2640px; width:750px; height:549px">
+  <img decoding="async" class="peca fade-in-element" src="assets/kitkat/fingers.webp" alt="Fingers de KitKat nos sabores morango e pudim" loading="lazy" style="left:51px; top:2640px; width:750px; height:549px">
   <div class="bloco fade-in-element" style="left:811px; top:2640px; width:631px; height:549px"><video src="assets/kitkat/stories.mp4" poster="assets/kitkat/stories-poster.jpg" muted loop playsinline preload="metadata" aria-label="Animação: stories do KitKat Match Up"></video><span class="c1"></span><span class="c2"></span></div>
-  <img decoding="async" class="peca fade-in-element" src="assets/kitkat/embalagem.jpg" alt="Embalagem do KitKat Match Up" loading="lazy" style="left:51px; top:3197px; width:543px; height:482px">
+  <img decoding="async" class="peca fade-in-element" src="assets/kitkat/embalagem.webp" alt="Embalagem do KitKat Match Up" loading="lazy" style="left:51px; top:3197px; width:543px; height:482px">
   <div class="bloco fade-in-element" style="left:604px; top:3197px; width:838px; height:483px"><video src="assets/kitkat/produto.mp4" poster="assets/kitkat/produto.jpg" muted loop playsinline preload="metadata" aria-label="Animação: o produto KitKat Match Up em movimento"></video><span class="c1"></span><span class="c2"></span></div>
   <section class="bloco citacao lilas fade-in-element" style="left:51px; top:3689px; width:541px; height:546px">
     <img decoding="async" class="aspas" src="assets/kitkat/aspas-clara.png" alt="" style="left:89px; top:86px">
@@ -187,9 +187,9 @@
     <p style="left:89px; top:170px">os elementos<br>coloridos nas<br>embalagens são<br>para comunicar<br><mark>sabor intenso e<br>cremosidade</mark>.</p>
     <span class="c1"></span><span class="c2"></span>
   </section>
-  <img decoding="async" class="peca fade-in-element" src="assets/kitkat/post.jpg" alt="Post do KitKat Match Up no Instagram" loading="lazy" style="left:604px; top:3690px; width:837px; height:546px">
+  <img decoding="async" class="peca fade-in-element" src="assets/kitkat/post.webp" alt="Post do KitKat Match Up no Instagram" loading="lazy" style="left:604px; top:3690px; width:837px; height:546px">
   <img decoding="async" class="peca fade-in-element" src="assets/kitkat/pessoa.jpg" alt="Pessoa segurando o KitKat Match Up" loading="lazy" style="left:51px; top:4245px; width:541px; height:777px">
-  <img decoding="async" class="peca fade-in-element" src="assets/kitkat/display.jpg" alt="Display diagonal do KitKat Match Up" loading="lazy" style="left:605px; top:4245px; width:836px; height:777px">
+  <img decoding="async" class="peca fade-in-element" src="assets/kitkat/display.webp" alt="Display diagonal do KitKat Match Up" loading="lazy" style="left:605px; top:4245px; width:836px; height:777px">
   <img decoding="async" class="abs assinatura fade-in-element" src="assets/kitkat/assinatura.webp" alt="Iai, bora de Match?" loading="lazy">
 
   <!-- celular: botão que abre/fecha o texto do projeto (no computador não aparece) -->
@@ -224,38 +224,6 @@
 </header>
 </div>
 
-<script>
-/* fade in: cada .fade-in-element aparece (uma vez) quando entra na tela */
-(() => {
-  const MARGEM = 16;
-  let pendentes = [...document.querySelectorAll('.fade-in-element')];
-  let pedido = false;
-  function confere() {
-    pedido = false;
-    if (!window.__carregou) return;
-    pendentes = pendentes.filter(e => {
-      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
-      return true;
-    });
-    if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
-  }
-  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(confere); } }
-  addEventListener('scroll', agenda, { passive: true });
-  addEventListener('resize', agenda);
-  quandoCarregar(agenda);
-})();
-</script>
-<script>
-/* vídeos (os GIFs do Figma, e os olhos do topo): só tocam enquanto estão na tela — economiza processamento */
-(() => {
-  const videos = [...document.querySelectorAll('video:not(.abertura)')];   // a abertura (com som) só toca no play
-  if (!('IntersectionObserver' in window)) { videos.forEach(v => v.play().catch(() => {})); return; }
-  const io = new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) e.target.play().catch(() => {}); else e.target.pause();
-  }), { rootMargin: '200px 0px' });
-  videos.forEach(v => io.observe(v));
-})();
-</script>
 <!-- pausa as animações pesadas enquanto a página rola -->
 <script src="assets/desempenho.js"></script>
 <script src="assets/header-some.js"></script>

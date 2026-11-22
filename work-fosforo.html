@@ -179,8 +179,8 @@
   </section>
 
   <!-- caixas, faixas de fogo e animação (os GIFs do Figma viraram vídeos em loop) -->
-  <img decoding="async" class="peca fade-in-element" src="assets/fosforo/caixa-1.jpg" alt="Caixa de fósforo Paraná" loading="lazy" style="left:50px; top:1162px; width:691px; height:414px">
-  <img decoding="async" class="peca fade-in-element" src="assets/fosforo/caixa-2.jpg" alt="Caixa de fósforo Paraná, outro lado" loading="lazy" style="left:749px; top:1162px; width:691px; height:414px">
+  <img decoding="async" class="peca fade-in-element" src="assets/fosforo/caixa-1.webp" alt="Caixa de fósforo Paraná" loading="lazy" style="left:50px; top:1162px; width:691px; height:414px">
+  <img decoding="async" class="peca fade-in-element" src="assets/fosforo/caixa-2.webp" alt="Caixa de fósforo Paraná, outro lado" loading="lazy" style="left:749px; top:1162px; width:691px; height:414px">
   <div class="bloco fade-in-element" style="left:48px; top:1584px; width:1392px; height:179px"><video src="assets/fosforo/fogo-vermelho.mp4" poster="assets/fosforo/fogo-vermelho.jpg" muted loop playsinline preload="metadata" aria-label="Animação: faixa de fogo vermelho"></video><span class="c1"></span><span class="c2"></span></div>
   <div class="bloco fade-in-element" style="left:48px; top:1772px; width:1392px; height:610px"><video src="assets/fosforo/animacao.mp4" poster="assets/fosforo/animacao.jpg" muted loop playsinline preload="metadata" aria-label="Animação das caixas de fósforo"></video><span class="c1"></span><span class="c2"></span></div>
   <img decoding="async" class="peca fade-in-element" src="assets/fosforo/mockup-primaria.jpg" alt="Mockup da embalagem primária" loading="lazy" style="left:48px; top:2392px; width:693px; height:521px">
@@ -191,7 +191,7 @@
     <span class="c1"></span><span class="c2"></span>
   </section>
   <div class="bloco fade-in-element" style="left:50px; top:2922px; width:1390px; height:179px"><video src="assets/fosforo/fogo-amarelo.mp4" poster="assets/fosforo/fogo-amarelo.jpg" muted loop playsinline preload="metadata" aria-label="Animação: faixa de fogo amarelo"></video><span class="c1"></span><span class="c2"></span></div>
-  <img decoding="async" class="peca fade-in-element" src="assets/fosforo/lados.jpg" alt="Os lados da embalagem" loading="lazy" style="left:51px; top:3111px; width:1388px; height:461px">
+  <img decoding="async" class="peca fade-in-element" src="assets/fosforo/lados.webp" alt="Os lados da embalagem" loading="lazy" style="left:51px; top:3111px; width:1388px; height:461px">
 
   <!-- caixas em 3D (arraste para girar) -->
   <div class="bloco modelo fade-in-element" style="left:50px; top:3581px">
@@ -237,38 +237,6 @@
 </header>
 </div>
 
-<script>
-/* fade in: cada .fade-in-element aparece (uma vez) quando entra na tela */
-(() => {
-  const MARGEM = 16;
-  let pendentes = [...document.querySelectorAll('.fade-in-element')];
-  let pedido = false;
-  function confere() {
-    pedido = false;
-    if (!window.__carregou) return;
-    pendentes = pendentes.filter(e => {
-      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
-      return true;
-    });
-    if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
-  }
-  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(confere); } }
-  addEventListener('scroll', agenda, { passive: true });
-  addEventListener('resize', agenda);
-  quandoCarregar(agenda);
-})();
-</script>
-<script>
-/* vídeos (os GIFs do Figma): só tocam enquanto estão na tela — economiza processamento */
-(() => {
-  const videos = [...document.querySelectorAll('video')];
-  if (!('IntersectionObserver' in window)) { videos.forEach(v => v.play().catch(() => {})); return; }
-  const io = new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) e.target.play().catch(() => {}); else e.target.pause();
-  }), { rootMargin: '200px 0px' });
-  videos.forEach(v => io.observe(v));
-})();
-</script>
 <script>
 /* abrindo a página direto do arquivo (file://), o navegador bloqueia a leitura dos .glb:
    nesse caso usa os modelos embutidos em modelos-locais.js (no site publicado nada disso acontece) */

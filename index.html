@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap">
 <!-- cursor com rastro de pixels (assets/cursor-trail.css + .js) -->
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
@@ -290,7 +290,7 @@
 
     <div class="abs pilha fade-in-element tilt-3d-container">
     <a class="card tilt-3d roxo" style="--i:0" href="work-tiposp.html">
-      <img decoding="async" class="abs foto" src="assets/card-tiposp.jpg" alt="TipoSP">
+      <img decoding="async" class="abs foto" src="assets/card-tiposp.webp" alt="TipoSP">
       <span class="abs nome">TipoSP</span>
       <span class="abs cat">Web Design</span>
       <img decoding="async" class="abs espiral maior" src="assets/espiral-tiposp.svg" alt="">
@@ -308,7 +308,7 @@
       <img decoding="async" class="abs espiral" src="assets/espiral-clara.svg" alt="">
     </a>
     <a class="card tilt-3d azul" style="--i:3" href="work-dengo.html">
-      <img decoding="async" class="abs foto" src="assets/card-dengo.jpg" alt="Dengo" style="object-fit:cover">
+      <img decoding="async" class="abs foto" src="assets/card-dengo.webp" alt="Dengo" style="object-fit:cover">
       <span class="abs nome">Dengo</span>
       <span class="abs cat">Estampas</span>
       <img decoding="async" class="abs espiral" src="assets/espiral-roxa.svg" alt="">
@@ -344,28 +344,6 @@
   const h = document.querySelector('.header');
   // quando a header desce, a barra de cima do Safari passa do azul do topo para a cor dela (roxo)
   if (h) quandoCarregar(() => requestAnimationFrame(() => requestAnimationFrame(() => { h.classList.add('desceu'); if (window.corBarra) corBarra.volta(); })));
-})();
-</script>
-<script>
-/* fade in: cada .fade-in-element aparece (uma vez) quando entra na tela */
-(() => {
-  const MARGEM = 16;   // quantos px o elemento precisa ter entrado na tela para aparecer
-  let pendentes = [...document.querySelectorAll('.fade-in-element')];
-  let pedido = false;
-  function confere() {
-    pedido = false;
-    if (!window.__carregou) return;                 // espera a tela de carregamento sair
-    // só a posição vertical importa; o que já ficou acima da tela também aparece
-    pendentes = pendentes.filter(e => {
-      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
-      return true;
-    });
-    if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
-  }
-  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(confere); } }
-  addEventListener('scroll', agenda, { passive: true });
-  addEventListener('resize', agenda);
-  quandoCarregar(agenda);
 })();
 </script>
 <script>

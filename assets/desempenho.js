@@ -57,3 +57,38 @@
   };
   if (document.readyState === 'loading') addEventListener('DOMContentLoaded', inicia); else inicia();
 })();
+
+/* SURGIR AO ROLAR (fade in) — comum a todas as páginas (antes repetido em cada uma):
+   cada .fade-in-element aparece (uma vez) quando entra na tela, depois que a tela de carregamento sai */
+(() => {
+  const MARGEM = 16;   // quantos px o elemento precisa ter entrado na tela para aparecer
+  let pendentes = [...document.querySelectorAll('.fade-in-element')];
+  if (!pendentes.length) return;
+  let pedido = false;
+  function confere() {
+    pedido = false;
+    if (!window.__carregou) return;                 // espera a tela de carregamento sair
+    // só a posição vertical importa; o que já ficou acima da tela também aparece
+    pendentes = pendentes.filter(e => {
+      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
+      return true;
+    });
+    if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
+  }
+  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(confere); } }
+  addEventListener('scroll', agenda, { passive: true });
+  addEventListener('resize', agenda);
+  if (window.quandoCarregar) quandoCarregar(agenda); else agenda();
+})();
+
+/* VÍDEOS SÓ TOCAM NA TELA (os GIFs do Figma, os olhos do topo…) — economiza processamento (antes repetido nas páginas de projeto).
+   Ficam de fora a abertura com som da A Substância (só toca no play) e as capas do celular da work (têm o próprio controle). */
+(() => {
+  const videos = [...document.querySelectorAll('video:not(.abertura):not(.capa-celular)')];
+  if (!videos.length) return;
+  if (!('IntersectionObserver' in window)) { videos.forEach(v => v.play().catch(() => {})); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) e.target.play().catch(() => {}); else e.target.pause();
+  }), { rootMargin: '200px 0px' });
+  videos.forEach(v => io.observe(v));
+})();

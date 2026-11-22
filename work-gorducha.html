@@ -219,7 +219,7 @@
   </section>
 
   <!-- vídeo do projeto -->
-  <div class="bloco video-bloco fade-in-element"><video class="abertura" data-cursor="link" src="assets/gorducha/video.mp4" poster="assets/gorducha/video.jpg" controls playsinline preload="metadata" aria-label="Vídeo da tipografia Gorducha"></video><span class="c1"></span><span class="c2"></span></div>
+  <div class="bloco video-bloco fade-in-element"><video class="abertura" data-cursor="link" src="assets/gorducha/video.mp4" poster="assets/gorducha/video.webp" controls playsinline preload="metadata" aria-label="Vídeo da tipografia Gorducha"></video><span class="c1"></span><span class="c2"></span></div>
 
   <!-- caixa para escrever com a Gorducha -->
   <section class="bloco escrever fade-in-element" aria-label="escreva com a tipografia Gorducha">
@@ -267,38 +267,6 @@
 </header>
 </div>
 
-<script>
-/* fade in: cada .fade-in-element aparece (uma vez) quando entra na tela */
-(() => {
-  const MARGEM = 16;
-  let pendentes = [...document.querySelectorAll('.fade-in-element')];
-  let pedido = false;
-  function confere() {
-    pedido = false;
-    if (!window.__carregou) return;
-    pendentes = pendentes.filter(e => {
-      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
-      return true;
-    });
-    if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
-  }
-  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(confere); } }
-  addEventListener('scroll', agenda, { passive: true });
-  addEventListener('resize', agenda);
-  quandoCarregar(agenda);
-})();
-</script>
-<script>
-/* vídeos (os GIFs do Figma, e os olhos do topo): só tocam enquanto estão na tela — economiza processamento */
-(() => {
-  const videos = [...document.querySelectorAll('video:not(.abertura)')];   // a abertura (com som) só toca no play
-  if (!('IntersectionObserver' in window)) { videos.forEach(v => v.play().catch(() => {})); return; }
-  const io = new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) e.target.play().catch(() => {}); else e.target.pause();
-  }), { rootMargin: '200px 0px' });
-  videos.forEach(v => io.observe(v));
-})();
-</script>
 <script>
 /* caixa de escrever: cada cor da barra pinta o fundo (tom pastel) e a letra (tom escuro do mesmo par); o tamanho da letra diminui quando o texto não cabe */
 (() => {

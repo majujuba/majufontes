@@ -156,7 +156,7 @@
 <div class="frame"><main class="page">
 
   <!-- topo -->
-  <div class="abs hero"><img decoding="async" src="assets/granado/hero.jpg" alt="Cajus e folhas carimbados do cartaz Granado"></div>
+  <div class="abs hero"><img decoding="async" src="assets/granado/hero.webp" alt="Cajus e folhas carimbados do cartaz Granado"></div>
   <div class="abs hero-fundo"></div>
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Cartaz Granado</h1>
 
@@ -173,10 +173,10 @@
   <div class="bloco fade-in-element" style="left:51px; top:1189px; width:1388px; height:208.2px"><video src="assets/granado/faixa.mp4" poster="assets/granado/faixa.jpg" muted loop playsinline preload="metadata" aria-label="Animação: assinatura do cartaz"></video><span class="c1"></span><span class="c2"></span></div>
 
   <!-- cartaz e fotos -->
-  <img decoding="async" class="peca fade-in-element" src="assets/granado/cartaz.jpg" alt="Cartaz Granado: cajus e folhas carimbados em cores terrosas" loading="lazy" style="left:51px; top:1407px; width:1388px; height:1714px">
+  <img decoding="async" class="peca fade-in-element" src="assets/granado/cartaz.webp" alt="Cartaz Granado: cajus e folhas carimbados em cores terrosas" loading="lazy" style="left:51px; top:1407px; width:1388px; height:1714px">
   <img decoding="async" class="peca fade-in-element" src="assets/granado/cartaz-parede.jpg" alt="Cartaz Granado aplicado" loading="lazy" style="left:51px; top:3131.4px; width:689px; height:584px">
   <img decoding="async" class="peca fade-in-element" src="assets/granado/cartaz-mao.jpg" alt="Cartaz Granado aplicado" loading="lazy" style="left:750px; top:3131.4px; width:689px; height:584px">
-  <img decoding="async" class="peca fade-in-element" src="assets/granado/processo-1.jpg" alt="Processo: carimbos de caju" loading="lazy" style="left:50px; top:3724px; width:460px; height:368px">
+  <img decoding="async" class="peca fade-in-element" src="assets/granado/processo-1.webp" alt="Processo: carimbos de caju" loading="lazy" style="left:50px; top:3724px; width:460px; height:368px">
   <img decoding="async" class="peca fade-in-element" src="assets/granado/processo-2.jpg" alt="Processo: carimbos de caju" loading="lazy" style="left:518px; top:3724px; width:458px; height:368px">
   <img decoding="async" class="peca fade-in-element" src="assets/granado/processo-3.jpg" alt="Processo: carimbos de caju" loading="lazy" style="left:983px; top:3724px; width:457px; height:368px">
 
@@ -219,38 +219,6 @@
 </header>
 </div>
 
-<script>
-/* fade in: cada .fade-in-element aparece (uma vez) quando entra na tela */
-(() => {
-  const MARGEM = 16;
-  let pendentes = [...document.querySelectorAll('.fade-in-element')];
-  let pedido = false;
-  function confere() {
-    pedido = false;
-    if (!window.__carregou) return;
-    pendentes = pendentes.filter(e => {
-      if (retangulo(e).top < innerHeight - MARGEM) { e.classList.add('visivel'); return false; }
-      return true;
-    });
-    if (!pendentes.length) { removeEventListener('scroll', agenda); removeEventListener('resize', agenda); }
-  }
-  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(confere); } }
-  addEventListener('scroll', agenda, { passive: true });
-  addEventListener('resize', agenda);
-  quandoCarregar(agenda);
-})();
-</script>
-<script>
-/* vídeos (os GIFs do Figma): só tocam enquanto estão na tela — economiza processamento */
-(() => {
-  const videos = [...document.querySelectorAll('video')];
-  if (!('IntersectionObserver' in window)) { videos.forEach(v => v.play().catch(() => {})); return; }
-  const io = new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) e.target.play().catch(() => {}); else e.target.pause();
-  }), { rootMargin: '200px 0px' });
-  videos.forEach(v => io.observe(v));
-})();
-</script>
 <script>
 /* quadro amarelo: cada clique carimba um desenho do cartaz (11 cajus e 3 folhas), girado e com tamanho um pouco diferente.
    Os cajus saem mais vezes que as folhas. "limpar" apaga tudo. */
