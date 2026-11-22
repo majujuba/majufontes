@@ -182,10 +182,12 @@
      e a flor de baixo antes do rodapé. Medidas em vw (tela de 375 = 100vw) */
   html.celular .frame { height: auto; }
   html.celular .page { position: relative; left: 0; margin: 0; width: 100%; height: auto; display: flex; flex-direction: column;
-    padding-top: 116vw; }
-  html.celular .topo-bg { left: 0; right: 0; height: 150vw; background: linear-gradient(180deg, #55427D 12vw, #5E0B0B 150vw); }
-  html.celular .flor-topo { left: -6vw; top: 6vw; width: 150vw; height: 78.1vw; }   /* espelhada como no computador (scaleX(-1)) */
-  html.celular .titulo { left: 6.4vw; top: 64vw; font-size: 21.87vw; line-height: 21.33vw; z-index: 1; }
+    padding-top: 138vw; }
+  html.celular .topo-bg { left: 0; right: 0; height: 170vw; background: linear-gradient(180deg, #55427D 12vw, #5E0B0B 170vw); }
+  /* flor do mesmo tamanho da do topo da work no celular (293vw de largura, pedido dela), espelhada como no computador:
+     a caixa é a da work refletida no meio da tela, então a flor cresce para a esquerda */
+  html.celular .flor-topo { left: -158.8vw; top: -65.44vw; width: 293.15vw; height: 152.7vw; }
+  html.celular .titulo { left: 6.4vw; top: 85.07vw; font-size: 21.87vw; line-height: 21.33vw; z-index: 1; }   /* como o "projetos works" */
 
   /* chamada "que tal nos conectarmos?" */
   html.celular .chamada { position: relative; left: auto; top: auto; width: auto; margin: 0 7vw; z-index: 1; }
@@ -217,10 +219,9 @@
   html.celular .botao-pixel:hover, html.celular.js .botao-pixel.fade-in-element.visivel:hover { transform: none; }   /* sem "hover" preso no toque */
   html.celular .aviso-envio { position: static; margin-top: 4vw; font-size: 16px; }
 
-  /* flor de baixo: a mesma caixa recortada do computador (813 × 251), na largura da tela, antes do rodapé */
-  html.celular .flor-baixo-caixa { position: relative; left: auto; top: auto; width: 100%; height: auto; aspect-ratio: 813 / 251; margin-top: 12vw; order: 1; }
+  html.celular .flor-baixo-caixa { display: none; }   /* sem a flor de baixo no celular (pedido dela) */
+  html.celular .form-contato { margin-bottom: 14vw; }
   html.celular .rodape { order: 2; }
-  html.celular .flor-baixo { left: -29.35%; top: -10.96%; width: 132.08%; height: 222.83%; }
 </style>
 <script>
   document.documentElement.classList.add('js');
