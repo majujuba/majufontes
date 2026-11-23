@@ -92,3 +92,15 @@
   }), { rootMargin: '200px 0px' });
   videos.forEach(v => io.observe(v));
 })();
+
+/* CAPAS DO CELULAR DA WORK (TipoSP, A Substância, Fósforo): só tocam no layout de celular e enquanto estão na tela.
+   No computador ficam escondidas e nem carregam (preload="none") */
+(() => {
+  const videos = [...document.querySelectorAll('video.capa-celular')];
+  if (!videos.length || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting && document.documentElement.classList.contains('celular')) e.target.play().catch(() => {});
+    else e.target.pause();
+  }), { rootMargin: '200px 0px' });
+  videos.forEach(v => io.observe(v));
+})();
