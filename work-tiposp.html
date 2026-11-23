@@ -60,7 +60,7 @@
   .bloco > .c1   { left: 0; bottom: 0; }
   .bloco > .c2   { right: 0; bottom: 0; }
   /* cartazes: o vídeo tem faixas pretas nas laterais (x 98–1780 de 1876); ampliado para a parede preencher a moldura */
-  .cartazes > video { transform: scale(1.12); }
+  html:not(.celular) .cartazes > video { transform: scale(1.12); }   /* no celular o recorte é outro (mais abaixo) */
 
   /* ── texto de apresentação ── */
   .apresentacao { left: 51px; top: 931px; width: 1390px; height: 230px; background: var(--azul-header); color: var(--roxo); }
