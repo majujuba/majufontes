@@ -127,6 +127,13 @@
   }
   /* fotos/vídeos dos projetos: só aparecem no celular (no computador os retângulos continuam roxos, como no Figma) */
   .projeto .capa-celular { display: none; }
+  /* computador: o gif de cada projeto preenche o retângulo, com o roxo (#3F3166) a 60% por cima;
+     com o mouse em cima, o roxo some em pixels a partir do mouse (canvas .veu, script no fim da página) */
+  .projeto .imagem { overflow: hidden; }
+  .projeto .capa-pc { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .projeto .veu { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .6; pointer-events: none; }
+  .projeto .imagem::before, .projeto .imagem::after, .projeto .imagem > .c1, .projeto .imagem > .c2 { z-index: 2; }
+  html.celular .projeto .capa-pc, html.celular .projeto .veu { display: none; }
 
   /* ══════════ VERSÃO CELULAR (só com html.celular — ver assets/celular.js; o desktop acima não muda) ══════════
      Figma "Mobile" da work (176:570), largura 375 → medidas em vw (1px do Figma = 0,2667vw):
@@ -181,7 +188,7 @@
 
   <!-- projetos (posições do Figma; o topo de cada um = 620 + posição na seção) -->
   <a class="abs projeto esq fade-in-element" style="top:757px" href="work-tiposp.html">
-    <span class="imagem"><video class="capa-celular" src="assets/works-celular/01-tiposp.mp4" poster="assets/works-celular/01-tiposp.jpg" muted loop playsinline preload="none" aria-hidden="true"></video><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><video class="capa-pc" src="assets/works-desktop/tiposp.mp4" poster="assets/works-desktop/tiposp.webp" muted loop playsinline preload="none" aria-hidden="true"></video><canvas class="veu" aria-hidden="true"></canvas><video class="capa-celular" src="assets/works-celular/01-tiposp.mp4" poster="assets/works-celular/01-tiposp.jpg" muted loop playsinline preload="none" aria-hidden="true"></video><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:1092px; top:32px; letter-spacing:-0.68px">TipoSP</h2>
     <span class="area" style="left:1096px; top:119px">Web Design</span>
     <p style="left:1096px; top:189px; width:319px">Um sistema com tradução da tipografia da cidade, desde o seu nascimento até o presente.</p>
@@ -190,7 +197,7 @@
   <img decoding="async" class="abs divisa" style="top:1131px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto dir fade-in-element" style="top:1190px" href="work-vizao.html">
-    <span class="imagem"><img class="capa-celular" src="assets/works-celular/02-vizao.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><video class="capa-pc" src="assets/works-desktop/vizao.mp4" poster="assets/works-desktop/vizao.webp" muted loop playsinline preload="none" aria-hidden="true"></video><canvas class="veu" aria-hidden="true"></canvas><img class="capa-celular" src="assets/works-celular/02-vizao.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:93px; top:32px">Vizão</h2>
     <span class="area" style="left:93px; top:115px">Editorial</span>
     <p style="left:93px; top:181px; width:282px">“Povos Originários estão revolucionando a ciência com seus conhecimentos ancestrais”</p>
@@ -199,7 +206,7 @@
   <img decoding="async" class="abs divisa" style="top:1564px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto esq fade-in-element" style="top:1623px" href="work-gorducha.html">
-    <span class="imagem"><img class="capa-celular" src="assets/works-celular/03-gorducha.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><video class="capa-pc" src="assets/works-desktop/gorducha.mp4" poster="assets/works-desktop/gorducha.webp" muted loop playsinline preload="none" aria-hidden="true"></video><canvas class="veu" aria-hidden="true"></canvas><img class="capa-celular" src="assets/works-celular/03-gorducha.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:1092px; top:32px; letter-spacing:-2.04px">Gorducha</h2>
     <span class="area" style="left:1095px; top:119px">Tipografia</span>
     <p style="left:1095px; top:189px; width:295px">Um sistema tipográfico display inspirado em elementos orgânicos que busca resgatar a estética divertida dos anos 70.</p>
@@ -208,7 +215,7 @@
   <img decoding="async" class="abs divisa" style="top:1997px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto dir fade-in-element" style="top:2056px" href="work-dengo.html">
-    <span class="imagem"><img class="capa-celular" src="assets/works-celular/04-dengo.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><video class="capa-pc" src="assets/works-desktop/dengo.mp4" poster="assets/works-desktop/dengo.webp" muted loop playsinline preload="none" aria-hidden="true"></video><canvas class="veu" aria-hidden="true"></canvas><img class="capa-celular" src="assets/works-celular/04-dengo.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:93px; top:32px; letter-spacing:-1.36px">Dengo</h2>
     <span class="area" style="left:93px; top:115px">Estampas</span>
     <p style="left:93px; top:181px; width:238px">Investiga a diversidade cultural brasileira e traduz visualmente em uma identidade gráfica.</p>
@@ -217,7 +224,7 @@
   <img decoding="async" class="abs divisa" style="top:2430px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto esq fade-in-element" style="top:2489px" href="work-a-substancia.html">
-    <span class="imagem"><video class="capa-celular" src="assets/works-celular/05-substancia.mp4" poster="assets/works-celular/05-substancia.jpg" muted loop playsinline preload="none" aria-hidden="true"></video><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><video class="capa-pc" src="assets/works-desktop/substancia.mp4" poster="assets/works-desktop/substancia.webp" muted loop playsinline preload="none" aria-hidden="true"></video><canvas class="veu" aria-hidden="true"></canvas><video class="capa-celular" src="assets/works-celular/05-substancia.mp4" poster="assets/works-celular/05-substancia.jpg" muted loop playsinline preload="none" aria-hidden="true"></video><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:1099px; top:6.5px; width:324px; font-size:66px; line-height:58px; letter-spacing:-2.64px">A Substância</h2>
     <span class="area" style="left:1092px; top:145px">Motion Design</span>
     <p style="left:1095px; top:202px; width:278px">Abertura de um audiovisual criada para o filme <em>A Substância (2024)</em>.</p>
@@ -226,7 +233,7 @@
   <img decoding="async" class="abs divisa" style="top:2863px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto dir fade-in-element" style="top:2922px" href="work-nsg.html">
-    <span class="imagem"><img class="capa-celular" src="assets/works-celular/06-nsg.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><video class="capa-pc" src="assets/works-desktop/nsg.mp4" poster="assets/works-desktop/nsg.webp" muted loop playsinline preload="none" aria-hidden="true"></video><canvas class="veu" aria-hidden="true"></canvas><img class="capa-celular" src="assets/works-celular/06-nsg.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:93px; top:32px; letter-spacing:-1.36px">NSG</h2>
     <span class="area" style="left:93px; top:115px">Identidade Visual</span>
     <p style="left:93px; top:181px; width:254px; letter-spacing:-0.16px">Rebranding para o time de e-sports <em>Noise Gaming,</em> focado em video games de futebol.</p>
@@ -235,7 +242,7 @@
   <img decoding="async" class="abs divisa" style="top:3296px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto esq fade-in-element" style="top:3355px" href="work-lord-ruthven.html">
-    <span class="imagem"><img class="capa-celular" src="assets/works-celular/07-lord.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><video class="capa-pc" src="assets/works-desktop/lord.mp4" poster="assets/works-desktop/lord.webp" muted loop playsinline preload="none" aria-hidden="true"></video><canvas class="veu" aria-hidden="true"></canvas><img class="capa-celular" src="assets/works-celular/07-lord.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 class="duas" style="left:1092px; top:18px; width:338px; letter-spacing:-1.36px">Lord Ruthven</h2>
     <span class="area" style="left:1093px; top:157px">Experimentação</span>
     <p style="left:1093px; top:211px; width:295px">Transformar um incômodo em experimento digital para as<br>redes sociais.</p>
@@ -244,7 +251,7 @@
   <img decoding="async" class="abs divisa" style="top:3729px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto dir fade-in-element" style="top:3788px" href="work-recorte.html">
-    <span class="imagem"><img class="capa-celular" src="assets/works-celular/08-recorte.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><video class="capa-pc" src="assets/works-desktop/recorte.mp4" poster="assets/works-desktop/recorte.webp" muted loop playsinline preload="none" aria-hidden="true"></video><canvas class="veu" aria-hidden="true"></canvas><img class="capa-celular" src="assets/works-celular/08-recorte.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:93px; top:32px; letter-spacing:-1.36px">Recorte</h2>
     <span class="area" style="left:93px; top:115px">Livreto - Editorial</span>
     <p style="left:93px; top:181px; width:263px; letter-spacing:-0.2px">Selecionar conteúdos da Revista Recorte e diagramá-los no modelo de livreto físico.</p>
@@ -253,7 +260,7 @@
   <img decoding="async" class="abs divisa" style="top:4162px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto esq fade-in-element" style="top:4221px" href="work-kit-kat.html">
-    <span class="imagem"><img class="capa-celular" src="assets/works-celular/09-kitkat.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><video class="capa-pc" src="assets/works-desktop/kitkat.mp4" poster="assets/works-desktop/kitkat.webp" muted loop playsinline preload="none" aria-hidden="true"></video><canvas class="veu" aria-hidden="true"></canvas><img class="capa-celular" src="assets/works-celular/09-kitkat.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:1092px; top:32px; letter-spacing:-2.72px">Kit Kat</h2>
     <span class="area" style="left:1092px; top:119px">Embalagem</span>
     <p style="left:1095px; top:189px; width:295px">Projeto se inicia sobre o momento do “break” como recorte temático, construímos uma linha de sabores pro público-alvo jovem.</p>
@@ -262,7 +269,7 @@
   <img decoding="async" class="abs divisa" style="top:4595px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto dir fade-in-element" style="top:4654px" href="work-fosforo.html">
-    <span class="imagem"><video class="capa-celular" src="assets/works-celular/10-fosforo.mp4" poster="assets/works-celular/10-fosforo.jpg" muted loop playsinline preload="none" aria-hidden="true"></video><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><video class="capa-pc" src="assets/works-desktop/fosforo.mp4" poster="assets/works-desktop/fosforo.webp" muted loop playsinline preload="none" aria-hidden="true"></video><canvas class="veu" aria-hidden="true"></canvas><video class="capa-celular" src="assets/works-celular/10-fosforo.mp4" poster="assets/works-celular/10-fosforo.jpg" muted loop playsinline preload="none" aria-hidden="true"></video><span class="c1"></span><span class="c2"></span></span>
     <h2 style="left:93px; top:32px; letter-spacing:-1.36px">Fósforo</h2>
     <span class="area" style="left:93px; top:115px">Embalagem</span>
     <p style="left:93px; top:181px; width:249px; letter-spacing:-0.2px">Redesign de embalagem para a marca <em>Fósforo Paraná</em>, com o objetivo de atualizar a embalagem da marca.</p>
@@ -271,7 +278,7 @@
   <img decoding="async" class="abs divisa" style="top:5028px" src="assets/works-linha.svg" alt="">
 
   <a class="abs projeto esq fade-in-element" style="top:5087px" href="work-cartaz-granado.html">
-    <span class="imagem"><img class="capa-celular" src="assets/works-celular/11-granado.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
+    <span class="imagem"><video class="capa-pc" src="assets/works-desktop/granado.mp4" poster="assets/works-desktop/granado.webp" muted loop playsinline preload="none" aria-hidden="true"></video><canvas class="veu" aria-hidden="true"></canvas><img class="capa-celular" src="assets/works-celular/11-granado.webp" alt="" loading="lazy" decoding="async"><span class="c1"></span><span class="c2"></span></span>
     <h2 class="duas" style="left:1095px; top:18px; width:338px; letter-spacing:-1.36px">Cartaz Granado</h2>
     <span class="area" style="left:1097px; top:157px">Ritmo Visual</span>
     <p style="left:1097px; top:211px; width:295px">Composição de elementos livre, com a escolha dos elementos para a marca Granado.</p>
@@ -324,6 +331,68 @@
 </script>
 <!-- cursor com rastro de pixels -->
 <!-- pausa as animações pesadas enquanto a página rola -->
+<script>
+/* computador: o roxo por cima de cada gif some em pixels a partir do mouse quando ele entra no retângulo,
+   e volta (também em pixels, a partir de onde o mouse saiu) quando ele sai */
+(() => {
+  const html = document.documentElement, LADO = 14, DURA = 650, ESPALHA = 0.22, COR = '#3F3166';
+  const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.projeto').forEach(proj => {
+    const img = proj.querySelector('.imagem'), tela = img.querySelector('.veu');
+    if (!tela) return;
+    const ctx = tela.getContext('2d');
+    let W = 0, H = 0, nx = 0, ny = 0, cheio = [], quadro = 0;
+    function prepara() {
+      const w = img.offsetWidth, h = img.offsetHeight;
+      if (w === W && h === H) return;
+      W = w; H = h;
+      const dpr = Math.min(2, devicePixelRatio || 1);
+      tela.width = Math.ceil(W * dpr); tela.height = Math.ceil(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      nx = Math.ceil(W / LADO); ny = Math.ceil(H / LADO);
+      cheio = new Array(nx * ny).fill(true);
+      desenha();
+    }
+    function desenha() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = COR;
+      for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++)
+        if (cheio[j * nx + i]) ctx.fillRect(i * LADO, j * LADO, LADO + .5, LADO + .5);
+    }
+    // ponto do mouse dentro do retângulo, em px da página (a composição pode estar em escala: celular.js)
+    function ponto(e) {
+      const r = retangulo(img), k = window.escalaPagina || 1;
+      return [(e.clientX - r.left) / k, (e.clientY - r.top) / k];
+    }
+    function anima(e, enchendo) {
+      prepara();
+      cancelAnimationFrame(quadro);
+      if (calmo) { cheio.fill(enchendo); desenha(); return; }
+      const [mx, my] = ponto(e);
+      // quanto mais longe do mouse, mais tarde o quadradinho muda (com um pouco de acaso)
+      const longe = Math.max(Math.hypot(mx, my), Math.hypot(W - mx, my), Math.hypot(mx, H - my), Math.hypot(W - mx, H - my)) || 1;
+      const t = [];
+      for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+        const d = Math.hypot((i + .5) * LADO - mx, (j + .5) * LADO - my) / longe;
+        t.push(d * (1 - ESPALHA) + Math.random() * ESPALHA);
+      }
+      const t0 = performance.now();
+      const passo = agora => {
+        const p = Math.min(1, (agora - t0) / DURA);
+        let mudou = false;
+        for (let c = 0; c < t.length; c++) if (t[c] <= p && cheio[c] !== enchendo) { cheio[c] = enchendo; mudou = true; }
+        if (mudou) desenha();
+        if (p < 1) quadro = requestAnimationFrame(passo);
+      };
+      quadro = requestAnimationFrame(passo);
+    }
+    prepara();
+    img.addEventListener('mouseenter', e => { if (!html.classList.contains('celular')) anima(e, false); });
+    img.addEventListener('mouseleave', e => { if (!html.classList.contains('celular')) anima(e, true); });
+    addEventListener('celular-mudou', () => { W = 0; prepara(); });
+  });
+})();
+</script>
 <script src="assets/desempenho.js"></script>
 <script src="assets/barra-rolagem.js"></script>
 <script src="assets/cursor-trail.js"></script>
