@@ -335,7 +335,7 @@
 /* computador: o roxo por cima de cada gif some em pixels a partir do mouse quando ele entra no retângulo,
    e volta (também em pixels, a partir de onde o mouse saiu) quando ele sai */
 (() => {
-  const html = document.documentElement, LADO = 14, DURA = 650, ESPALHA = 0.22, COR = '#3F3166';
+  const html = document.documentElement, LADO = 14, DURA = 900, ESPALHA = 0.22, COR = '#3F3166';
   const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.querySelectorAll('.projeto').forEach(proj => {
     const img = proj.querySelector('.imagem'), tela = img.querySelector('.veu');
