@@ -215,7 +215,29 @@
   html.celular .pilha .card.mais { top: var(--topo-pilha); }
 
   html.celular .rodape { order: 2; }
+  /* ── computador: o topo sempre ocupa a janela inteira ──
+     O topo tem 812px (Figma). Em janelas mais altas que isso (ex.: 1920 × 1080), --sobra é o que falta (em px da página,
+     já contando a escala de celular.js): o fundo do topo cresce, o "maju." desce metade (fica no meio), a flor vermelha
+     desce junto com o fim do topo, e tudo o que vem depois (projetos, cards, rodapé) desce a sobra inteira. */
+  html:not(.celular) .hero-bg { height: calc(812px + var(--sobra, 0px)); }
+  html:not(.celular) .fade, html:not(.celular) .desenho-roxo, html:not(.celular) .secao-work,
+  html:not(.celular) .titulo, html:not(.celular) .linha, html:not(.celular) .rodape { margin-top: var(--sobra, 0px); }
+  html:not(.celular) .logo { margin-top: calc(var(--sobra, 0px) / 2); }
+  html:not(.celular) .frame, html:not(.celular) .page { height: calc(3324px + var(--sobra, 0px)); }
 </style>
+<script>
+(() => {
+  const html = document.documentElement;
+  const mede = () => {
+    const k = window.escalaPagina || 1;
+    html.style.setProperty('--sobra', html.classList.contains('celular') ? '0px' : Math.max(0, innerHeight / k - 812) + 'px');
+  };
+  mede();
+  addEventListener('resize', mede);
+  addEventListener('celular-mudou', mede);
+  addEventListener('DOMContentLoaded', mede);
+})();
+</script>
 <script>
   document.documentElement.classList.add('js');
   /* as animações da página só começam quando a tela de carregamento sai */
