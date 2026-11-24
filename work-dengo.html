@@ -149,6 +149,10 @@
   window.quandoCarregar = fn => { if (window.__carregou) fn(); else addEventListener('carregou', fn, { once: true }); };
   addEventListener('transicao-fim', () => { window.__carregou = true; dispatchEvent(new Event('carregou')); });
 </script>
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
 </head>
 <body>
 
