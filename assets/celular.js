@@ -39,9 +39,9 @@
   var css = document.createElement('style');
   css.textContent =
     'html:not(.celular) .frame, html:not(.celular) header.header { zoom: var(--escala, 1); }' +
-    // header: estrela e links nas bordas da janela, com margens proporcionais à largura (--margem-header)
-    'html:not(.celular) header.header .estrela { translate: var(--margem-header, 0px) 0; }' +
-    'html:not(.celular) header.header .nav { translate: calc(-1 * var(--margem-header, 0px)) 0; }';
+    // header: estrela e links nas bordas da janela, com margens proporcionais à largura (--margem-header-esq / -dir)
+    'html:not(.celular) header.header .estrela { translate: var(--margem-header-esq, 0px) 0; }' +
+    'html:not(.celular) header.header .nav { translate: calc(-1 * var(--margem-header-dir, 0px)) 0; }';
   document.head.appendChild(css);
   var k = 1, fator = null;
   function escala() {
@@ -51,9 +51,11 @@
     html.style.setProperty('--escala', String(k));
     html.style.setProperty('--larg', (cw / k) + 'px');
     html.style.setProperty('--margem', cel ? '0px' : Math.max(0, (cw / k - LARGURA) / 2) + 'px');
-    // header: as margens laterais (51px no Figma de 1490) crescem na mesma proporção da janela — estrela na borda esquerda,
-    // links na direita, em qualquer largura (antes ficavam presos às margens da composição de 1490px)
-    html.style.setProperty('--margem-header', cel ? '0px' : Math.max(0, (cw / k) * 51 / LARGURA - 51) + 'px');
+    // header: margens laterais proporcionais à largura da janela, como na referência dela (estrela a 4,8% da borda esquerda,
+    // "contact" a 4,2% da direita), em qualquer largura do computador; no Figma (1490px) eram 51px dos dois lados
+    const W = cw / k;
+    html.style.setProperty('--margem-header-esq', cel ? '0px' : (W * 0.048 - 51) + 'px');
+    html.style.setProperty('--margem-header-dir', cel ? '0px' : (W * 0.042 - 51) + 'px');
     window.escalaPagina = k;
     fator = null;
   }
