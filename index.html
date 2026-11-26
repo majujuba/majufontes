@@ -608,9 +608,13 @@
   const n = cards.length;
   if (n < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const pilha = cards[0].parentElement;
-  let pedido = false;
-  function atualiza() {
-    pedido = false;
+  /* rolagem suave: a escala de cada card não segue a rolagem ao pixel — ela vai chegando ao valor certo com um leve
+     atraso (a cada quadro anda SUAVIDADE do que falta), então os cards de trás encolhem e voltam de um jeito macio.
+     As medidas da pilha são lidas só ao abrir e ao mudar o tamanho (não a cada quadro de rolagem). */
+  const SUAVIDADE = 0.12;
+  let medidas = null, quadro = 0;
+  const atual = cards.map(() => 1);
+  function mede() {
     const cs = getComputedStyle(pilha);
     const topo = parseFloat(cs.getPropertyValue('--topo-pilha'));
     const degrau = parseFloat(cs.getPropertyValue('--degrau'));
@@ -618,17 +622,33 @@
     const passo = (cards[0].offsetHeight + parseFloat(cs.getPropertyValue("--folga"))) * k;
     const base = retangulo(pilha).top + scrollY;
     const prende = i => base + i * passo - (topo + i * degrau) * k;   // rolagem em que o card i prende
-    const fim = prende(n - 1);
+    medidas = { prende: cards.map((c, i) => prende(i)), fim: prende(n - 1) };
+  }
+  const alvo = i => {
+    const p = medidas.prende[i];
+    const a = Math.max(0, Math.min(1, (scrollY - p) / (medidas.fim - p || 1)));
+    return 1 - ENCOLHE * (n - 1 - i) * a;
+  };
+  function anima() {
+    quadro = 0;
+    let falta = false;
     cards.forEach((c, i) => {
-      const a = Math.max(0, Math.min(1, (scrollY - prende(i)) / (fim - prende(i) || 1)));
-      const s = 1 - ENCOLHE * (n - 1 - i) * a;
-      const v = s.toFixed(4);                           // combinada com o tilt 3D no CSS
+      const t = alvo(i), d = t - atual[i];
+      atual[i] = Math.abs(d) < 0.0002 ? t : atual[i] + d * SUAVIDADE;
+      if (atual[i] !== t) falta = true;
+      const v = atual[i].toFixed(4);                    // combinada com o tilt 3D no CSS
       if (c.dataset.escala !== v) { c.dataset.escala = v; c.style.setProperty('--escala', v); }   // só regrava se mudou
     });
+    if (falta) quadro = requestAnimationFrame(anima);
   }
-  addEventListener('scroll', () => { if (!pedido) { pedido = true; requestAnimationFrame(atualiza); } }, { passive: true });
-  addEventListener('resize', atualiza);
-  atualiza();
+  const pede = () => { if (!quadro) quadro = requestAnimationFrame(anima); };
+  function remede() { mede(); cards.forEach((c, i) => { atual[i] = alvo(i); }); cancelAnimationFrame(quadro); quadro = 0; anima(); }
+  addEventListener('scroll', pede, { passive: true });
+  addEventListener('resize', remede);
+  addEventListener('celular-mudou', remede);
+  addEventListener('load', remede);
+  if (document.fonts) document.fonts.ready.then(remede);
+  remede();
 })();
 </script>
 <!-- cursor com rastro de pixels -->
