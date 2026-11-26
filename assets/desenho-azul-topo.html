@@ -573,7 +573,7 @@ const desloca = document.getElementById('desloca');
    pesado) é atualizada a ~30 quadros por segundo, o bastante para um movimento lento */
 // no celular (toque) a ondulação fica parada (ver ONDA_INTERVALO) e os pixels esmaecem por transição CSS: o iPhone travava
 const TOQUE = matchMedia("(hover: none), (pointer: coarse)").matches;
-const ONDA_INTERVALO = TOQUE ? Infinity : 33;   // celular: a linha fica com a ondulação desenhada, mas PARADA — refazer o filtro (mesmo 10x/s) travava o iPhone
+const ONDA_INTERVALO = TOQUE ? 66 : 33;   // celular: a linha volta a ondular (pedido dela), a ~15 quadros/s para não pesar; parada enquanto a página rola
 let visivel = true, rodando = false, ultimaOnda = -1e9;
 function liga(){ if(!rodando){ rodando = true; requestAnimationFrame(quadro); } }
 if('IntersectionObserver' in window){
