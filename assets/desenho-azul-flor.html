@@ -518,7 +518,7 @@ function escolheNivel(p,t,atual){
   svgPix.removeAttribute('aria-label'); svgPix.setAttribute('aria-hidden', 'true');
   svgPix.appendChild(gPix);
   svgLinha.style.willChange = svgPix.style.willChange = 'transform';   // camadas separadas: piscar os pixels nÃ£o refaz o filtro da linha
-  svgLinha.parentNode.insertBefore(svgPix, svgLinha);   // pixels por baixo da linha
+  svgLinha.parentNode.insertBefore(svgPix, svgLinha.nextSibling);   // pixels por cima da linha (pedido dela)
 })();
 const pixels = [...document.querySelectorAll('#pixels polygon')].map(el=>{
   const b = el.getBBox();
