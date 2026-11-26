@@ -107,7 +107,7 @@
 
 /* ESTRELA DO RODAPÉ = "VOLTAR AO TOPO" (todas as páginas, computador e celular)
    A estrela continua igual (imagem, tamanho, lugar); vira um botão: clique, Enter ou Espaço rolam a página até o topo.
-   Rolagem própria (quadro a quadro, começa e termina devagar), com duração proporcional à distância (0,9 s a 2,2 s);
+   Rolagem própria (quadro a quadro, começa e termina devagar), com duração proporcional à distância (1 s a 2,4 s);
    se a pessoa rolar por conta própria no meio (roda, toque, teclas), a rolagem para na hora.
    Com "reduzir movimento" no sistema, vai direto ao topo. */
 (() => {
@@ -119,7 +119,20 @@
   estrela.setAttribute('title', 'voltar ao topo');
   estrela.style.cursor = 'pointer';
   const calmo = matchMedia('(prefers-reduced-motion: reduce)');
-  const suave = t => (1 - Math.cos(Math.PI * t)) / 2;   // começa e termina bem devagar, sem tranco no meio
+  /* curva da subida (cubic-bezier .62, 0, .12, 1): começa devagar, ganha velocidade e desacelera longamente no fim —
+     a página "pousa" no topo, sem tranco nem rebote (a parte final é mais lenta que na easeInOutQuint simétrica) */
+  const bezier = (x1, y1, x2, y2) => {
+    const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+    const X = t => ((ax * t + bx) * t + cx) * t, dX = t => (3 * ax * t + 2 * bx) * t + cx, Y = t => ((ay * t + by) * t + cy) * t;
+    return x => {
+      if (x <= 0) return 0; if (x >= 1) return 1;
+      let t = x;
+      for (let i = 0; i < 8; i++) { const e = X(t) - x, d = dX(t); if (Math.abs(e) < 1e-6 || !d) break; t -= e / d; }
+      t = Math.min(1, Math.max(0, t));
+      return Y(t);
+    };
+  };
+  const suave = bezier(.62, 0, .12, 1);
   let quadro = 0;
   const para = () => {
     cancelAnimationFrame(quadro); quadro = 0;
@@ -131,7 +144,7 @@
     const de = scrollY;
     if (de <= 0) return;
     if (calmo.matches) { scrollTo(0, 0); return; }
-    const dura = Math.min(2200, Math.max(900, 700 + de * 0.2));   // mais longa: 0,9 s a 2,2 s
+    const dura = Math.min(2400, Math.max(1000, 800 + de * 0.2));   // proporcional à distância: 1 s a 2,4 s
     const t0 = performance.now();
     addEventListener('wheel', para, { passive: true });
     addEventListener('touchstart', para, { passive: true });
