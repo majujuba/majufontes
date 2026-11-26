@@ -251,7 +251,7 @@
 </head>
 <body>
 <!-- tela de carregamento -->
-<div class="carregando" id="carregando" aria-hidden="true"><img src="assets/estrela-roxa.svg" alt="" fetchpriority="high" width="120" height="120"></div>
+<div class="carregando" id="carregando" aria-hidden="true"><img src="assets/estrela-roxa.webp" alt="" fetchpriority="high" width="120" height="120"></div>
 <script>
 (() => {
   const MINIMO = 1800;   // tempo mínimo com a estrela na tela (ms), mesmo se a página carregar antes
@@ -366,7 +366,7 @@
 
 <!-- header: ancorado à janela (51px das bordas esquerda e direita) -->
 <header class="abs header">
-  <img decoding="async" class="abs estrela" src="assets/estrela-header.svg" alt="">
+  <img decoding="async" class="abs estrela" src="assets/estrela-header.webp" alt="">
   <a class="abs nav work" href="work.html">work</a>
   <a class="abs nav about" href="about.html">about</a>
   <a class="abs nav contact" href="contact.html">contact</a>
@@ -454,7 +454,6 @@
     }
     const forma = contorno(W, H, 97 + i * 7919);
     const dTraco = forma(ESPESSURA/2);                    // traço encostado na beirada, por dentro
-    card.classList.add('rustica');
     /* textura de traço desenhado à mão: o mesmo tipo de distorção usado na linha das flores */
     const id = 'traco-card-' + i;
     const filtro =
@@ -471,18 +470,22 @@
        assim nada do fundo do card sobra do lado de fora da borda */
     const molde = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">' +
       '<defs>' + filtro + '</defs><path d="' + dTraco + '" fill="#fff" stroke="#fff" ' + atributos + '/></svg>';
-    const url = 'url("data:image/svg+xml,' + encodeURIComponent(molde) + '")';
-    card.style.webkitMaskImage = url; card.style.maskImage = url;
     card.style.webkitMaskSize = '100% 100%'; card.style.maskSize = '100% 100%';
     card.style.webkitMaskRepeat = 'no-repeat'; card.style.maskRepeat = 'no-repeat';
-
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('class', 'abs borda');
-    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-    svg.setAttribute('aria-hidden', 'true');
-    svg.innerHTML = '<defs>' + filtro + '</defs>' +
-      '<path d="' + dTraco + '" fill="none" style="stroke:var(--stroke)" ' + atributos + '/>';
-    card.appendChild(svg);
+    // desempenho: o recorte e a borda entram já como imagem pronta (abaixo); o filtro "ao vivo" fica só de reserva,
+    // se a imagem não puder ser gerada — antes ele ficava aplicado no meio-tempo e o navegador refazia a textura
+    // a cada quadro da tela de carregamento (os cards ainda estão fora da tela nesse momento)
+    const aoVivo = () => {
+      const url = 'url("data:image/svg+xml,' + encodeURIComponent(molde) + '")';
+      card.style.webkitMaskImage = url; card.style.maskImage = url;
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('class', 'abs borda');
+      svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+      svg.setAttribute('aria-hidden', 'true');
+      svg.innerHTML = '<defs>' + filtro + '</defs>' +
+        '<path d="' + dTraco + '" fill="none" style="stroke:var(--stroke)" ' + atributos + '/>';
+      card.appendChild(svg);
+    };
 
     /* desempenho: os cards encolhem a cada quadro da rolagem (pilha), e com o filtro "ao vivo"
        o navegador refazia a textura do recorte e da borda o tempo todo. Aqui os dois viram uma
@@ -490,14 +493,21 @@
     const cor = getComputedStyle(card).getPropertyValue('--stroke').trim() || '#D8D8D8';
     const bordaTexto = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">' +
       '<defs>' + filtro + '</defs><path d="' + dTraco + '" fill="none" stroke="' + cor + '" ' + atributos + '/></svg>';
-    Promise.all([rasteriza(molde, W, H), rasteriza(bordaTexto, W, H)]).then(([png, pngBorda]) => {
-      if (png) { const u = 'url("' + png + '")'; card.style.webkitMaskImage = u; card.style.maskImage = u; }
-      if (pngBorda) {
-        const img = new Image(); img.className = 'abs borda'; img.alt = ''; img.setAttribute('aria-hidden', 'true');
-        img.onload = () => svg.replaceWith(img); img.src = pngBorda;
-      }
-    });
+    // desempenho: cada desenho trava a página ~50 ms; os cards ficam abaixo do topo, então eles são gerados depois da
+    // tela de carregamento, um por vez, nos intervalos livres (até lá o card tem a borda lisa do CSS)
+    fila(() => Promise.all([rasteriza(molde, W, H), rasteriza(bordaTexto, W, H)]).then(([png, pngBorda]) => {
+      card.classList.add('rustica');
+      if (!png || !pngBorda) { aoVivo(); return; }
+      const u = 'url("' + png + '")'; card.style.webkitMaskImage = u; card.style.maskImage = u;
+      const img = new Image(); img.className = 'abs borda'; img.alt = ''; img.setAttribute('aria-hidden', 'true');
+      img.src = pngBorda; card.appendChild(img);
+    }));
   });
+
+  function fila(tarefa) {
+    const ocioso = window.requestIdleCallback ? fn => requestIdleCallback(fn, { timeout: 1200 }) : fn => setTimeout(fn, 60);
+    fila.p = (fila.p || new Promise(r => quandoCarregar(r))).then(() => new Promise(r => ocioso(r))).then(tarefa);
+  }
 
   function rasteriza(svgTexto, W, H) {
     const ESC = Math.min(3, (devicePixelRatio || 1) * 1.5);   // folga para o zoom do navegador e a inclinação 3D

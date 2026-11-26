@@ -612,6 +612,9 @@ function quadro(t){
 }
 liga();
 
+// já começa a calcular o caminho do traço (fora da linha principal), enquanto a página termina de abrir
+if(!SEM_DESENHO && !jaPronta) caminhoPronto = preparaCaminho();
+
 /* com "?esperar" no endereço (dentro da Home), espera a tela de carregamento sair */
 let comecou = false;
 function comecar(){
@@ -784,6 +787,32 @@ function calculaCaminho(s,W,H){
   return {pecas, seg, larg, marcos:new Float32Array(marcos)};
 }
 
+/* desempenho: lê os pixels do traço e calcula o caminho da "caneta" (calculaCaminho, o mesmo de sempre) num Web Worker,
+   começando assim que a flor abre — o resultado é idêntico, mas não trava a página (na Home isso acontece por trás da
+   tela de carregamento). Se o Worker não puder ser criado, calcula aqui mesmo, como antes. */
+var caminhoPronto;   // var: é preenchida antes desta linha (no começo da página)
+async function preparaCaminho(){
+  const img = new Image();
+  img.src = traco.getAttribute('href');
+  await img.decode();
+  const ESC = 0.5;                                   // resolução de trabalho
+  const W = Math.round(img.naturalWidth*ESC), H = Math.round(img.naturalHeight*ESC);
+  const leitor = document.createElement('canvas'); leitor.width = W; leitor.height = H;
+  const lctx = leitor.getContext('2d', {willReadFrequently:true});
+  lctx.drawImage(img,0,0,W,H);
+  const s = lctx.getImageData(0,0,W,H).data;
+  let r = null;
+  try{
+    const codigo = 'const INICIO='+JSON.stringify(INICIO)+',CANETAS='+JSON.stringify(CANETAS)+';'+calculaCaminho.toString()+
+      ';onmessage=e=>postMessage(calculaCaminho(e.data.s,e.data.W,e.data.H));';
+    const url = URL.createObjectURL(new Blob([codigo],{type:'text/javascript'}));
+    const tr = new Worker(url);
+    r = await new Promise((ok,erro)=>{ tr.onmessage = e=>ok(e.data); tr.onerror = erro; tr.postMessage({s,W,H},[s.buffer]); });
+    tr.terminate(); URL.revokeObjectURL(url);
+  }catch(e){ r = null; }
+  if(!r){ lctx.drawImage(img,0,0,W,H); r = calculaCaminho(lctx.getImageData(0,0,W,H).data,W,H); }
+  return Object.assign({W,H}, r);
+}
 async function desenhaTraco(){
   const NS = 'http://www.w3.org/2000/svg';
   const svg = traco.ownerSVGElement;
@@ -807,16 +836,8 @@ async function desenhaTraco(){
   opacidade(0);
 
   try{
-    const img = new Image();
-    img.src = traco.getAttribute('href');
-    await img.decode();
-    const ESC = 0.5;                                   // resolução de trabalho
-    const W = Math.round(img.naturalWidth*ESC), H = Math.round(img.naturalHeight*ESC);
-    const leitor = document.createElement('canvas'); leitor.width = W; leitor.height = H;
-    const lctx = leitor.getContext('2d', {willReadFrequently:true});
-    lctx.drawImage(img,0,0,W,H);
-    const s = lctx.getImageData(0,0,W,H).data;
-    const {pecas, seg, larg, marcos} = calculaCaminho(s,W,H);
+    // desempenho: o caminho já foi calculado (ou está sendo) fora da linha principal, desde que a flor abriu — ver preparaCaminho
+    const {W, H, pecas, seg, larg, marcos} = await (caminhoPronto || preparaCaminho());
 
     /* um traço da máscara para cada pedaço do caminho (em pixels da imagem) */
     const fx = nw/W, fy = nh/H;

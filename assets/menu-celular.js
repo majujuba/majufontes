@@ -43,7 +43,7 @@
   menu.style.setProperty('--menu-texto', claro ? corLink : '#D8D8D8');
   menu.innerHTML =
     '<div class="menu-topo">' +
-      '<a class="menu-estrela" href="index.html" aria-label="início"><img src="assets/' + (claro ? 'estrela-roxa.svg' : 'estrela-header.svg') + '" alt=""></a>' +
+      '<a class="menu-estrela" href="index.html" aria-label="início"><img src="assets/' + (claro ? 'estrela-roxa-q.webp' : 'estrela-header.webp') + '" alt=""></a>' +
       '<button type="button" class="menu-fechar" aria-label="fechar o menu"><span></span><span></span></button>' +
     '</div>' +
     '<ul class="menu-links">' +
