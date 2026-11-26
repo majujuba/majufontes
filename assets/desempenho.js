@@ -107,7 +107,7 @@
 
 /* ESTRELA DO RODAPÉ = "VOLTAR AO TOPO" (todas as páginas, computador e celular)
    A estrela continua igual (imagem, tamanho, lugar); vira um botão: clique, Enter ou Espaço rolam a página até o topo.
-   Rolagem própria (quadro a quadro, começa e termina devagar), com duração proporcional à distância (0,6 s a 1,4 s);
+   Rolagem própria (quadro a quadro, começa e termina devagar), com duração proporcional à distância (0,9 s a 2,2 s);
    se a pessoa rolar por conta própria no meio (roda, toque, teclas), a rolagem para na hora.
    Com "reduzir movimento" no sistema, vai direto ao topo. */
 (() => {
@@ -119,7 +119,7 @@
   estrela.setAttribute('title', 'voltar ao topo');
   estrela.style.cursor = 'pointer';
   const calmo = matchMedia('(prefers-reduced-motion: reduce)');
-  const suave = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const suave = t => (1 - Math.cos(Math.PI * t)) / 2;   // começa e termina bem devagar, sem tranco no meio
   let quadro = 0;
   const para = () => {
     cancelAnimationFrame(quadro); quadro = 0;
@@ -131,7 +131,7 @@
     const de = scrollY;
     if (de <= 0) return;
     if (calmo.matches) { scrollTo(0, 0); return; }
-    const dura = Math.min(1400, Math.max(600, 400 + de * 0.12));
+    const dura = Math.min(2200, Math.max(900, 700 + de * 0.2));   // mais longa: 0,9 s a 2,2 s
     const t0 = performance.now();
     addEventListener('wheel', para, { passive: true });
     addEventListener('touchstart', para, { passive: true });
