@@ -107,7 +107,7 @@
 
 /* ESTRELA DO RODAPÉ = "VOLTAR AO TOPO" (todas as páginas, computador e celular)
    A estrela continua igual (imagem, tamanho, lugar); vira um botão: clique, Enter ou Espaço rolam a página até o topo.
-   Rolagem própria (requestAnimationFrame, curva própria: sai macia e pousa devagar no topo), com duração proporcional à distância (1,6 s a 2,8 s);
+   Rolagem própria (requestAnimationFrame, curva própria: sai macia e pousa devagar no topo), com duração proporcional à distância (2,2 s a 3,6 s);
    se a pessoa rolar por conta própria no meio (roda, toque, teclas), a rolagem para na hora.
    Com "reduzir movimento" no sistema, vai direto ao topo. */
 (() => {
@@ -119,7 +119,7 @@
   estrela.setAttribute('title', 'voltar ao topo');
   estrela.style.cursor = 'pointer';
   const calmo = matchMedia('(prefers-reduced-motion: reduce)');
-  /* curva da subida (cubic-bezier .38, 0, 0, 1): sai sem tranco, ganha velocidade aos poucos e desacelera
+  /* curva da subida (cubic-bezier .4, 0, .2, 1): sai sem tranco, ganha velocidade aos poucos e desacelera
      longamente nos últimos pixels — a página "pousa" no topo (mais macia que a easeOutExpo, que saía rápido demais) */
   const bezier = (x1, y1, x2, y2) => {
     const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
@@ -131,7 +131,7 @@
       return Y(Math.min(1, Math.max(0, t)));
     };
   };
-  const suave = bezier(.38, 0, 0, 1);   // fim bem curvo: a velocidade some aos poucos até parar
+  const suave = bezier(.4, 0, .2, 1);   // desaceleração no fim mais leve (menos curva)
   let quadro = 0;
   const para = () => {
     cancelAnimationFrame(quadro); quadro = 0;
@@ -143,7 +143,7 @@
     const de = scrollY;
     if (de <= 0) return;
     if (calmo.matches) { scrollTo(0, 0); return; }
-    const dura = Math.min(2800, Math.max(1600, 1400 + de * 0.2));   // 1,6 s a 2,8 s, conforme a distância
+    const dura = Math.min(3600, Math.max(2200, 2000 + de * 0.25));   // mais lenta: 2,2 s a 3,6 s, conforme a distância
     const t0 = performance.now();
     addEventListener('wheel', para, { passive: true });
     addEventListener('touchstart', para, { passive: true });
