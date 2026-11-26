@@ -41,8 +41,68 @@
   });
   /* curva contínua (Catmull-Rom → Bézier): sem "quinas" entre segmentos, as letras não mudam
      de inclinação aos saltos — era isso que fazia o texto tremer ao andar */
-  const P0 = suave.filter((p, i) => i % 8 === 0 || i === suave.length - 1);
-  const POLI = POLIGONO.trim().split(/\s+/).map(s => s.split(',').map(Number));
+  const P0_FIGMA = suave.filter((p, i) => i % 8 === 0 || i === suave.length - 1);
+  const POLI_FIGMA = POLIGONO.trim().split(/\s+/).map(s => s.split(',').map(Number));
+
+  /* CORDA SEM PONTAS (computador): a forma do Figma termina em pontas arredondadas dentro da tela em janelas largas.
+     As pontas são trocadas por um prolongamento da própria corda (mesma espessura e direção da ponta, que vai ficando
+     horizontal aos poucos, com a borda irregular), até passar das bordas da janela — EXTRA unidades de cada lado.
+     A escala não muda (nada é esticado); as ondas da corda (curva) e a ondulação do filtro valem também no prolongamento. */
+  const CORTE_ESQ = 220, CORTE_DIR = 3880;   // onde a forma do Figma é cortada (antes das pontas arredondadas)
+  const POLI_TOPO = POLI_FIGMA.slice(0, POLI_FIGMA.length / 2), POLI_BASE = POLI_FIGMA.slice(POLI_FIGMA.length / 2);
+  const bordaEm = (lista, x) => {            // y da borda (topo ou base) no ponto x, interpolado
+    for (let i = 0; i < lista.length - 1; i++) {
+      const [xa, ya] = lista[i], [xb, yb] = lista[i + 1];
+      if ((x - xa) * (x - xb) <= 0 && xa !== xb) return ya + (yb - ya) * (x - xa) / (xb - xa);
+    }
+    return lista[0][1];
+  };
+  const meioEm = x => { let m = suave[0]; for (const p of suave) if (Math.abs(p[0] - x) < Math.abs(m[0] - x)) m = p; return m[1]; };
+  let sorteio = 1; const rnd = () => (sorteio = (sorteio * 16807) % 2147483647) / 2147483647;
+  const ASPEREZA = [];                       // irregularidade fixa da borda do prolongamento
+  for (let i = 0; i < 4000; i++) ASPEREZA.push((rnd() - .5) * 7 + Math.sin(i * .9) * 1.5);
+  function prolongamento(lado, extra) {
+    // lado -1: esquerda (de CORTE_ESQ até -extra); +1: direita (de CORTE_DIR até 4096+extra)
+    const x0 = lado < 0 ? CORTE_ESQ : CORTE_DIR;
+    const topo0 = bordaEm(POLI_TOPO, x0), base0 = bordaEm(POLI_BASE, x0);
+    const c0 = (topo0 + base0) / 2, meia = (base0 - topo0) / 2;
+    const inclin = (meioEm(x0 + lado * 60) - meioEm(x0 - lado * 60)) / 120 * lado;   // direção da corda na ponta
+    const SUAVE = 320;                         // distância em que a direção da ponta vai se desfazendo
+    const ONDA_EXTRA = 150, COMPR_EXTRA = 2600;  // ondulação do prolongamento: altura e comprimento parecidos com os do desenho
+    const topo = [], base = [];
+    const fim = lado < 0 ? -extra : 4096 + extra;
+    let n = 0;
+    for (let x = x0; lado < 0 ? x >= fim : x <= fim; x += lado * 8, n++) {
+      const d = Math.abs(x - x0);
+      // sai na direção da ponta e segue ondulando como o resto da corda (sobe e desce suave, sem ficar reta)
+      const entra = 1 - Math.exp(-d / SUAVE);
+      const c = c0 + lado * inclin * SUAVE * entra + ONDA_EXTRA * Math.sin(2 * Math.PI * d / COMPR_EXTRA + (lado < 0 ? 0 : Math.PI)) * entra;
+      const a = ASPEREZA[n % ASPEREZA.length] * Math.min(1, d / 60), b = ASPEREZA[(n + 1733) % ASPEREZA.length] * Math.min(1, d / 60);
+      topo.push([x, c - meia + a]); base.push([x, c + meia + b]);
+    }
+    return { topo, base, meio: topo.map(([x], i) => [x, (topo[i][1] + base[i][1]) / 2]) };
+  }
+  let P0 = P0_FIGMA, POLI = POLI_FIGMA, EXTRA = 0;
+  function geometria(extra) {
+    EXTRA = extra;
+    if (!extra) { P0 = P0_FIGMA; POLI = POLI_FIGMA; return; }
+    const esq = prolongamento(-1, extra), dir = prolongamento(1, extra);
+    const topoMeio = POLI_TOPO.filter(([x]) => x > CORTE_ESQ && x < CORTE_DIR);
+    const baseMeio = POLI_BASE.filter(([x]) => x > CORTE_ESQ && x < CORTE_DIR);
+    POLI = [...esq.topo.slice().reverse(), ...topoMeio, ...dir.topo, ...dir.base.slice().reverse(), ...baseMeio, ...esq.base];
+    const meioFigma = P0_FIGMA.filter(([x]) => x > CORTE_ESQ + 40 && x < CORTE_DIR - 40);
+    const esqMeio = esq.meio.slice().reverse().filter((p, i, a) => i % 6 === 0 || i === a.length - 1);
+    const dirMeio = dir.meio.filter((p, i, a) => i % 6 === 0 || i === a.length - 1);
+    P0 = [...esqMeio, ...meioFigma, ...dirMeio];
+  }
+  // quanto prolongar: a sobra da janela de cada lado da composição de 1490px (--margem, de celular.js) + folga
+  const UNID_POR_PX = 4096 / 1670.5;
+  function extraDaJanela() {
+    if (document.documentElement.classList.contains('celular')) return 0;
+    const margem = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--margem')) || 0;
+    return Math.ceil((margem + 220) * UNID_POR_PX / 200) * 200;   // em degraus de 200 unidades (não refaz a cada pixel)
+  }
+  geometria(extraDaJanela());
 
   /* deslocamento vertical da corda no ponto x, no tempo tt (s): duas ondas suaves,
      uma andando para a direita e outra, mais curta, para a esquerda — o encontro delas
@@ -90,6 +150,19 @@
   svgFundo.style.willChange = svg.style.willChange = 'transform';
   // o fade in (classe "visivel") é aplicado ao SVG das palavras; a corda acompanha
   new MutationObserver(() => { svgFundo.className.baseVal = svg.className.baseVal; }).observe(svg, { attributes: true, attributeFilter: ['class'] });
+  // área do desenho (viewBox e caixa na página) acompanha o prolongamento, na mesma escala: nada é esticado
+  const caixaOriginal = { left: svg.style.left, width: svg.style.width };
+  function aplicaCaixa() {
+    const vb = EXTRA ? `${-EXTRA} 0 ${4096 + 2 * EXTRA} 697` : '0 0 4096 697';
+    for (const s of [svg, svgFundo]) {
+      s.setAttribute('viewBox', vb);
+      if (EXTRA) { s.style.left = (-73 - EXTRA / UNID_POR_PX) + 'px'; s.style.width = (1670.5 + 2 * EXTRA / UNID_POR_PX) + 'px'; }
+      else { s.style.left = caixaOriginal.left; s.style.width = caixaOriginal.width; }
+    }
+    filtro.setAttribute('x', -100 - EXTRA); filtro.setAttribute('width', 4296 + 2 * EXTRA);
+    filtro.setAttribute('y', EXTRA ? -500 : -100); filtro.setAttribute('height', EXTRA ? 1700 : 897);   // o prolongamento pode subir ou descer além da faixa original
+  }
+  aplicaCaixa();
   // geometricPrecision: o navegador não "encaixa" as letras na grade de pixels a cada quadro (evita tremido)
   const grupo = cria('g', { 'clip-path': 'url(#faixa-recorte)', 'data-cursor-bg': 'dark', 'text-rendering': 'geometricPrecision' });
   svg.appendChild(grupo);
@@ -186,6 +259,17 @@
   function liga() { if (!rodando && !calmo) { rodando = true; requestAnimationFrame(quadro); } }
 
   function inicia() { monta(); posiciona(0); liga(); }
+  // janela mudou de largura (ou passou do layout de celular para o do computador): refaz o prolongamento
+  let refaz = 0;
+  const confereLargura = () => {
+    clearTimeout(refaz);
+    refaz = setTimeout(() => {
+      const e = extraDaJanela(); if (e === EXTRA) return;
+      geometria(e); aplicaCaixa(); curvaCorda(tempoCorda / 1000); monta(); posiciona(0);
+    }, 150);
+  };
+  addEventListener('resize', confereLargura);
+  addEventListener('celular-mudou', confereLargura);
   inicia();
   // quando a fonte The Seasons terminar de carregar, mede as palavras de novo
   if (document.fonts) document.fonts.ready.then(() => { const antes = ciclo; monta(); if (ciclo !== antes || calmo) posiciona(0); });
