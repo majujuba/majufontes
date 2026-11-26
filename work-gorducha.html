@@ -155,7 +155,9 @@
   /* ══════════ VERSÃO CELULAR — a base comum das páginas de projeto está em assets/projeto-celular.css; aqui só o que é da Gorducha ══════════ */
   html.celular { --fundo-pagina: var(--roxo); --foto-y: 50%; }   /* foto do celular: o cartão deitado sobre o sorvete, recortado em pé (hero-celular.webp, de "gorducha cartao expand") */
   /* o cartão no meio da tela, quase de ponta a ponta; o pé da foto se dissolve no roxo (degradê comum, projeto-celular.css) */
-  html.celular .hero img { left: 0; width: 100%; top: 0; height: 100%; object-position: 50% 50%; }
+  /* a largura manda (não a altura): o cartão fica com uma folguinha de cada lado, como na referência dela */
+  html.celular .hero img { left: 0; width: 100%; top: 0; height: auto; aspect-ratio: 522 / 900; object-fit: cover; }
+  html.celular .hero { overflow: hidden; }   /* em telas baixas a foto passa do pé do topo: não aparece embaixo do título */
   html.celular .page > .video-bloco { aspect-ratio: 16 / 9; }   /* o vídeo inteiro, sem as faixas vermelhas dos lados */
   /* caixa de escrever: quadrada, com a área do texto e a barra de cores proporcionais */
   html.celular .page > .escrever { aspect-ratio: 1 / 1; }
