@@ -7,10 +7,11 @@
 <script src="assets/celular.js"></script>
 <title>maju. — designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
+<link rel="preconnect" href="https://use.typekit.net" crossorigin><link rel="preconnect" href="https://p.typekit.net" crossorigin>
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap"></noscript>
 <!-- cursor com rastro de pixels (assets/cursor-trail.css + .js) -->
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
@@ -136,7 +137,7 @@
   .rodape .copy { left: 60px; bottom: 23px; font: 400 15px/1 var(--cambria); color: var(--cinza); white-space: nowrap; }
 
   /* ── fade in ao entrar na tela (como na referência: sobe 20px enquanto aparece) ── */
-  .js .fade-in-element { opacity: 0; transform: translateY(20px);
+  .js .fade-in-element { opacity: .01; transform: translateY(20px);   /* .01 e não 0: invisível, mas o navegador conta como desenhado (FCP/LCP no PageSpeed) */
     transition: opacity 1.2s cubic-bezier(.22,1,.36,1), transform 1.2s cubic-bezier(.22,1,.36,1);
     transition-delay: var(--atraso, 0s); }
   .js .fade-in-element.visivel { opacity: 1; transform: none; }
@@ -159,7 +160,7 @@
   /* + uma "sombra" lisa da mesma cor para baixo: cobre a área atrás das barras flutuantes do Safari sem tirar a estrela do centro */
   @media (hover: none), (pointer: coarse) { .carregando { position: absolute; bottom: auto; height: 100vh; height: 100lvh; box-shadow: 0 400px 0 0 #84A9D9; } }
   html:not(.js) .carregando { display: none; }
-  .carregando img { width: 120px; height: auto; opacity: 0; transform: scale(.9);
+  .carregando img { width: 120px; height: auto; opacity: .01; transform: scale(.9);   /* .01: conta como primeiro desenho (FCP) */
     transition: opacity .6s ease, transform .6s cubic-bezier(.22,1,.36,1); }
   .carregando.entra img { opacity: 1; transform: none; }
   .carregando.sai img { opacity: 0; transform: scale(1.1); transition: opacity .5s ease, transform .5s ease; }
@@ -250,7 +251,7 @@
 </head>
 <body>
 <!-- tela de carregamento -->
-<div class="carregando" id="carregando" aria-hidden="true"><img decoding="async" src="assets/estrela-roxa.svg" alt=""></div>
+<div class="carregando" id="carregando" aria-hidden="true"><img src="assets/estrela-roxa.svg" alt="" fetchpriority="high" width="120" height="120"></div>
 <script>
 (() => {
   const MINIMO = 1800;   // tempo mínimo com a estrela na tela (ms), mesmo se a página carregar antes
@@ -286,7 +287,15 @@
     }, calmo ? 0 : 500);
   }
   function pronto() { setTimeout(sair, Math.max(0, (calmo ? 600 : MINIMO) - (performance.now() - t0))); }
-  if (document.readyState === 'complete') pronto(); else addEventListener('load', pronto);
+  // espera a página e as fontes (não todas as fotos e flores, que continuam carregando por trás): no celular,
+  // com internet lenta, esperar o "load" inteiro segurava a tela azul por vários segundos
+  let chamou = false;
+  const pronto1 = () => { if (!chamou) { chamou = true; pronto(); } };
+  const depoisDoHtml = () => {
+    const fontes = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+    Promise.race([fontes, new Promise(r => setTimeout(r, 1500))]).then(pronto1);
+  };
+  if (document.readyState !== 'loading') depoisDoHtml(); else addEventListener('DOMContentLoaded', depoisDoHtml);
   setTimeout(sair, MAXIMO);
 })();
 </script>
@@ -316,25 +325,25 @@
 
     <div class="abs pilha fade-in-element tilt-3d-container">
     <a class="card tilt-3d roxo" style="--i:0" href="work-tiposp.html">
-      <img decoding="async" class="abs foto" src="assets/card-tiposp.webp" alt="TipoSP">
+      <img decoding="async" loading="lazy" class="abs foto" src="assets/card-tiposp.webp" srcset="assets/card-tiposp-820.webp 820w, assets/card-tiposp.webp 1626w" sizes="(max-width: 760px) 100vw, 813px" alt="TipoSP">
       <span class="abs nome">TipoSP</span>
       <span class="abs cat">Web Design</span>
       <img decoding="async" class="abs espiral maior" src="assets/espiral-tiposp.svg" alt="">
     </a>
     <a class="card tilt-3d azul" style="--i:1" href="work-gorducha.html">
-      <img decoding="async" class="abs foto" src="assets/card-gorducha.webp" alt="Gorducha">
+      <img decoding="async" loading="lazy" class="abs foto" src="assets/card-gorducha.webp" srcset="assets/card-gorducha-820.webp 820w, assets/card-gorducha.webp 1626w" sizes="(max-width: 760px) 100vw, 813px" alt="Gorducha">
       <span class="abs nome" style="font-size:64px">Gorducha</span>
       <span class="abs cat">Tipografia</span>
       <img decoding="async" class="abs espiral" src="assets/espiral-roxa.svg" alt="">
     </a>
     <a class="card tilt-3d roxo" style="--i:2" href="work-vizao.html">
-      <img decoding="async" class="abs foto" src="assets/card-vizao.webp" alt="Vizão">
+      <img decoding="async" loading="lazy" class="abs foto" src="assets/card-vizao.webp" srcset="assets/card-vizao-820.webp 820w, assets/card-vizao.webp 1626w" sizes="(max-width: 760px) 100vw, 813px" alt="Vizão">
       <span class="abs nome">Vizão</span>
       <span class="abs cat">Editorial</span>
       <img decoding="async" class="abs espiral" src="assets/espiral-clara.svg" alt="">
     </a>
     <a class="card tilt-3d azul" style="--i:3" href="work-dengo.html">
-      <img decoding="async" class="abs foto" src="assets/card-dengo.webp" alt="Dengo" style="object-fit:cover">
+      <img decoding="async" loading="lazy" class="abs foto" src="assets/card-dengo.webp" srcset="assets/card-dengo-820.webp 820w, assets/card-dengo.webp 1626w" sizes="(max-width: 760px) 100vw, 813px" alt="Dengo" style="object-fit:cover">
       <span class="abs nome">Dengo</span>
       <span class="abs cat">Estampas</span>
       <img decoding="async" class="abs espiral" src="assets/espiral-roxa.svg" alt="">

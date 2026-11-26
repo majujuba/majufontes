@@ -7,10 +7,11 @@
 <script src="assets/celular.js"></script>
 <title>Dengo — maju. designer</title>
 <!-- The Seasons (Adobe Fonts) + Pixelify Sans (Google Fonts). Cambria vem do sistema (Windows). -->
+<link rel="preconnect" href="https://use.typekit.net" crossorigin><link rel="preconnect" href="https://p.typekit.net" crossorigin>
 <link rel="stylesheet" href="https://use.typekit.net/npm1tms.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap"></noscript>
 <link rel="stylesheet" href="assets/cursor-trail.css">
 <!-- barra de rolagem personalizada (trilho cinza, barra roxa áspera) -->
 <link rel="stylesheet" href="assets/barra-rolagem.css">
@@ -132,7 +133,7 @@
   .rodape .copy { left: 60px; bottom: 23px; font: 400 15px/1 var(--cambria); color: var(--cinza); white-space: nowrap; }
 
   /* ── fade in (igual às outras páginas) ── */
-  .js .fade-in-element { opacity: 0; transform: translateY(20px);
+  .js .fade-in-element { opacity: .01; transform: translateY(20px);   /* .01 e não 0: invisível, mas o navegador conta como desenhado (FCP/LCP no PageSpeed) */
     transition: opacity 1.2s cubic-bezier(.22,1,.36,1), transform 1.2s cubic-bezier(.22,1,.36,1);
     transition-delay: var(--atraso, 0s); }
   .js .fade-in-element.visivel { opacity: 1; transform: none; }
@@ -159,7 +160,7 @@
 <div class="frame"><main class="page">
 
   <!-- topo -->
-  <div class="abs hero"><picture><source media="(max-width: 760px), (max-device-width: 600px), (max-device-height: 600px)" srcset="assets/dengo/barras-azul.webp"><img decoding="async" src="assets/dengo/hero.webp" alt="Barras de chocolate Dengo com as estampas sobre um fundo azul"></picture></div>
+  <div class="abs hero"><picture><source media="(max-width: 760px), (max-device-width: 600px), (max-device-height: 600px)" srcset="assets/dengo/barras-azul.webp"><img fetchpriority="high" src="assets/dengo/hero.webp" alt="Barras de chocolate Dengo com as estampas sobre um fundo azul"></picture></div>
   <div class="abs hero-fundo"></div>
   <h1 class="abs titulo fade-in-element" style="--atraso:.2s">Dengo</h1>
 
