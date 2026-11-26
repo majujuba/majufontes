@@ -119,7 +119,7 @@
   estrela.setAttribute('title', 'voltar ao topo');
   estrela.style.cursor = 'pointer';
   const calmo = matchMedia('(prefers-reduced-motion: reduce)');
-  /* curva da subida (cubic-bezier .35, 0, .15, 1): sai sem tranco, ganha velocidade aos poucos e desacelera
+  /* curva da subida (cubic-bezier .38, 0, 0, 1): sai sem tranco, ganha velocidade aos poucos e desacelera
      longamente nos últimos pixels — a página "pousa" no topo (mais macia que a easeOutExpo, que saía rápido demais) */
   const bezier = (x1, y1, x2, y2) => {
     const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
@@ -131,7 +131,7 @@
       return Y(Math.min(1, Math.max(0, t)));
     };
   };
-  const suave = bezier(.35, 0, .15, 1);
+  const suave = bezier(.38, 0, 0, 1);   // fim bem curvo: a velocidade some aos poucos até parar
   let quadro = 0;
   const para = () => {
     cancelAnimationFrame(quadro); quadro = 0;
