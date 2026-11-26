@@ -179,9 +179,12 @@
   .rodape .copy { left: 60px; bottom: 23px; font: 400 15px/1 var(--cambria); color: var(--cinza); white-space: nowrap; }
 
   /* ── fade in (igual às outras páginas) ── */
-  .js .fade-in-element { opacity: .01; transform: translateY(20px);   /* .01 e não 0: invisível, mas o navegador conta como desenhado (FCP/LCP no PageSpeed) */
+  .js .fade-in-element { opacity: 0; transform: translateY(20px);
     transition: opacity 1.2s cubic-bezier(.22,1,.36,1), transform 1.2s cubic-bezier(.22,1,.36,1);
     transition-delay: var(--atraso, 0s); }
+  /* imagens e vídeos começam em .01 e não 0: continuam invisíveis, mas o navegador conta como desenhados (LCP no PageSpeed).
+     Só eles: texto em .01 era lido pelo teste de acessibilidade como "sem contraste" */
+  .js :where(img, video).fade-in-element { opacity: .01; }
   .js .fade-in-element.visivel { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) {
     .js .fade-in-element { opacity: 1; transform: none; transition: none; }
