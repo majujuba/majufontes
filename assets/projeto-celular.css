@@ -128,3 +128,5 @@ html.celular .rodape { order: 4; }
 html.celular br.pc { display: none; }
 .texto .inteira { white-space: nowrap; }   /* "diagramá-los" não se parte no hífen */
 html:not(.celular) .texto .aperta { word-spacing: -0.6px; }   /* cabe uma palavra a mais na linha */
+/* Recorte: a primeira linha termina em "diagramá-los" (pedido dela) — letras e palavras dessa linha um pouquinho mais próximas (0,2 px / 0,7 px) */
+html:not(.celular) .texto .linha1 { white-space: nowrap; letter-spacing: -0.2px; word-spacing: -0.7px; }
