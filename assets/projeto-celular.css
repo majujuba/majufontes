@@ -123,3 +123,8 @@ html.celular .navega .botao-pixel { top: 17px; height: 34px; padding: 0 12px 1px
 html.celular .navega .anterior { left: var(--m); }
 html.celular .navega .proximo { right: var(--m); }
 html.celular .rodape { order: 4; }
+
+/* ajustes de quebra de linha dos textos de abertura, feitos para o computador (pedido dela) — no celular o texto quebra sozinho */
+html.celular br.pc { display: none; }
+.texto .inteira { white-space: nowrap; }   /* "diagramá-los" não se parte no hífen */
+html:not(.celular) .texto .aperta { word-spacing: -0.6px; }   /* cabe uma palavra a mais na linha */
